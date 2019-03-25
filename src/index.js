@@ -24,6 +24,7 @@ const respondWith = (res, static_path) => {
         }
 
         res.set('Content-Type', 'text/html');
+        res.set('X-Frame-Options', 'SAMEORIGIN');
         res.send(data);
     });
 }

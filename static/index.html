@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Codeframe</title>
+    <title>Codeframe | A Playground for the Web</title>
     <link rel="stylesheet" href="/static/css/main.css">
     <link rel="stylesheet" href="/static/css/index.css">
   </head>
@@ -16,19 +16,19 @@
           <a class="button" href="/">Codeframe</a>
       </div>
       <nav>
-          <a class="button newButton" href="/new" target="_blank">
+          <a class="button newButton" href="/new">
               + New <span class="mobile-hidden">Codeframe</span>
           </a>
           <a class="button" href="https://twitter.com/thesephist" target="_blank">
               <span class="mobile-hidden">Made by</span> @thesephist
           </a>
           <a class="button" href="https://github.com/thesephist/codeframe" target="_blank">
-              <span class="mobile-hidden">View Source on</span> Github
+              <span class="mobile-hidden">View Source on</span> GitHub
           </a>
       </nav>
     </header>
 
-    <div class="hero">
+    <section class="hero">
       <div class="textOverlay">
         <h1 class="pretag">
           Welcome to Codeframe.
@@ -38,9 +38,21 @@
         </div>
         <div class="ctaButtons">
           <a href="/new" class="button active startButton">Start building</a>
+          <!-- Medium post link to my announcement post -->
+          <a href="#" class="button">How it works</a>
+        </div>
+
+        <h2>Try it here!</h2>
+        <p>
+          This is a live Codeframe editor. Change the HTML and JavaScript code on the right
+          side and tap "Save &amp; Reload" to see the changes on the left pane.
+        </p>
+        <div class="liveEditorContainer fixed button">
+          <!-- Update this later to be a simple but intuitive demo of Codeframe -->
+          <iframe src="/h/28262af8071d/j/cd2d3882419c/edit" frameborder="0" class="liveEditor"></iframe>
         </div>
       </div>
-    </div>
+    </section>
 
     <section>
       <div class="textOverlay">
@@ -49,15 +61,15 @@
           Everything is code!
         </p>
         <div class="triple">
-          <div class="item button">
+          <div class="item fixed button">
             <h3>Code</h3>
             <p>This</p>
           </div>
-          <div class="item button">
+          <div class="item fixed button">
             <h3>Code</h3>
             <p>This</p>
           </div>
-          <div class="item button">
+          <div class="item fixed button">
             <h3>Code</h3>
             <p>This</p>
           </div>

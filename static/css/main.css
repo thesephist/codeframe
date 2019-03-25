@@ -75,6 +75,7 @@ body {
     background: #fff;
     font-weight: bold;
     cursor: pointer;
+    box-sizing: border-box;
 
     position: relative;
     top: -2px;
@@ -142,4 +143,20 @@ body {
 
 .button:focus {
     outline: none;
+}
+
+.button.fixed:hover,
+.button.fixed:hover::before,
+.button.fixed:hover::after,
+.button.fixed:active,
+.button.fixed:active::before,
+.button.fixed:active::after,
+.button.fixed:focus,
+.button.fixed:focus::before,
+.button.fixed:focus::after {
+    transform: none;
+}
+
+p {
+    max-width: 640px;
 }

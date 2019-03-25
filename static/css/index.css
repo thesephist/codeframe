@@ -29,7 +29,7 @@ nav {
 
 .textOverlay {
     width: 94%;
-    max-width: 720px;
+    max-width: 800px;
     margin: 52px auto;
 }
 
@@ -51,6 +51,20 @@ nav {
     display: flex;
     font-size: 1.6em;
     flex-direction: row;
+    margin-bottom: 50px;
+}
+
+.liveEditorContainer {
+    min-height: 480px;
+    height: 52vh;
+    padding: 0;
+    width: calc(100% - 10px);
+}
+
+.liveEditor {
+    height: 100%;
+    width: 100%;
+    padding: 0;
 }
 
 section h2 {
@@ -66,8 +80,8 @@ section h2::after {
     position: absolute;
     bottom: 0;
     left: 0;
-    padding: 0 8px;
-    transform: translateX(-8px);
+    padding: 0 4px;
+    transform: translateX(-4px);
     border-radius: 3px;
     content: '';
     display: block;
@@ -87,6 +101,7 @@ section p {
     justify-content: space-between;
     align-items: flex-start;
     width: 100%;
+    overflow: hidden;
 }
 
 .triple .item {
@@ -100,14 +115,31 @@ section p {
     font-weight: bold;
 }
 
-@media (max-width: 750px) {
-    .triple {
-        flex-direction: column;
-    }
-}
-
 footer a {
     text-decoration: underline;
     color: var(--cf-accent);
     cursor: pointer;
+}
+
+@media (max-width: 500px) {
+    .ctaButtons {
+        display: block;
+        overflow: hidden;
+    }
+    .ctaButtons .button {
+        float: left;
+        clear: both;
+    }
+}
+
+@media (max-width: 750px) {
+    .hero .textOverlay {
+        margin-top: 18px;
+    }
+    .tagline {
+        font-size: 3em;
+    }
+    .triple {
+        flex-direction: column;
+    }
 }

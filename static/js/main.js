@@ -131,7 +131,7 @@ class PreviewPane extends StyledComponent {
         }
         return jdom`<div class="previewPanel" style="width:${this.paneWidth}%">
             <div class="urlBar">
-                <div class="button inputContainer">
+                <div class="fixed button inputContainer">
                     <input value="${url}" onfocus="${this.selectInput}" />
                 </div>
                 <a class="button" target="_blank" href="${url}" noreferer noopener>Preview</a>
@@ -369,6 +369,9 @@ class Workspace extends StyledComponent {
             background: var(--cf-background);
             border-bottom: 4px solid var(--cf-black);
         }
+        &.embedded header {
+            display: none;
+        }
         nav {
             display: flex;
             flex-direction: row;
@@ -423,12 +426,24 @@ class Workspace extends StyledComponent {
             bottom: 0;
             z-index: 1000;
         }
+        .fullButton {
+            display: none;
+        }
+        &.embedded .fullButton {
+            display: block;
+            position: absolute;
+            top: unset;
+            left: unset;
+            bottom: 2px;
+            right: 6px;
+            font-size: .75em;
+        }
         `;
     }
 
     compose() {
         return jdom`
-        <div class="workspace"
+        <div class="workspace ${window.frameElement === null ? '' : 'embedded'}"
             onmousemove="${this.grabDragging ? this.handleGrabMousemove : ''}"
             onmouseup="${this.grabDragging ? this.handleGrabMouseup : ''}">
             <header>
@@ -436,20 +451,26 @@ class Workspace extends StyledComponent {
                     <a class="button" href="/">Codeframe</a>
                 </div>
                 <nav>
-                    <a class="button newButton" href="/new" target="_blank">
+                    <a class="button newButton" href="/new">
                         + New <span class="mobile-hidden">Codeframe</span>
                     </a>
                     <a class="button" href="https://twitter.com/thesephist" target="_blank">
                         <span class="mobile-hidden">Made by</span> @thesephist
                     </a>
                     <a class="button" href="https://github.com/thesephist/codeframe" target="_blank">
-                        <span class="mobile-hidden">View Source on</span> Github
+                        <span class="mobile-hidden">View Source on</span> GitHub
                     </a>
                 </nav>
             </header>
             <main>
                 ${this.preview.node}
                 ${this.editor.node}
+                <a class="button fullButton"
+                    title="Open in a new window"
+                    target="_blank"
+                    href="${window.location.href}">
+                    Open in new tab
+                </a>
                 ${this.grabDragging ? jdom`<div class="grabHandleShadow"></div>` : ''}
                 <div
                     class="grabHandle mobile-hidden"
