@@ -17,6 +17,8 @@ main,
 footer,
 input,
 select,
+iframe,
+button,
 textarea {
     box-sizing: border-box;
 }

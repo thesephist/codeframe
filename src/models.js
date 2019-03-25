@@ -18,6 +18,7 @@ class SourceFileStore {
         if (!fs.existsSync(this.basePath)) {
             fs.mkdirSync(this.basePath);
         }
+        this.create('');
     }
 
     getPathFromHash(hash) {

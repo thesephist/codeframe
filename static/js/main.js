@@ -4,7 +4,9 @@ const {
     Router,
 } = Torus;
 
-const TEST_HASH = 'tHcltW+0gIR7';
+const BLANK_HASH = 'e3b0c44298fc';
+
+const MOBILE_WIDTH = 750;
 
 const cfFetch = (uri, options) => {
     return fetch(uri, {
@@ -37,8 +39,14 @@ class PreviewPane extends StyledComponent {
         justify-content: space-between;
         align-items: flex-start;
         height: 100%;
-        width: 100%;
+        width: 50%;
         flex-grow: 1;
+        flex-shrink: 1;
+        overflow: hidden;
+        @media (max-width: ${MOBILE_WIDTH}px) {
+            width: 100% !important;
+            height: 50% !important;
+        }
         .urlBar {
             height: 36px;
         }
@@ -74,6 +82,13 @@ class Editor extends StyledComponent {
         this.switchMode('html');
 
         this.bind(frameRecord, data => this.render(data));
+
+        this.resizeEditor = this.resizeEditor.bind(this);
+        window.addEventListener('resize', this.resizeEditor);
+    }
+
+    remove() {
+        window.removeEventListener('resize', this.resizeEditor)
     }
 
     initMonaco() {
@@ -91,6 +106,10 @@ class Editor extends StyledComponent {
             });
             this.monacoEditor.layout();
         });
+    }
+
+    resizeEditor() {
+        this.monacoEditor.layout();
     }
 
     switchMode(mode) {
@@ -124,8 +143,14 @@ class Editor extends StyledComponent {
     styles() {
         return css`
         height: 100%;
-        width: 100%;
+        width: 50%;
         flex-grow: 1;
+        flex-shrink: 1;
+        overflow: hidden;
+        @media (max-width: ${MOBILE_WIDTH}px) {
+            width: 100% !important;
+            height: 50% !important;
+        }
         .editorContainer {
             height: 100%;
             width: 100%;
@@ -146,7 +171,7 @@ class Editor extends StyledComponent {
                     <button class="tab-html" onclick="${() => this.switchMode('html')}">HTML</button>
                     <button class="tab-js" onclick="${() => this.switchMode('javascript')}">JAVASCRIPT</button>
                 </div>
-                <button onclick="${() => this.saveFrames()}">Save</button>
+                <button onclick="${() => this.saveFrames()}">Save ${'&'} Reload</button>
             </div>
             ${this.monacoContainer}
         </div>`;
@@ -176,6 +201,9 @@ class Workspace extends StyledComponent {
             align-items: flex-start;
             flex-grow: 1;
             overflow: hidden;
+            @media (max-width: ${MOBILE_WIDTH}px) {
+                flex-direction: column !important;
+            }
         }
         `;
     }
@@ -215,7 +243,7 @@ class App extends StyledComponent {
                     break;
                 default:
                     // open blank files?
-                    router.go(`/h/${TEST_HASH}/j/${TEST_HASH}/edit`);
+                    router.go(`/h/${BLANK_HASH}/j/${BLANK_HASH}/edit`);
                     break;
             }
         })
