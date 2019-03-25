@@ -19,7 +19,7 @@ api.frame.getPage = async params => {
     return `
         <!DOCTYPE html>
         <html>
-        <head><title>Frame ${params.htmlFrameHash}/${params.jsFrameHash} CodeFrame</title></head>
+        <head><title>Live Frame | CodeFrame</title></head>
         <body>
         ${htmlFrame}
         <script>${jsFrame}</script>

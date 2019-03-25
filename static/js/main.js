@@ -24,15 +24,42 @@ const api = {
     }),
 }
 
-const PreviewPane = (htmlFrameHash, jsFrameHash) => {
-    return jdom`<iframe
-    style="
+class PreviewPane extends StyledComponent {
+
+    init(frameRecord) {
+        this.bind(frameRecord, data => this.render(data));
+    }
+
+    styles() {
+        return css`
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-start;
         height: 100%;
         width: 100%;
         flex-grow: 1;
-    "
-    src="/f/${htmlFrameHash}/${jsFrameHash}.html"
-    />`;
+        .urlBar {
+            height: 36px;
+        }
+        iframe {
+            height: 100%;
+            width: 100%;
+            flex-grow: 1;
+        }
+        `;
+    }
+
+    compose(data) {
+        const url = `${window.location.origin}/f/${data.htmlFrameHash}/${data.jsFrameHash}.html`;
+        return jdom`<div class="previewPanel">
+            <div class="urlBar">
+                <a target="_blank" href="${url}" noreferer noopener>${url}</a>
+            </div>
+            <iframe src=${url} />
+        </div>`;
+    }
+
 }
 
 class Editor extends StyledComponent {
@@ -130,6 +157,7 @@ class Editor extends StyledComponent {
 class Workspace extends StyledComponent {
 
     init(frameRecord) {
+        this.preview = new PreviewPane(frameRecord);
         this.editor = new Editor(frameRecord);
 
         this.bind(frameRecord, data => this.render(data));
@@ -160,7 +188,7 @@ class Workspace extends StyledComponent {
                 </div>
             </header>
             <main>
-                ${PreviewPane(data.htmlFrameHash, data.jsFrameHash)}
+                ${this.preview.node}
                 ${this.editor.node}
             </main>
         </div>`;
