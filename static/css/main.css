@@ -41,5 +41,105 @@ p {
 }
 
 a {
-    color: var(--rb-dark-primary);
+    color: var(--cf-black);
+    text-decoration: none;
+}
+
+/* VARIABLES */
+
+body {
+    --cf-black: #333;
+    --cf-accent: #08a773;
+    --cf-background: #a7e0ce;
+}
+
+@media (max-width: 750px) {
+    .mobile-hidden {
+        display: none;
+    }
+}
+
+@media (min-width: 750px) {
+    .desktop-hidden {
+        display: none;
+    }
+}
+
+/* BRAND STYLES */
+
+.button {
+    display: block;
+    border: 3px solid var(--cf-black);
+    border-radius: 3px;
+    padding: 4px 8px;
+    background: #fff;
+    font-weight: bold;
+    cursor: pointer;
+
+    position: relative;
+    top: -2px;
+    left: -2px;
+    transition: transform .2s;
+    margin: 8px 6px 10px 6px;
+    z-index: 1;
+}
+
+.button::before {
+    content: '';
+    background: #fff;
+    border: 3px solid var(--cf-black);
+    border-radius: 3px;
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    height: 100%;
+    width: 100%;
+    z-index: -1;
+}
+
+.button:hover,
+.button:focus {
+    transform: translate(2px, 2px);
+}
+
+.button::after {
+    content: '';
+    display: block;
+    background: #555;
+    border: 3px solid var(--cf-black);
+    border-radius: 3px;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    right: 0;
+    z-index: -2;
+    transition: transform .2s;
+}
+
+.button:hover::after,
+.button:focus::after {
+    transform: translate(-2px, -3px);
+}
+
+.button:active {
+    transform: translate(3px, 3px);
+}
+
+.button:active::after {
+    transform: translate(-4px, -4px);
+}
+
+.button.active {
+    color: #fff;
+    background: var(--cf-accent);
+}
+
+.button.active::before {
+    background: var(--cf-accent);
+}
+
+.button:focus {
+    outline: none;
 }

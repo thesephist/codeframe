@@ -43,12 +43,41 @@ class PreviewPane extends StyledComponent {
         flex-grow: 1;
         flex-shrink: 1;
         overflow: hidden;
+        border-right: 2px solid var(--cf-black);
         @media (max-width: ${MOBILE_WIDTH}px) {
             width: 100% !important;
             height: 50% !important;
+            border-right: 0 !important;
+            border-bottom: 2px solid var(--cf-black);
         }
         .urlBar {
-            height: 36px;
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            padding: 0 3px;
+            border-bottom: 4px dotted var(--cf-black);
+            .inputContainer {
+                box-sizing: content-box;
+                flex-grow: 1;
+                flex-shrink: 1;
+            }
+            input {
+                display: block;
+                font-size: .75rem;
+                font-weight: bold;
+                height: 100%;
+                width: 100%;
+                box-shadow: none;
+                outline: none;
+                border: 0;
+                padding: 0;
+                font-weight: normal;
+                font-family: 'Menlo', 'Monaco', monospace;
+            }
+            a {
+                font-size: .75rem;
+                flex-grow: 0;
+            }
         }
         iframe {
             height: 100%;
@@ -65,7 +94,10 @@ class PreviewPane extends StyledComponent {
         const url = `${window.location.origin}/f/${data.htmlFrameHash}/${data.jsFrameHash}.html`;
         return jdom`<div class="previewPanel">
             <div class="urlBar">
-                <a target="_blank" href="${url}" noreferer noopener>${url}</a>
+                <div class="button inputContainer">
+                    <input value="${url}" onfocus="${evt => evt.target.select()}" />
+                </div>
+                <a class="button" target="_blank" href="${url}" noreferer noopener>Preview</a>
             </div>
             <iframe src=${url} />
         </div>`;
@@ -140,6 +172,7 @@ class Editor extends StyledComponent {
             monaco.editor.setModelLanguage(this.monacoEditor.getModel(), mode);
             this.monacoEditor.setValue(this.frames[mode]);
         }
+        this.render();
     }
 
     async saveFrames() {
@@ -166,19 +199,33 @@ class Editor extends StyledComponent {
         flex-grow: 1;
         flex-shrink: 1;
         overflow: hidden;
+        border-left: 2px solid var(--cf-black);
         @media (max-width: ${MOBILE_WIDTH}px) {
             width: 100% !important;
             height: 50% !important;
+            border-left: 0 !important;
+            border-top: 2px solid var(--cf-black);
         }
         .editorContainer {
             height: 100%;
             width: 100%;
+            padding-top: 8px;
         }
         .top-bar {
             display: flex;
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
+            padding: 0 3px;
+            border-bottom: 4px dotted var(--cf-black);
+        }
+        .tabs {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+        .button {
+            font-size: .75rem;
         }
         `;
     }
@@ -187,10 +234,18 @@ class Editor extends StyledComponent {
         return jdom`<div class="editor">
             <div class="top-bar">
                 <div class="tabs">
-                    <button class="tab-html" onclick="${() => this.switchMode('html')}">HTML</button>
-                    <button class="tab-js" onclick="${() => this.switchMode('javascript')}">JAVASCRIPT</button>
+                    <button
+                        class="button ${this.mode === 'html' ? 'active' : ''} tab-html"
+                        onclick="${() => this.switchMode('html')}">
+                        HTML
+                    </button>
+                    <button
+                        class="button ${this.mode === 'javascript' ? 'active' : ''} tab-js"
+                        onclick="${() => this.switchMode('javascript')}">
+                        JavaScript
+                    </button>
                 </div>
-                <button onclick="${() => this.saveFrames()}">Save ${'&'} Reload</button>
+                <button class="button" onclick="${() => this.saveFrames()}">Save ${'&'} Reload</button>
             </div>
             ${this.monacoContainer}
         </div>`;
@@ -213,6 +268,24 @@ class Workspace extends StyledComponent {
         height: 100%;
         display: flex;
         flex-direction: column;
+        header {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px;
+            background: var(--cf-background);
+            border-bottom: 4px solid var(--cf-black);
+            @media (max-width: ${MOBILE_WIDTH}px) {
+                padding: 0 !important;
+            }
+        }
+        nav {
+            display: flex;
+            flex-direction: row;
+            flex-shrink: 1;
+            overflow-x: auto;
+        }
         main {
             display: flex;
             flex-direction: row;
@@ -224,10 +297,8 @@ class Workspace extends StyledComponent {
                 flex-direction: column !important;
             }
         }
-        header {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
+        .newButton {
+            color: var(--cf-accent);
         }
         `;
     }
@@ -236,10 +307,18 @@ class Workspace extends StyledComponent {
         return jdom`<div class="workspace">
             <header>
                 <div class="logo">
-                    <a href="/">Codeframe</a>
+                    <a class="button" href="/">Codeframe</a>
                 </div>
                 <nav>
-                    <a href="https://github.com/thesephist/codeframe" target="_blank">on Github</a>
+                    <a class="button newButton" href="https://github.com/thesephist/codeframe" target="_blank">
+                        New <span class="mobile-hidden">Codeframe</span>
+                    </a>
+                    <a class="button" href="https://twitter.com/thesephist" target="_blank">
+                        <span class="mobile-hidden">Made by</span> @thesephist
+                    </a>
+                    <a class="button" href="https://github.com/thesephist/codeframe" target="_blank">
+                        <span class="mobile-hidden">View Source on</span> Github
+                    </a>
                 </nav>
             </header>
             <main>
