@@ -97,7 +97,7 @@ module.exports = {
         ],
         'function-paren-newline': 'off',
         'generator-star-spacing': 'error',
-        'global-require': 'error',
+        'global-require': 'off', // monaco uses requirejs
         'guard-for-in': 'off',
         'handle-callback-err': 'error',
         'id-blacklist': 'error',
@@ -299,6 +299,7 @@ module.exports = {
             'single',
             {
                 'avoidEscape': true,
+                'allowTemplateLiterals': true,
             },
         ],
         'radix': 'error',

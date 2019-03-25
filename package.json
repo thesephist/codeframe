@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node src/index.js",
-    "lint": "eslint ./src/*.js ./static/js/*.js templates/*.js"
+    "lint": "eslint ./src/*.js ./static/js/*.js"
   },
   "dependencies": {
     "body-parser": "^1.18.3",

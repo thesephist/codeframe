@@ -8,7 +8,7 @@ const hashFile = contents => {
     const hash = crypto.createHash('sha256');
     hash.update(contents);
     // first 12 chars of the hex digest
-    return 'cf_' + hash.digest('base64').substr(0, 12);
+    return hash.digest('hex').substr(0, 12);
 }
 
 class SourceFileStore {
@@ -20,8 +20,12 @@ class SourceFileStore {
         }
     }
 
+    getPathFromHash(hash) {
+        return path.join(this.basePath, `cf_${hash}.frame`);
+    }
+
     getHashedFilePath(contents) {
-        return path.join(this.basePath, `${hashFile(contents)}.frame`);
+        return this.getPathFromHash(hashFile(contents));
     }
 
     has(sourceFilePath) {
@@ -32,9 +36,9 @@ class SourceFileStore {
         });
     }
 
-    getFromFS(sourceFilePath) {
+    getFromFS(frameHash) {
         return new Promise((res, rej) => {
-            fs.readFile(sourceFilePath, (err, data) => {
+            fs.readFile(this.getPathFromHash(frameHash), 'utf8', (err, data) => {
                 if (err) {
                     rej(err);
                 } else {

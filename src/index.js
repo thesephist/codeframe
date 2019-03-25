@@ -10,11 +10,11 @@ app.use(bodyParser.text({
 }));
 
 const api = require('./api.js');
-const views = require('./views.js');
 
 // STATIC ASSETS
 const STATIC_PATHS = {
     '/': 'index.html',
+    '/new': 'editor.html',
     '/h/:htmlFrameHash/j/:jsFrameHash/edit': 'editor.html',
 }
 const respondWith = (res, static_path) => {
@@ -40,32 +40,16 @@ for (const [uri, path] of Object.entries(STATIC_PATHS)) {
 }
 app.use('/static', express.static('static'));
 
-// VIEWS
-const VIEW_PATHS = {
-    '/base': views.baseView,
-    '/h/:htmlFrameHash/j/:jsFrameHash/': views.liveFrameView,
-}
-for (const [uri, renderer] of Object.entries(VIEW_PATHS)) {
-    app.get(uri, (req, res) => {
-        try {
-            res.set('Content-Type', 'text/html');
-            const html = renderer(req.params);
-            if (html !== false) {
-                res.send(html);
-            } else {
-                respondWith(res, '404.html');
-            }
-        } catch (e) {
-            console.error(e);
-            respondWith(res, '500.html');
-        }
-    })
-}
-
 // API
+const CONTENT_TYPES = {
+    '.js': 'text/javascript',
+    '.html': 'text/html',
+}
 const API_PATHS = {
     'GET /api/frame/:frameHash': api.frame.get,
     'POST /api/frame/': api.frame.post,
+
+    'GET /f/:htmlFrameHash/:jsFrameHash.html': api.frame.getPage,
 }
 const METHODS = ['GET', 'POST', 'PUT', 'DELETE'];
 for (const [spec, handler] of Object.entries(API_PATHS)) {
@@ -77,9 +61,17 @@ for (const [spec, handler] of Object.entries(API_PATHS)) {
         throw new Error(`Method ${method} for route ${route} is not valid`);
     }
 
+    let contentType = 'application/json';
+    for (const [ending, type] of Object.entries(CONTENT_TYPES)) {
+        if (route.endsWith(ending)) {
+            contentType = type;
+        }
+    }
+
     appMethod(route, async (req, res) => {
         try {
-            res.set('Content-Type', 'application/json');
+            res.set('Content-Type', contentType);
+            res.set('X-Frame-Options', 'SAMEORIGIN');
             const result = await handler(req.params, req.query, req.body);
             if (typeof result === 'string') {
                 res.send(result);
