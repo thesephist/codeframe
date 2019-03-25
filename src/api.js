@@ -22,6 +22,7 @@ api.frame.getPage = async params => {
         <head><title>Live Frame | CodeFrame</title></head>
         <body>
         ${htmlFrame}
+        <script src="https://unpkg.com/torus-dom/dist/index.min.js"></script>
         <script>${jsFrame}</script>
         </body>
         </html>`;

@@ -54,6 +54,9 @@ class PreviewPane extends StyledComponent {
             height: 100%;
             width: 100%;
             flex-grow: 1;
+            outline: none;
+            border: 0;
+            box-shadow: none;
         }
         `;
     }
@@ -73,15 +76,17 @@ class PreviewPane extends StyledComponent {
 class Editor extends StyledComponent {
 
     init(frameRecord) {
-        this.mode = '';
+        this.mode = 'html';
         this.frames = {
-            html: '<h1>\n\tHello, World!\n</h1>',
-            javascript: `console.log('Hello, World!');`,
+            html: '',
+            javascript: ``,
         }
         this.initMonaco();
-        this.switchMode('html');
 
-        this.bind(frameRecord, data => this.render(data));
+        this.bind(frameRecord, data => {
+            this.fetchFrames(data);
+            this.render(data);
+        });
 
         this.resizeEditor = this.resizeEditor.bind(this);
         window.addEventListener('resize', this.resizeEditor);
@@ -89,6 +94,20 @@ class Editor extends StyledComponent {
 
     remove() {
         window.removeEventListener('resize', this.resizeEditor)
+    }
+
+    fetchFrames(data) {
+        if (!this._framesFetched) {
+            if (data.htmlFrameHash) {
+                api.get(`/frame/${data.htmlFrameHash}`).then(resp => {
+                    return resp.text();
+                }).then(result => this.frames.html = result);
+                api.get(`/frame/${data.jsFrameHash}`).then(resp => {
+                    return resp.text();
+                }).then(result => this.frames.javascript = result);
+                this._framesFetched = true;
+            }
+        }
     }
 
     initMonaco() {
@@ -164,7 +183,7 @@ class Editor extends StyledComponent {
         `;
     }
 
-    compose(data) {
+    compose() {
         return jdom`<div class="editor">
             <div class="top-bar">
                 <div class="tabs">
@@ -205,15 +224,23 @@ class Workspace extends StyledComponent {
                 flex-direction: column !important;
             }
         }
+        header {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
         `;
     }
 
-    compose(data) {
+    compose() {
         return jdom`<div class="workspace">
             <header>
                 <div class="logo">
                     <a href="/">Codeframe</a>
                 </div>
+                <nav>
+                    <a href="https://github.com/thesephist/codeframe" target="_blank">on Github</a>
+                </nav>
             </header>
             <main>
                 ${this.preview.node}
