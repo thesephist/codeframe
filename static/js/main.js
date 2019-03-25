@@ -26,12 +26,33 @@ const api = {
     }),
 }
 
+const now = () => new Date().getTime();
+
+const debounce = (fn, delayMillis) => {
+    let lastRun = 0;
+    let to = null;
+    return (...args) => {
+        clearTimeout(to);
+        const dfn = () => {
+            lastRun = now();
+            fn(...args);
+        }
+        if (now() - lastRun > delayMillis) {
+            dfn()
+        } else {
+            to = setTimeout(dfn, delayMillis);
+        }
+    }
+}
+
 class PreviewPane extends StyledComponent {
 
     init(frameRecord) {
         this.paneWidth = 50;
         this.iframe = document.createElement('iframe');
         this.bind(frameRecord, data => this.render(data));
+
+        this.selectInput = this.selectInput.bind(this);
     }
 
     setWidth(width) {
@@ -98,6 +119,10 @@ class PreviewPane extends StyledComponent {
         `;
     }
 
+    selectInput(evt) {
+        evt.target.select();
+    }
+
     compose(data) {
         const url = `${window.location.origin}/f/${data.htmlFrameHash}/${data.jsFrameHash}.html`;
         if (this._lastUrl !== url) {
@@ -107,7 +132,7 @@ class PreviewPane extends StyledComponent {
         return jdom`<div class="previewPanel" style="width:${this.paneWidth}%">
             <div class="urlBar">
                 <div class="button inputContainer">
-                    <input value="${url}" onfocus="${evt => evt.target.select()}" />
+                    <input value="${url}" onfocus="${this.selectInput}" />
                 </div>
                 <a class="button" target="_blank" href="${url}" noreferer noopener>Preview</a>
             </div>
@@ -133,8 +158,12 @@ class Editor extends StyledComponent {
             this.render(data);
         });
 
-        this.resizeEditor = this.resizeEditor.bind(this);
+        this.resizeEditor = debounce(this.resizeEditor.bind(this), 250);
         window.addEventListener('resize', this.resizeEditor);
+
+        this.switchHTMLMode = this.switchMode.bind(this, 'html');
+        this.switchJSMode = this.switchMode.bind(this, 'javascript');
+        this.saveFrames = this.saveFrames.bind(this);
     }
 
     remove() {
@@ -174,11 +203,13 @@ class Editor extends StyledComponent {
                 language: this.mode,
                 value: this.frames[this.mode],
             });
+            this.render();
             this.monacoEditor.layout();
         });
     }
 
     resizeEditor() {
+        console.log('layout');
         this.monacoEditor.layout();
     }
 
@@ -216,6 +247,8 @@ class Editor extends StyledComponent {
         flex-shrink: 1;
         overflow: hidden;
         border-left: 2px solid var(--cf-black);
+        display: flex;
+        flex-direction: column;
         @media (max-width: ${MOBILE_WIDTH}px) {
             width: 100% !important;
             height: 50% !important;
@@ -239,11 +272,20 @@ class Editor extends StyledComponent {
         .button {
             font-size: .75rem;
         }
-        .editorContainer {
+        .editorContainer, .ready {
             height: 100%;
             width: 100%;
-            padding-top: 8px;
             flex-shrink: 1;
+        }
+        .ready {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            color: #555;
+            em {
+                display: block;
+            }
         }
         `;
     }
@@ -254,18 +296,20 @@ class Editor extends StyledComponent {
                 <div class="tabs">
                     <button
                         class="button ${this.mode === 'html' ? 'active' : ''} tab-html"
-                        onclick="${() => this.switchMode('html')}">
+                        onclick="${this.switchHTMLMode}">
                         HTML
                     </button>
                     <button
                         class="button ${this.mode === 'javascript' ? 'active' : ''} tab-js"
-                        onclick="${() => this.switchMode('javascript')}">
+                        onclick="${this.switchJSMode}">
                         JavaScript
                     </button>
                 </div>
-                <button class="button" onclick="${() => this.saveFrames()}">Save ${'&'} Reload</button>
+                <button class="button" onclick="${this.saveFrames}">Save ${'&'} Reload</button>
             </div>
-            ${this.monacoContainer}
+            ${this.monacoEditor ? this.monacoContainer : (
+                jdom`<div class="ready"><em>Getting your code ready...</em></div>`
+            )}
         </div>`;
     }
 
@@ -393,7 +437,7 @@ class Workspace extends StyledComponent {
                     <a class="button" href="/">Codeframe</a>
                 </div>
                 <nav>
-                    <a class="button newButton" href="https://github.com/thesephist/codeframe" target="_blank">
+                    <a class="button newButton" href="/new" target="_blank">
                         New <span class="mobile-hidden">Codeframe</span>
                     </a>
                     <a class="button" href="https://twitter.com/thesephist" target="_blank">
