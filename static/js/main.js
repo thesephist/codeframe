@@ -62,6 +62,7 @@ class PreviewPane extends StyledComponent {
             width: 100%;
             padding: 0 3px;
             border-bottom: 4px dotted var(--cf-black);
+            flex-shrink: 0;
             .inputContainer {
                 box-sizing: content-box;
                 flex-grow: 1;
@@ -92,6 +93,7 @@ class PreviewPane extends StyledComponent {
             outline: none;
             border: 0;
             box-shadow: none;
+            flex-shrink: 1;
         }
         `;
     }
@@ -183,12 +185,10 @@ class Editor extends StyledComponent {
     switchMode(mode) {
         if (this.monacoEditor) {
             this.frames[this.mode] = this.monacoEditor.getValue();
-        }
-        this.mode = mode;
-        if (this.monacoEditor) {
             monaco.editor.setModelLanguage(this.monacoEditor.getModel(), mode);
             this.monacoEditor.setValue(this.frames[mode]);
         }
+        this.mode = mode;
         this.render();
     }
 
@@ -222,11 +222,6 @@ class Editor extends StyledComponent {
             border-left: 0 !important;
             border-top: 2px solid var(--cf-black);
         }
-        .editorContainer {
-            height: 100%;
-            width: 100%;
-            padding-top: 8px;
-        }
         .top-bar {
             display: flex;
             flex-direction: row;
@@ -234,6 +229,7 @@ class Editor extends StyledComponent {
             align-items: center;
             padding: 0 3px;
             border-bottom: 4px dotted var(--cf-black);
+            flex-shrink: 0;
         }
         .tabs {
             display: flex;
@@ -242,6 +238,12 @@ class Editor extends StyledComponent {
         }
         .button {
             font-size: .75rem;
+        }
+        .editorContainer {
+            height: 100%;
+            width: 100%;
+            padding-top: 8px;
+            flex-shrink: 1;
         }
         `;
     }
@@ -319,6 +321,7 @@ class Workspace extends StyledComponent {
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
+            flex-shrink: 0;
             padding: 4px;
             background: var(--cf-background);
             border-bottom: 4px solid var(--cf-black);
@@ -340,6 +343,8 @@ class Workspace extends StyledComponent {
             flex-grow: 1;
             overflow: hidden;
             position: relative;
+            height: 100%;
+            flex-shrink: 1;
             @media (max-width: ${MOBILE_WIDTH}px) {
                 flex-direction: column !important;
             }
@@ -354,13 +359,26 @@ class Workspace extends StyledComponent {
             transform: translate(-50%, -50%);
             border-radius: 4px;
             width: 8px;
-            height: 48px;
+            height: 56px;
             background: #fff;
             border: 3px solid var(--cf-black);
             cursor: ew-resize;
+            z-index: 2000;
+            &:hover {
+                background: var(--cf-background);
+            }
             &:active {
                 background: var(--cf-accent);
             }
+        }
+        .grabHandleShadow {
+            background: rgba(0, 0, 0, .1);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1000;
         }
         `;
     }
@@ -368,7 +386,8 @@ class Workspace extends StyledComponent {
     compose() {
         return jdom`
         <div class="workspace"
-            onmousemove="${this.grabDragging ? this.handleGrabMousemove : ''}">
+            onmousemove="${this.grabDragging ? this.handleGrabMousemove : ''}"
+            onmouseup="${this.grabDragging ? this.handleGrabMouseup : ''}">
             <header>
                 <div class="logo">
                     <a class="button" href="/">Codeframe</a>
@@ -388,11 +407,11 @@ class Workspace extends StyledComponent {
             <main>
                 ${this.preview.node}
                 ${this.editor.node}
+                ${this.grabDragging ? jdom`<div class="grabHandleShadow"></div>` : ''}
                 <div
                     class="grabHandle mobile-hidden"
                     style="left:${this.paneSplit}%"
-                    onmousedown="${this.handleGrabMousedown}"
-                    onmouseup="${this.handleGrabMouseup}">
+                    onmousedown="${this.handleGrabMousedown}">
                 </div>
             </main>
         </div>`;
