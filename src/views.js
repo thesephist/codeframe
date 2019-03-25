@@ -4,6 +4,11 @@ const baseView = () => {
     return baseTpl();
 }
 
+const liveFrameView = () => {
+    return 'live site';
+}
+
 module.exports = {
     baseView,
+    liveFrameView,
 };
