@@ -368,9 +368,6 @@ class Workspace extends StyledComponent {
             padding: 4px;
             background: var(--cf-background);
             border-bottom: 4px solid var(--cf-black);
-            @media (max-width: ${MOBILE_WIDTH}px) {
-                padding: 0 !important;
-            }
         }
         nav {
             display: flex;
@@ -391,6 +388,9 @@ class Workspace extends StyledComponent {
             @media (max-width: ${MOBILE_WIDTH}px) {
                 flex-direction: column !important;
             }
+        }
+        .button {
+            white-space: nowrap;
         }
         .newButton {
             color: var(--cf-accent);
@@ -437,7 +437,7 @@ class Workspace extends StyledComponent {
                 </div>
                 <nav>
                     <a class="button newButton" href="/new" target="_blank">
-                        New <span class="mobile-hidden">Codeframe</span>
+                        + New <span class="mobile-hidden">Codeframe</span>
                     </a>
                     <a class="button" href="https://twitter.com/thesephist" target="_blank">
                         <span class="mobile-hidden">Made by</span> @thesephist

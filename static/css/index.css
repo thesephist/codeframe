@@ -1,0 +1,113 @@
+/* INDEX PAGE STYLES */
+header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+    padding: 4px;
+    background: var(--cf-background);
+    border-bottom: 4px solid var(--cf-black);
+}
+
+nav {
+    display: flex;
+    flex-direction: row;
+    flex-shrink: 1;
+    overflow-x: auto;
+}
+
+.button {
+    white-space: nowrap;
+}
+
+.newButton {
+    color: var(--cf-accent);
+}
+
+/* HERO */
+
+.textOverlay {
+    width: 94%;
+    max-width: 720px;
+    margin: 52px auto;
+}
+
+.pretag {
+    font-size: 2em;
+    font-weight: bold;
+    color: var(--cf-accent);
+    margin-top: 0;
+    margin-bottom: 24px;
+}
+
+.tagline {
+    font-size: 4em;
+    font-weight: bold;
+    margin-bottom: 32px;
+}
+
+.ctaButtons {
+    display: flex;
+    font-size: 1.6em;
+    flex-direction: row;
+}
+
+section h2 {
+    display: inline-block;
+    font-weight: bold;
+    font-size: 2em;
+    position: relative;
+    margin: 12px 0;
+    z-index: 1;
+}
+
+section h2::after {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 0 8px;
+    transform: translateX(-8px);
+    border-radius: 3px;
+    content: '';
+    display: block;
+    height: 50%;
+    width: 100%;
+    background: var(--cf-background);
+    z-index: -1;
+}
+
+section p {
+    margin-bottom: 24px;
+}
+
+.triple {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.triple .item {
+    flex-grow: 1;
+    flex-shrink: 1;
+    font-weight: normal;
+    width: calc(100% - 12px);
+}
+
+.triple h3 {
+    font-weight: bold;
+}
+
+@media (max-width: 750px) {
+    .triple {
+        flex-direction: column;
+    }
+}
+
+footer a {
+    text-decoration: underline;
+    color: var(--cf-accent);
+    cursor: pointer;
+}
