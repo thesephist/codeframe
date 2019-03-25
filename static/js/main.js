@@ -209,7 +209,6 @@ class Editor extends StyledComponent {
     }
 
     resizeEditor() {
-        console.log('layout');
         this.monacoEditor.layout();
     }
 
