@@ -29,7 +29,14 @@ const api = {
 class PreviewPane extends StyledComponent {
 
     init(frameRecord) {
+        this.paneWidth = 50;
+        this.iframe = document.createElement('iframe');
         this.bind(frameRecord, data => this.render(data));
+    }
+
+    setWidth(width) {
+        this.paneWidth = width;
+        this.render();
     }
 
     styles() {
@@ -39,7 +46,6 @@ class PreviewPane extends StyledComponent {
         justify-content: space-between;
         align-items: flex-start;
         height: 100%;
-        width: 50%;
         flex-grow: 1;
         flex-shrink: 1;
         overflow: hidden;
@@ -92,14 +98,18 @@ class PreviewPane extends StyledComponent {
 
     compose(data) {
         const url = `${window.location.origin}/f/${data.htmlFrameHash}/${data.jsFrameHash}.html`;
-        return jdom`<div class="previewPanel">
+        if (this._lastUrl !== url) {
+            this.iframe.src = url;
+            this._lastUrl = url;
+        }
+        return jdom`<div class="previewPanel" style="width:${this.paneWidth}%">
             <div class="urlBar">
                 <div class="button inputContainer">
                     <input value="${url}" onfocus="${evt => evt.target.select()}" />
                 </div>
                 <a class="button" target="_blank" href="${url}" noreferer noopener>Preview</a>
             </div>
-            <iframe src=${url} />
+            ${this.iframe}
         </div>`;
     }
 
@@ -108,6 +118,7 @@ class PreviewPane extends StyledComponent {
 class Editor extends StyledComponent {
 
     init(frameRecord) {
+        this.paneWidth = 50;
         this.mode = 'html';
         this.frames = {
             html: '',
@@ -126,6 +137,12 @@ class Editor extends StyledComponent {
 
     remove() {
         window.removeEventListener('resize', this.resizeEditor)
+    }
+
+    setWidth(width) {
+        this.paneWidth = width;
+        this.resizeEditor();
+        this.render();
     }
 
     fetchFrames(data) {
@@ -195,7 +212,6 @@ class Editor extends StyledComponent {
     styles() {
         return css`
         height: 100%;
-        width: 50%;
         flex-grow: 1;
         flex-shrink: 1;
         overflow: hidden;
@@ -231,7 +247,7 @@ class Editor extends StyledComponent {
     }
 
     compose() {
-        return jdom`<div class="editor">
+        return jdom`<div class="editor" style="width:${this.paneWidth}%">
             <div class="top-bar">
                 <div class="tabs">
                     <button
@@ -256,10 +272,40 @@ class Editor extends StyledComponent {
 class Workspace extends StyledComponent {
 
     init(frameRecord) {
+        this.paneSplit = 50;
         this.preview = new PreviewPane(frameRecord);
         this.editor = new Editor(frameRecord);
 
         this.bind(frameRecord, data => this.render(data));
+
+        this.grabDragging = false;
+        this.handleGrabMousedown = this.handleGrabMousedown.bind(this);
+        this.handleGrabMousemove = this.handleGrabMousemove.bind(this);
+        this.handleGrabMouseup = this.handleGrabMouseup.bind(this);
+    }
+
+    setPaneWidth(width) {
+        this.paneSplit = width;
+        this.preview.setWidth(width);
+        this.editor.setWidth(100 - width);
+        this.render();
+    }
+
+    handleGrabMousedown() {
+        this.grabDragging = true;
+        this.render();
+    }
+
+    handleGrabMousemove(evt) {
+        if (this.grabDragging) {
+            evt.preventDefault();
+            this.setPaneWidth(evt.clientX / window.innerWidth * 100);
+        }
+    }
+
+    handleGrabMouseup(evt) {
+        this.grabDragging = false;
+        this.render();
     }
 
     styles() {
@@ -293,6 +339,7 @@ class Workspace extends StyledComponent {
             align-items: flex-start;
             flex-grow: 1;
             overflow: hidden;
+            position: relative;
             @media (max-width: ${MOBILE_WIDTH}px) {
                 flex-direction: column !important;
             }
@@ -300,11 +347,28 @@ class Workspace extends StyledComponent {
         .newButton {
             color: var(--cf-accent);
         }
+        .grabHandle {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 4px;
+            width: 8px;
+            height: 48px;
+            background: #fff;
+            border: 3px solid var(--cf-black);
+            cursor: ew-resize;
+            &:active {
+                background: var(--cf-accent);
+            }
+        }
         `;
     }
 
     compose() {
-        return jdom`<div class="workspace">
+        return jdom`
+        <div class="workspace"
+            onmousemove="${this.grabDragging ? this.handleGrabMousemove : ''}">
             <header>
                 <div class="logo">
                     <a class="button" href="/">Codeframe</a>
@@ -324,6 +388,12 @@ class Workspace extends StyledComponent {
             <main>
                 ${this.preview.node}
                 ${this.editor.node}
+                <div
+                    class="grabHandle mobile-hidden"
+                    style="left:${this.paneSplit}%"
+                    onmousedown="${this.handleGrabMousedown}"
+                    onmouseup="${this.handleGrabMouseup}">
+                </div>
             </main>
         </div>`;
     }
