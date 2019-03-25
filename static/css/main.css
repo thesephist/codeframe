@@ -1,0 +1,43 @@
+/* RESETS */
+body {
+    font-family: system-ui, 'Helvetica Neue', 'Arial', sans-serif;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-sizing: border-box;
+}
+
+div,
+header,
+main,
+footer,
+input,
+select,
+textarea {
+    box-sizing: border-box;
+}
+
+h1,
+h2,
+h3 {
+    font-weight: normal;
+}
+
+h1,
+h2,
+h3,
+p {
+    line-height: 1.5em;
+}
+
+p {
+    margin-bottom: 10px;
+}
+
+a {
+    color: var(--rb-dark-primary);
+}

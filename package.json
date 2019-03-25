@@ -1,0 +1,16 @@
+{
+  "name": "codeframe",
+  "version": "0.1.0",
+  "description": "The fastest, easiest way to build and deploy quick static webpages",
+  "main": "src/index.js",
+  "repository": "git@github.com:thesephist/codeframe.git",
+  "author": "Linus Lee <linus@thesephist.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4"
+  }
+}
