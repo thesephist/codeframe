@@ -132,6 +132,9 @@ class PreviewPane extends StyledComponent {
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            &:active {
+                color: #000;
+            }
         }
         `;
     }
