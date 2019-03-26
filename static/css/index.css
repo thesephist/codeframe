@@ -194,6 +194,17 @@ footer p {
 }
 
 @media (min-width: 751px) {
+    header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        box-shadow: 0 4px 0 rgba(0, 0, 0, .2);
+    }
+    .hero {
+        margin-top: 86px;
+    }
     .triple .item:first-child {
         margin-top: -2px;
         transform: rotate(-1deg);

@@ -6,9 +6,12 @@ const config = require('../config.js');
 
 const STARTER_FIXTURES = [
     'blank.frame',
+    'button-effects.html',
+    'filters-shadows.html',
+    'flexbox.html',
     'helloworld.html',
     'helloworld.js',
-    'styles.html',
+    'simple-blog.html',
 ];
 
 const hashFile = contents => {

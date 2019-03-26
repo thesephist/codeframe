@@ -1,0 +1,103 @@
+<style>
+    body {
+        font-family: system-ui, sans-serif;
+        max-width: 800px;
+        width: 94%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    h2 {
+        color: #555;
+        font-weight: normal;
+    }
+
+    button {
+        font-size: 1em;
+        border: 0;
+        height: 50px;
+        width: 200px;
+        background: #9868e4;
+        border: 4px solid #333;
+        color: #fff;
+        font-weight: bold;
+        text-align: center;
+        box-sizing: border-box;
+        padding: 0;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .opacity {
+        transition: opacity .2s;
+    }
+
+    .opacity:hover,
+    .opacity:focus {
+        opacity: .8;
+    }
+
+    .opacity:active {
+        opacity: .5;
+    }
+
+    .transforms {
+        transition: transform .2s;
+    }
+
+    .transforms:hover {
+        transform: translateY(-2px) scale(1.05);
+    }
+
+    .transforms:active {
+        transform: translateY(-2px) scale(1);
+    }
+
+    .gradient-bg:hover {
+        background: linear-gradient(-45deg,
+            #924d9a,
+            #9868e4,
+            #8ba3ce);
+    }
+
+    .gradient-bg:active {
+        opacity: .8;
+    }
+
+    @keyframes wiggle {
+        0% {
+            transform: rotate(-2deg);
+        }
+
+        50% {
+            transform: rotate(2deg);
+        }
+
+        100% {
+            transform: rotate(-2deg);
+        }
+    }
+
+    .animation:hover {
+        animation: wiggle .5s infinite;
+    }
+
+    .animation:active {
+        animation: none;
+        transform: scale(0.95);
+    }
+</style>
+
+<h1>Button Hover Effects</h1>
+
+<h2>Opacity</h2>
+<button class="opacity">Click Me!</button>
+
+<h2>Transforms</h2>
+<button class="transforms">Click Me!</button>
+
+<h2>Gradient background</h2>
+<button class="gradient-bg">Click Me!</button>
+
+<h2>Animation</h2>
+<button class="animation">Click Me!</button>

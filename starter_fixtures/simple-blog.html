@@ -1,0 +1,161 @@
+<style>
+    body {
+        font-family: system-ui, sans-serif;
+        margin: 0;
+        color: #222;
+
+        /* VARIABLES */
+        --theme-color: #e4822e;
+    }
+
+    header {
+        border-bottom: 2px solid #aaa;
+        padding: 8px 16px;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        box-sizing: border-box;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background: #fff;
+    }
+
+    .logo {
+        font-weight: bold;
+    }
+
+    header a {
+        text-decoration: none;
+        color: var(--theme-color);
+        margin: 0 4px;
+    }
+
+    header a:hover {
+        text-decoration: underline;
+    }
+
+    article,
+    footer {
+        margin-top: 24px;
+        padding: 20px;
+        width: 100%;
+        box-sizing: border-box;
+        max-width: 680px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    .subtitle {
+        font-weight: bold;
+        color: #777;
+        font-size: 1.2em;
+        margin-bottom: 36px;
+    }
+
+    p {
+        line-height: 1.5em;
+    }
+
+    .permalink {
+        float: right;
+        display: block;
+        background: var(--theme-color);
+        padding: 4px 8px;
+        color: #fff;
+        border-radius: 3px;
+        text-decoration: none;
+    }
+
+    .permalink:hover {
+        opacity: .7;
+    }
+
+    article a {
+        color: var(--theme-color);
+    }
+
+    footer {
+        font-style: italic;
+        color: #777;
+    }
+</style>
+<header>
+
+    <div class="logo">
+        <a href="#">My Blog</a>
+    </div>
+
+    <nav>
+        <a href="#about">About</a>
+        |
+        <a href="#latest">Latest</a>
+        |
+        <a href="#archive">Archive</a>
+    </nav>
+
+</header>
+
+<article>
+
+    <h1>
+        Why Codeframe?
+    </h1>
+
+    <div class="subtitle">
+        Making a tool for first-time creators
+    </div>
+
+    <a href="#permalink" class="permalink">Permalink</a>
+
+    <p>
+        So. Why did I make this? Well,
+    </p>
+    <p>
+        I like to work on side projects <em>all the time</em>. My computer is
+        littered with quick, small projects from random late nights and weekends
+        where I found some time to start hacking on random ideas entertain myself
+        or make my life less repetitive. But as I built more and more projects,
+        I saw that the least interesting part about starting a new idea –– setting
+        everything up, configuring files and scripts –– was also the biggest deterrent
+        to my creativity.
+    </p>
+    <p>
+        So I started another side project! Enter <strong class="inline fixed button">Codeframe</strong>.
+    </p>
+    <p>
+        I started building Codeframe to solve this problem: it's meant to be <strong>the fastest way
+            to go from idea to code running on a live webpage that can be shared with
+            anyone on the planet.</strong> Everything from the technical stack from top to bottom,
+        to the simplicity of the UI, to the fact that <a href="https://linus.zone/torus">Torus</a>
+        comes included into every Codeframe, is designed with the goal of speed of creativity in mind.
+    </p>
+    <p>
+        I also frequently run into opportunities to teach web design and development,
+        and find myself wanting something more lightweight and approachable than CodePen,
+        Glitch, and Repl.it, which are fantastic alternatives but often too heavy
+        or complex for beginners in web development. For these times, Codeframe is
+        meant to be a simpler, more approachable alternative.
+    </p>
+    <p>
+        But above all, <strong>Codeframe exists to make it easier to learn how to make things
+            on the web, and to make it faster and more painless to build things for the web.</strong>
+        If you're a maker of beautiful things on the Internet, I hope you give Codeframe
+        a try, and I hope you love it.
+    </p>
+    <p>
+        If you have questions, comments, or feedback, please come find me! I'm on Twitter
+        and GitHub <a href="https://twitter.com/thesephist">@thesephist</a>.
+    </p>
+
+</article>
+
+<footer>
+    &copy; Linus Lee 2019
+</footer>

@@ -1,0 +1,134 @@
+<style>
+    body {
+        font-family: system-ui, sans-serif;
+        max-width: 800px;
+        width: 94%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    p {
+        line-height: 1.5em;
+    }
+
+    code {
+        font-size: 1rem;
+        font-family: 'Menlo', 'Monaco', 'Courier', monospace;
+        color: #555;
+        font-weight: bold;
+        background: #eee;
+        border-radius: 3px;
+        padding: 3px 4px 2px 4px;
+    }
+
+    .flex-container,
+    .flex-item {
+        box-sizing: border-box;
+    }
+
+    .flex-container {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        border: 3px solid #333;
+    }
+
+    .flex-item {
+        background: orange;
+        border: 3px solid #333;
+        margin: 8px;
+        height: 50px;
+        width: 50px;
+    }
+
+    .flex-item.big {
+        height: 72px;
+        width: 72px;
+    }
+
+    /* FLEXBOX SETTINGS */
+    .centerAll {
+        justify-content: center;
+        align-items: center;
+    }
+
+    .endAll {
+        justify-content: flex-end;
+        align-items: flex-end;
+    }
+
+    .spaceAroundAll {
+        justify-content: space-around;
+        align-items: center;
+    }
+</style>
+
+<h1>Flexbox</h1>
+
+<p>
+    Flexbox is set of CSS properties that help you
+    define layout of elements on a page in one direction
+    –– either horizontally, in <code>row</code>, or vertically,
+    in <code>column</code> orientations.
+</p>
+
+<h2>Create a flexbox container</h2>
+
+<p>
+    We can change a container element into a "flex container"
+    with the <code>display: flex;</code> rule, and set the direction
+    of the flexbox with the <code>flex-direction</code> property,
+    either set to <code>row</code> or <code>column</code>.
+</p>
+
+<p>This is a row flexbox.</p>
+
+<div class="flex-container">
+    <div class="flex-item"></div>
+    <div class="flex-item big"></div>
+    <div class="flex-item"></div>
+</div>
+
+<p>
+    We can change how items are aligned using the <code>justify-content</code>
+    and <code>align-items</code> CSS properties. The first controls how items
+    are aligned in the <em>direction of the flexbox</em>, while the latter
+    controls how items are aligned <em>orthogonally to the direction of the
+        flexbox.</em>
+</p>
+
+<p>
+    This flexbox is justified to center everything.
+</p>
+
+<div class="flex-container centerAll">
+    <div class="flex-item"></div>
+    <div class="flex-item big"></div>
+    <div class="flex-item"></div>
+</div>
+
+<p>
+    This flexbox aligns everything to the end.
+</p>
+
+<div class="flex-container endAll">
+    <div class="flex-item"></div>
+    <div class="flex-item big"></div>
+    <div class="flex-item"></div>
+</div>
+
+<p>
+    This flexbox uses <code>space-around</code>, which tells
+    CSS to leave equal space between all elements in the box.
+</p>
+
+<div class="flex-container spaceAroundAll">
+    <div class="flex-item"></div>
+    <div class="flex-item big"></div>
+    <div class="flex-item"></div>
+</div>
+
+<p>
+    You can find much more information about the power of
+    flexbox layouts at sites like CSS-Tricks and MDN.
+</p>

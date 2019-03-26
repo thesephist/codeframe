@@ -1,0 +1,62 @@
+<style>
+    body {
+        font-family: system-ui, sans-serif;
+        max-width: 800px;
+        width: 94%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    p {
+        line-height: 1.5em;
+    }
+
+    h2 {
+        color: #555;
+        font-weight: normal;
+    }
+
+    .box {
+        background: orange;
+        border: 4px solid #333;
+        border-radius: 6px;
+        height: 64px;
+        width: 64px;
+        float: left;
+        margin: 12px;
+    }
+
+    .boxes {
+        overflow: hidden;
+    }
+</style>
+
+<h1>CSS Filters and Shadows</h1>
+
+<h2>CSS filter functions</h2>
+
+<p>
+    CSS includes filter effects, which we can use to add
+    special effects to our elements.
+</p>
+
+<div class="boxes">
+    <div class="box" style="filter:blur(4px)"></div>
+    <div class="box" style="filter:brightness(140%)"></div>
+    <div class="box" style="filter:brightness(60%)"></div>
+    <div class="box" style="filter:saturate(.3)"></div>
+    <div class="box" style="filter:invert(100%)"></div>
+</div>
+
+<h2>CSS box shadow</h2>
+
+<p>
+    The CSS box-shadow property can be used to add drop Shadows
+    to our elements.
+</p>
+
+<div class="boxes">
+    <div class="box" style="box-shadow: 0 2px 6px rgba(0, 0, 0, .4)"></div>
+    <div class="box" style="box-shadow: 6px 6px 0 rgba(150, 20, 0, .5)"></div>
+    <div class="box" style="box-shadow: 0 3px 12px -2px rgba(0, 0, 0, .4)"></div>
+</div>
