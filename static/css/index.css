@@ -123,6 +123,7 @@ section p {
     justify-content: space-between;
     align-items: flex-start;
     width: 100%;
+    margin-bottom: 16px;
 }
 
 .triple .item {
@@ -179,7 +180,7 @@ footer p {
 }
 
 .starterTemplates .item:hover h3::after {
-    transform: translateX(3px);
+    transform: translateX(4px);
 }
 
 @media (max-width: 500px) {
