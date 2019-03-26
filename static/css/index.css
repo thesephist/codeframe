@@ -27,10 +27,24 @@ nav {
 
 /* HERO */
 
-.textOverlay {
+.textOverlay,
+hr {
     width: 94%;
-    max-width: 800px;
-    margin: 52px auto;
+    max-width: 900px;
+}
+
+p a {
+    text-decoration: underline;
+    color: var(--cf-accent);
+    cursor: pointer;
+}
+
+.textOverlay {
+    margin: 24px auto 52px auto;
+}
+
+p {
+    max-width: 640px;
 }
 
 .pretag {
@@ -56,6 +70,7 @@ nav {
 
 .liveEditorContainer {
     min-height: 480px;
+    max-height: 600px;
     height: 52vh;
     padding: 0;
     width: calc(100% - 10px);
@@ -91,6 +106,15 @@ section h2::after {
     z-index: -1;
 }
 
+section h3 {
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+section h3 + p {
+    margin-top: 12px;
+}
+
 section p {
     margin-bottom: 24px;
 }
@@ -101,7 +125,6 @@ section p {
     justify-content: space-between;
     align-items: flex-start;
     width: 100%;
-    overflow: hidden;
 }
 
 .triple .item {
@@ -109,16 +132,41 @@ section p {
     flex-shrink: 1;
     font-weight: normal;
     width: calc(100% - 12px);
+    white-space: initial;
+    padding: 6px 10px;
 }
 
 .triple h3 {
-    font-weight: bold;
+    color: var(--cf-accent);
+    margin-top: 8px;
+    margin-bottom: 0;
+    padding-bottom: 12px;
+    border-bottom: 3px dotted var(--cf-accent);
 }
 
-footer a {
-    text-decoration: underline;
+.triple p {
+    margin: 16px 0 8px 0;
+}
+
+p strong {
+    font-weight: normal;
     color: var(--cf-accent);
-    cursor: pointer;
+}
+
+hr {
+    border: 0;
+    border-bottom: 4px dotted var(--cf-background);
+    margin-bottom: 52px;
+}
+
+footer {
+    font-style: italic;
+    color: #555;
+    text-align: right;
+}
+
+footer p {
+    max-width: unset;
 }
 
 @media (max-width: 500px) {
@@ -129,6 +177,20 @@ footer a {
     .ctaButtons .button {
         float: left;
         clear: both;
+    }
+}
+
+@media (min-width: 751px) {
+    .triple .item:first-child {
+        margin-top: -2px;
+        transform: rotate(-1deg);
+    }
+    .triple .item:nth-child(2) {
+        margin-top: 22px;
+    }
+    .triple .item:last-child {
+        margin-top: 8px;
+        transform: rotate(1deg);
     }
 }
 

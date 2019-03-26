@@ -84,6 +84,9 @@ class PreviewPane extends StyledComponent {
             padding: 0 3px;
             border-bottom: 4px dotted var(--cf-black);
             flex-shrink: 0;
+            .embedded & {
+                background: var(--cf-background);
+            }
             .inputContainer {
                 box-sizing: content-box;
                 flex-grow: 1;
@@ -262,6 +265,9 @@ class Editor extends StyledComponent {
             padding: 0 3px;
             border-bottom: 4px dotted var(--cf-black);
             flex-shrink: 0;
+            .embedded & {
+                background: var(--cf-background);
+            }
         }
         .tabs {
             display: flex;
@@ -501,7 +507,6 @@ class App extends StyledComponent {
                     });
                     break;
                 default:
-                    // open blank files?
                     router.go(`/h/${BLANK_HASH}/j/${BLANK_HASH}/edit`);
                     break;
             }
