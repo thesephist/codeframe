@@ -207,10 +207,16 @@ class Editor extends StyledComponent {
             if (data.htmlFrameHash) {
                 api.get(`/frame/${data.htmlFrameHash}`).then(resp => {
                     return resp.text();
-                }).then(result => this.frames.html = result);
+                }).then(result => {
+                    this.frames.html = result;
+                    this.render();
+                });
                 api.get(`/frame/${data.jsFrameHash}`).then(resp => {
                     return resp.text();
-                }).then(result => this.frames.javascript = result);
+                }).then(result => {
+                    this.frames.javascript = result;
+                    this.render();
+                });
                 this._framesFetched = true;
             }
         }
@@ -329,6 +335,9 @@ class Editor extends StyledComponent {
     }
 
     compose() {
+        if (this.monacoEditor) {
+            this.monacoEditor.setValue(this.frames[this.mode]);
+        }
         return jdom`<div class="editor" style="width:${this.paneWidth}%">
             <div class="top-bar">
                 <div class="tabs">
