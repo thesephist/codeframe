@@ -54,6 +54,7 @@ class PreviewPane extends StyledComponent {
         this.bind(frameRecord, data => this.render(data));
 
         this.selectInput = this.selectInput.bind(this);
+        this.handleRefresh = this.handleRefresh.bind(this);
     }
 
     setWidth(width) {
@@ -120,11 +121,19 @@ class PreviewPane extends StyledComponent {
             box-shadow: none;
             flex-shrink: 1;
         }
+        .refreshButton {
+            font-size: 16px;
+        }
         `;
     }
 
     selectInput(evt) {
         evt.target.select();
+    }
+
+    handleRefresh() {
+        this._lastUrl = '';
+        this.render();
     }
 
     compose(data) {
@@ -138,6 +147,8 @@ class PreviewPane extends StyledComponent {
                 <div class="fixed button inputContainer">
                     <input value="${url}" onfocus="${this.selectInput}" />
                 </div>
+                <button class="button refreshButton"
+                    onclick="${this.handleRefresh}">↻</button>
                 <a class="button previewButton"
                     target="_blank" href="${url}"
                     rel="noreferrer noopener">Preview</a>
@@ -279,6 +290,16 @@ class Editor extends StyledComponent {
         }
         .button {
             font-size: .75rem;
+        }
+        .editorContainer .button {
+            border: 0;
+            background: transparent;
+            height: unset;
+            width: unset;
+            &::before,
+            &::after {
+                display: none;
+            }
         }
         .editorContainer, .ready {
             height: 100%;

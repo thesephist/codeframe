@@ -7,11 +7,15 @@ const config = require('../config.js');
 const STARTER_FIXTURES = [
     'blank.frame',
     'button-effects.html',
+    'canvas.js',
     'filters-shadows.html',
     'flexbox.html',
     'helloworld.html',
     'helloworld.js',
     'simple-blog.html',
+    'interactive-input.html',
+    'interactive-input.js',
+    'see-javascript.html',
 ];
 
 const hashFile = contents => {
