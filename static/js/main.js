@@ -50,6 +50,7 @@ class PreviewPane extends StyledComponent {
     init(frameRecord) {
         this.paneWidth = 50;
         this.iframe = document.createElement('iframe');
+        this.iframe.setAttribute('frameborder', 0);
         this.bind(frameRecord, data => this.render(data));
 
         this.selectInput = this.selectInput.bind(this);
@@ -137,7 +138,9 @@ class PreviewPane extends StyledComponent {
                 <div class="fixed button inputContainer">
                     <input value="${url}" onfocus="${this.selectInput}" />
                 </div>
-                <a class="button" target="_blank" href="${url}" noreferer noopener>Preview</a>
+                <a class="button previewButton"
+                    target="_blank" href="${url}"
+                    rel="noreferrer noopener">Preview</a>
             </div>
             ${this.iframe}
         </div>`;

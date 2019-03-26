@@ -4,6 +4,13 @@ const crypto = require('crypto');
 
 const config = require('../config.js');
 
+const STARTER_FIXTURES = [
+    'blank.frame',
+    'helloworld.html',
+    'helloworld.js',
+    'styles.html',
+];
+
 const hashFile = contents => {
     const hash = crypto.createHash('sha256');
     hash.update(contents);
@@ -18,7 +25,15 @@ class SourceFileStore {
         if (!fs.existsSync(this.basePath)) {
             fs.mkdirSync(this.basePath);
         }
-        this.create('');
+        for (const fxt of STARTER_FIXTURES) {
+            fs.readFile(`starter_fixtures/${fxt}`, 'utf8', (err, data) => {
+                if (err) {
+                    console.error(err);
+                } else {
+                    this.create(data);
+                }
+            });
+        }
     }
 
     getPathFromHash(hash) {
