@@ -81,10 +81,7 @@ for (const [spec, handler] of Object.entries(API_PATHS)) {
             }
         } catch (e) {
             console.error(e);
-            res.set('Content-Type', 'application/json');
-            res.send(JSON.stringify({
-                error: '500 Server Error',
-            }));
+            res.send('error');
         }
     });
 }

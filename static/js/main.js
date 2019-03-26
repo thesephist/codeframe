@@ -122,7 +122,16 @@ class PreviewPane extends StyledComponent {
             flex-shrink: 1;
         }
         .refreshButton {
-            font-size: 16px;
+            font-size: 17px;
+            width: calc(.75rem + 17px);
+            height: calc(.75rem + 17px);
+            line-height: calc(.75rem + 18px);
+            flex-shrink: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
         `;
     }
@@ -378,7 +387,7 @@ class Workspace extends StyledComponent {
         }
     }
 
-    handleGrabMouseup(evt) {
+    handleGrabMouseup() {
         this.grabDragging = false;
         this.render();
     }

@@ -5,6 +5,7 @@ const crypto = require('crypto');
 const config = require('../config.js');
 
 const STARTER_FIXTURES = [
+    'blank-torus.js',
     'blank.frame',
     'button-effects.html',
     'canvas.js',
@@ -15,7 +16,9 @@ const STARTER_FIXTURES = [
     'simple-blog.html',
     'interactive-input.html',
     'interactive-input.js',
+    'nametag-torus.js',
     'see-javascript.html',
+    'todo-torus.js',
 ];
 
 const hashFile = contents => {
