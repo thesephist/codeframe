@@ -41,6 +41,12 @@ for (const [uri, path] of Object.entries(STATIC_PATHS)) {
 }
 app.use('/static', express.static('static'));
 
+// Easily redirect /f/*.html/edit to an editor view
+//  to edit statically rendered Codeframes.
+app.get('/f/:htmlFrameHash/:jsFrameHash.html/edit', (req, res) => {
+    res.redirect(302, `/h/${req.params.htmlFrameHash}/j/${req.params.jsFrameHash}/edit`);
+});
+
 // API
 const CONTENT_TYPES = {
     '.js': 'text/javascript',
