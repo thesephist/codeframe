@@ -11,19 +11,34 @@ app.use(bodyParser.text({
 
 const api = require('./api.js');
 
+const CONTENT_TYPES = {
+    '.js': 'text/javascript',
+    '.html': 'text/html',
+    '.ico': 'image/x-icon',
+}
+
 // STATIC ASSETS
 const STATIC_PATHS = {
     '/': 'index.html',
     '/new': 'editor.html',
+    '/favicon.ico': 'assets/favicon.ico',
     '/h/:htmlFrameHash/j/:jsFrameHash/edit': 'editor.html',
 }
 const respondWith = (res, static_path) => {
-    fs.readFile(`static/${static_path}`, 'utf8', (err, data) => {
+    fs.readFile(`static/${static_path}`, (err, data) => {
         if (err) {
             throw err;
         }
 
-        res.set('Content-Type', 'text/html');
+        let contentType = 'text/html';
+        for (const [ending, type] of Object.entries(CONTENT_TYPES)) {
+            if (static_path.endsWith(ending)) {
+                contentType = type;
+                break;
+            }
+        }
+
+        res.set('Content-Type', contentType);
         res.set('X-Frame-Options', 'SAMEORIGIN');
         res.send(data);
     });
@@ -48,10 +63,6 @@ app.get('/f/:htmlFrameHash/:jsFrameHash.html/edit', (req, res) => {
 });
 
 // API
-const CONTENT_TYPES = {
-    '.js': 'text/javascript',
-    '.html': 'text/html',
-}
 const API_PATHS = {
     'GET /api/frame/:frameHash': api.frame.get,
     'POST /api/frame/': api.frame.post,
@@ -72,6 +83,7 @@ for (const [spec, handler] of Object.entries(API_PATHS)) {
     for (const [ending, type] of Object.entries(CONTENT_TYPES)) {
         if (route.endsWith(ending)) {
             contentType = type;
+            break;
         }
     }
 
