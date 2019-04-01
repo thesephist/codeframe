@@ -9,6 +9,7 @@
   "scripts": {
     "start": "node src/index.js",
     "lint": "eslint ./src/*.js ./static/js/*.js",
+    "docs": "litterate --config ./litterate.config.js",
     "clean": "rm -r ./db/*"
   },
   "dependencies": {
@@ -16,6 +17,7 @@
     "express": "^4.16.4"
   },
   "devDependencies": {
-    "eslint": "^5.15.3"
+    "eslint": "^5.15.3",
+    "litterate": "^0.1.1"
   }
 }
