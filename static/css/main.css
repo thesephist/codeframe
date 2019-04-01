@@ -55,13 +55,19 @@ body {
 
 @media (max-width: 750px) {
     .mobile-hidden {
-        display: none;
+        display: none !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .tiny-hidden {
+        display: none !important;
     }
 }
 
 @media (min-width: 750px) {
     .desktop-hidden {
-        display: none;
+        display: none !important;
     }
 }
 
