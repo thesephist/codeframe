@@ -257,7 +257,7 @@ class Editor extends StyledComponent {
         }
         this.mode = mode;
         this.render();
-        gevent('editor', 'switchmode', 'model', mode);
+        gevent('editor', 'switchmode', mode);
     }
 
     async saveFrames() {
@@ -406,7 +406,7 @@ class Workspace extends StyledComponent {
     handleGrabMouseup() {
         this.grabDragging = false;
         this.render();
-        gevent('workspace', 'resize', 'editor', this.paneSplit.toString());
+        gevent('workspace', 'resize', 'editor', this.paneSplit);
     }
 
     styles() {
