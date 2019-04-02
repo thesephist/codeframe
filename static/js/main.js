@@ -175,7 +175,14 @@ class PreviewPane extends StyledComponent {
         //  attribute on the iframe. If it's unchanged, we leave the iframe alone.
         const url = `${window.location.origin}/f/${data.htmlFrameHash}/${data.jsFrameHash}.html`;
         if (this._lastUrl !== url) {
-            this.iframe.src = url;
+            //> If we simply assign to `iframe.src` property here, it adds an entry to the parent
+            //  page's back/forward history, which we don't want. We only want to add to `src` if
+            //  the iframe does not already have a page loaded (i.e. when `contentWindow` is null).
+            if (this.iframe.contentWindow) {
+                this.iframe.contentWindow.location.replace(url);
+            } else {
+                this.iframe.src = url;
+            }
             this._lastUrl = url;
         }
         return jdom`<div class="previewPanel" style="width:${this.paneWidth}%">
@@ -186,8 +193,7 @@ class PreviewPane extends StyledComponent {
                 <button class="button refreshButton"
                     onclick="${this.handleRefresh}">↻</button>
                 <a class="button previewButton"
-                    target="_blank" href="${url}"
-                    rel="noreferrer noopener">Preview</a>
+                    target="_blank" href="${url}">Preview</a>
             </div>
             ${this.iframe}
         </div>`;
@@ -206,6 +212,9 @@ class Editor extends StyledComponent {
         //> The "mode" is a slug, either `'html'` or `'javascript'`, that shows
         //  what file we're currently editing.
         this.mode = 'html';
+        //> Frame hashes of the last-saved editor values, to see if we need to re-fetch
+        //  frame file values when the route changes.
+        this._lastHash = '';
         //> The frames state stores the string contents of both files during editing.
         this.frames = {
             html: '',
@@ -213,7 +222,7 @@ class Editor extends StyledComponent {
         }
         //> Monaco has the concept of "models" to keep track of state across editing sessions
         //  between files. This is where we keep the model (state) of the two files, when they're
-        //  not actively being edited. This preserves e.g. the unod/redo stack between mode switches.
+        //  not actively being edited. This preserves e.g. the undo/redo stack between mode switches.
         this.models = {
             html: null,
             javascript: null,
@@ -248,34 +257,30 @@ class Editor extends StyledComponent {
     }
 
     fetchFrames(data) {
-        //> At the moment (this may change later), `fetchFrames` is called once
-        //  to fetch Codeframe files for editors with files that aren't empty. When the
-        //  user first loads a page, we detect if we've fetched frames before for this instance
-        //  of the editor, and if we haven't, we fetch it from the API and mark that we've
-        //  fetched. This is so we avoid having to re-fetch with every route change, which happens
-        //  with every save.
-        if (!this._framesFetched) {
-            if (data.htmlFrameHash) {
-                api.get(`/frame/${data.htmlFrameHash}`).then(resp => {
-                    return resp.text();
-                }).then(result => {
-                    this.frames.html = result;
-                    if (this.models.html !== null) {
-                        this.models.html.setValue(result);
-                    }
-                    this.render();
-                });
-                api.get(`/frame/${data.jsFrameHash}`).then(resp => {
-                    return resp.text();
-                }).then(result => {
-                    this.frames.javascript = result;
-                    if (this.models.javascript !== null) {
-                        this.models.javascript.setValue(result);
-                    }
-                    this.render();
-                });
-                this._framesFetched = true;
-            }
+        //> `fetchFrames` is in charge of (1) determining based on new data whether we need to
+        //  re-fetch HTML and JS files for the current version of the Codeframe (or if we have it already)
+        //  and making those requests and saving the results to the view state. We are careful here
+        //  to first check if the frames we are looking to fetch aren't the ones already saved in the editor.
+        if (data.htmlFrameHash + data.jsFrameHash !== this._lastHash && data.htmlFrameHash) {
+            api.get(`/frame/${data.htmlFrameHash}`).then(resp => {
+                return resp.text();
+            }).then(result => {
+                this.frames.html = result;
+                if (this.models.html !== null) {
+                    this.models.html.setValue(result);
+                }
+                this.render();
+            });
+
+            api.get(`/frame/${data.jsFrameHash}`).then(resp => {
+                return resp.text();
+            }).then(result => {
+                this.frames.javascript = result;
+                if (this.models.javascript !== null) {
+                    this.models.javascript.setValue(result);
+                }
+                this.render();
+            });
         }
     }
 
@@ -348,6 +353,7 @@ class Editor extends StyledComponent {
         ]);
         //> Once we've saved the current frames, open the new frames up in the preview pane
         //  by going to this route with the new frames.
+        this._lastHash = hashes.html + hashes.js;
         router.go(`/h/${hashes.html}/j/${hashes.js}/edit`);
         gevent('editor', 'save');
     }
