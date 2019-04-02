@@ -10,10 +10,21 @@
     <link rel="stylesheet" href="/static/css/index.css">
     <link rel="icon" type="image/png" href="/static/assets/favicon-32x32.png" sizes="32x32" />
     <link rel="icon" type="image/png" href="/static/assets/favicon-16x16.png" sizes="16x16" />
-    </head>
+
+    <!-- g analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-137481167-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      if (!window.location.hostname.includes('localhost')) {
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-137481167-1');
+      }
+    </script>
+  </head>
 
   <body>
-  <header>
+    <header>
       <div class="logo">
           <a class="button" href="/">Codeframe</a>
       </div>
