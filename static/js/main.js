@@ -260,12 +260,18 @@ class Editor extends StyledComponent {
                     return resp.text();
                 }).then(result => {
                     this.frames.html = result;
+                    if (this.models.html !== null) {
+                        this.models.html.setValue(result);
+                    }
                     this.render();
                 });
                 api.get(`/frame/${data.jsFrameHash}`).then(resp => {
                     return resp.text();
                 }).then(result => {
                     this.frames.javascript = result;
+                    if (this.models.javascript !== null) {
+                        this.models.javascript.setValue(result);
+                    }
                     this.render();
                 });
                 this._framesFetched = true;
@@ -305,7 +311,9 @@ class Editor extends StyledComponent {
 
     resizeEditor() {
         //> `editorInstance.layout()` forces the editor to re-size itself.
-        this.monacoEditor.layout();
+        if (this.monacoEditor) {
+            this.monacoEditor.layout();
+        }
     }
 
     switchMode(mode) {
