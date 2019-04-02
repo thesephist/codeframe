@@ -18,6 +18,12 @@
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
         gtag('config', 'UA-137481167-1');
+        window.gevent = (category, action, label, value) => {
+          var tracker = ga.getAll()[0];
+          tracker.send('event', category, action, label, value);
+        }
+      } else {
+        window.gevent = () => {}
       }
     </script>
   </head>
