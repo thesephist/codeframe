@@ -211,6 +211,13 @@ class Editor extends StyledComponent {
             html: '',
             javascript: ``,
         }
+        //> Monaco has the concept of "models" to keep track of state across editing sessions
+        //  between files. This is where we keep the model (state) of the two files, when they're
+        //  not actively being edited. This preserves e.g. the unod/redo stack between mode switches.
+        this.models = {
+            html: null,
+            javascript: null,
+        }
         this.initMonaco();
 
         this.bind(frameRecord, data => {
@@ -270,7 +277,7 @@ class Editor extends StyledComponent {
     //  with the Monaco editor's API. We create a new instance of an editor and start
     //  editing the currently selected mode's file.
     initMonaco() {
-        //> We explicitly create a div to containe the editor, since that's how Monaco's
+        //> We explicitly create a div to contain the editor, since that's how Monaco's
         //  editor API works.
         this.monacoContainer = document.createElement('div');
         this.monacoContainer.classList.add('editorContainer');
@@ -282,10 +289,12 @@ class Editor extends StyledComponent {
             },
         });
         require(['vs/editor/editor.main'], () => {
-            this.monacoEditor = monaco.editor.create(this.monacoContainer, {
-                language: this.mode,
-                value: this.frames[this.mode],
-            });
+            //> Initialize models for both files
+            this.models.html = monaco.editor.createModel(this.frames.html, 'html');
+            this.models.javascript = monaco.editor.createModel(this.frames.javascript, 'javascript');
+
+            this.monacoEditor = monaco.editor.create(this.monacoContainer);
+            this.monacoEditor.setModel(this.models[this.mode]);
             this.render();
             //> After the editor renders once, we want to make sure the editor
             //  is sized correctly to the containing box. `layout()` forces Monaco
@@ -300,12 +309,11 @@ class Editor extends StyledComponent {
     }
 
     switchMode(mode) {
-        //> When we switch modes, we have to switch out the file + language being edited
-        //  in Monaco and re-render.
+        //> When we switch modes, we have to first save the value of the file being
+        //  edited, then switch out the underlying file model.
         if (this.monacoEditor) {
             this.frames[this.mode] = this.monacoEditor.getValue();
-            monaco.editor.setModelLanguage(this.monacoEditor.getModel(), mode);
-            this.monacoEditor.setValue(this.frames[mode]);
+            this.monacoEditor.setModel(this.models[mode]);
         }
         this.mode = mode;
         this.render();
@@ -400,9 +408,6 @@ class Editor extends StyledComponent {
     }
 
     compose() {
-        if (this.monacoEditor) {
-            this.monacoEditor.setValue(this.frames[this.mode]);
-        }
         return jdom`<div class="editor" style="width:${this.paneWidth}%">
             <div class="top-bar">
                 <div class="tabs">
