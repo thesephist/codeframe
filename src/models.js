@@ -1,9 +1,15 @@
+//> This file contains all logic for managing the filesystem
+//  backed database of Codeframe files.
+
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
 const config = require('../config.js');
 
+//> These files are Codeframe files that must be ensured to exist
+//  in the database with every deploy, since they're used in demos
+//  on the home page. These are checked for existence later.
 const STARTER_FIXTURES = [
     'blank-torus.js',
     'blank.frame',
@@ -21,6 +27,7 @@ const STARTER_FIXTURES = [
     'todo-torus.js',
 ];
 
+//> Utility method to get a trimmed sha256 hash of a string.
 const hashFile = contents => {
     const hash = crypto.createHash('sha256');
     hash.update(contents);
@@ -28,6 +35,8 @@ const hashFile = contents => {
     return hash.digest('hex').substr(0, 12);
 }
 
+//> `SourceFileStore` is the database that manages the app's communication
+//  with the filesystem-backed storage for Codeframe files.
 class SourceFileStore {
 
     constructor(basePath) {
@@ -35,6 +44,8 @@ class SourceFileStore {
         if (!fs.existsSync(this.basePath)) {
             fs.mkdirSync(this.basePath);
         }
+        //> The first time the file store is created, we make sure each of the required
+        //  demo snippets exists.
         for (const fxt of STARTER_FIXTURES) {
             fs.readFile(`starter_fixtures/${fxt}`, 'utf8', (err, data) => {
                 if (err) {
@@ -62,6 +73,7 @@ class SourceFileStore {
         });
     }
 
+    //> Given a hash, returns a Promise resolving to the contents of the file, or rejects.
     getFromFS(frameHash) {
         return new Promise((res, rej) => {
             fs.readFile(this.getPathFromHash(frameHash), 'utf8', (err, data) => {
@@ -74,6 +86,7 @@ class SourceFileStore {
         });
     }
 
+    //> First check if the file we're looking to create exists, and if not, create one.
     async create(sourceFileContents) {
         const frameHash = hashFile(sourceFileContents);
         const sourceFilePath = this.getHashedFilePath(sourceFileContents);
@@ -94,6 +107,7 @@ class SourceFileStore {
 
 }
 
+//> Create a new database from the class, and export that for use.
 const store = new SourceFileStore(config.DATABASE);
 
 module.exports = {

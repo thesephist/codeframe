@@ -30,6 +30,8 @@ const respondWith = (res, static_path) => {
             throw err;
         }
 
+        //> We determine the content-type based on requested resource file ending,
+        //  and fall back to HTML.
         let contentType = 'text/html';
         for (const [ending, type] of Object.entries(CONTENT_TYPES)) {
             if (static_path.endsWith(ending)) {
@@ -56,8 +58,8 @@ for (const [uri, path] of Object.entries(STATIC_PATHS)) {
 }
 app.use('/static', express.static('static'));
 
-// Easily redirect /f/*.html/edit to an editor view
-//  to edit statically rendered Codeframes.
+//> Easily redirect `/f/*.html/edit` to an editor view
+//  to edit statically rendered Codeframes by just appending `/edit` to the URL.
 app.get('/f/:htmlFrameHash/:jsFrameHash.html/edit', (req, res) => {
     res.redirect(302, `/h/${req.params.htmlFrameHash}/j/${req.params.jsFrameHash}/edit`);
 });
@@ -79,6 +81,8 @@ for (const [spec, handler] of Object.entries(API_PATHS)) {
         throw new Error(`Method ${method} for route ${route} is not valid`);
     }
 
+    //> We determine the content-type based on requested resource file ending,
+    //  and fall back to JSON.
     let contentType = 'application/json';
     for (const [ending, type] of Object.entries(CONTENT_TYPES)) {
         if (route.endsWith(ending)) {
@@ -90,6 +94,8 @@ for (const [spec, handler] of Object.entries(API_PATHS)) {
     appMethod(route, async (req, res) => {
         try {
             res.set('Content-Type', contentType);
+            //> This `X-Frame-Options` setting (embed setting) is set this way to
+            //  (for now) only allow embeds in other Codeframe sites, like on the home page.
             res.set('X-Frame-Options', 'SAMEORIGIN');
             const result = await handler(req.params, req.query, req.body);
             if (typeof result === 'string') {

@@ -1,13 +1,18 @@
+//> ## Codeframe's editor component
+
 const {
     StyledComponent,
     Record,
     Router,
 } = Torus;
 
+//> When a user visits a /new editor, we need to populate it
+//  with blank versions of HTML and JS frames. We fetch them by
+//  identifying them with this fixed, precomputed hash of blank frames.
 const BLANK_HASH = 'e3b0c44298fc';
 
-const MOBILE_WIDTH = 750;
-
+//> Utility function to fetch while bypassing the cache, and with some
+//  default options.
 const cfFetch = (uri, options) => {
     return fetch(uri, {
         credentials: 'same-origin',
@@ -16,6 +21,8 @@ const cfFetch = (uri, options) => {
     });
 }
 
+//> This `api` object provides some utility methods we use to fetch
+//  and push stuff to and from the Codeframe internal API.
 const api = {
     get: path => cfFetch(`/api${path}`, {
         method: 'GET',
@@ -28,6 +35,9 @@ const api = {
 
 const now = () => new Date().getTime();
 
+//> Debounce coalesces multiple calls to the same function in a short
+//  period of time into one call, by cancelling subsequent calls within
+//  a given timeframe.
 const debounce = (fn, delayMillis) => {
     let lastRun = 0;
     let to = null;
@@ -45,12 +55,20 @@ const debounce = (fn, delayMillis) => {
     }
 }
 
+//> The `PreviewPane`  is the half-screen pane that shows a preview of the
+//  rendered Codeframe, alongside the URL and refresh buttons.
 class PreviewPane extends StyledComponent {
 
     init(frameRecord) {
+        //> Percentage of the editor size that the preview pane takes up.
         this.paneWidth = 50;
+
+        //> We create an iframe manually and insert it into the component DOM,
+        //  so as to avoid the iframe being re-fetched and re-rendered every time
+        //  the preview pane is rendered.
         this.iframe = document.createElement('iframe');
         this.iframe.setAttribute('frameborder', 0);
+
         this.bind(frameRecord, data => this.render(data));
 
         this.selectInput = this.selectInput.bind(this);
@@ -73,7 +91,7 @@ class PreviewPane extends StyledComponent {
         flex-shrink: 1;
         overflow: hidden;
         border-right: 2px solid var(--cf-black);
-        @media (max-width: ${MOBILE_WIDTH}px) {
+        @media (max-width: 750px) {
             width: 100% !important;
             height: 50% !important;
             border-right: 0 !important;
@@ -145,12 +163,16 @@ class PreviewPane extends StyledComponent {
     }
 
     handleRefresh() {
+        //> Force-refreshing the preview works by clearing the "last url"
+        //  fetched, so it looks like the same URL is a new URL on next render.
         this._lastUrl = '';
         this.render();
         gevent('preview', 'refresh');
     }
 
     compose(data) {
+        //> We compare the new URL to the old URL here, to see whether we need to reset the `src`
+        //  attribute on the iframe. If it's unchanged, we leave the iframe alone.
         const url = `${window.location.origin}/f/${data.htmlFrameHash}/${data.jsFrameHash}.html`;
         if (this._lastUrl !== url) {
             this.iframe.src = url;
@@ -173,11 +195,18 @@ class PreviewPane extends StyledComponent {
 
 }
 
+//> The `Editor` component encapsulates the Monaco editor, all file state,
+//  and other state about the files the user is editing.
 class Editor extends StyledComponent {
 
     init(frameRecord) {
+        //> Percentage of the editor size that the editor pane takes up.
         this.paneWidth = 50;
+
+        //> The "mode" is a slug, either `'html'` or `'javascript'`, that shows
+        //  what file we're currently editing.
         this.mode = 'html';
+        //> The frames state stores the string contents of both files during editing.
         this.frames = {
             html: '',
             javascript: ``,
@@ -189,9 +218,13 @@ class Editor extends StyledComponent {
             this.render(data);
         });
 
+        //> Any calls to `resizeEditor` should be debounced to 250ms. This is negligible
+        // to UX in fast modern laptops, but has a noticeable impact on UX for lower-end devices.
         this.resizeEditor = debounce(this.resizeEditor.bind(this), 250);
         window.addEventListener('resize', this.resizeEditor);
 
+        //> We create these two methods that are versions of `switchMode`
+        //  bound to specific editing modes, for easier use later on in `compose()`.
         this.switchHTMLMode = this.switchMode.bind(this, 'html');
         this.switchJSMode = this.switchMode.bind(this, 'javascript');
         this.saveFrames = this.saveFrames.bind(this);
@@ -208,6 +241,12 @@ class Editor extends StyledComponent {
     }
 
     fetchFrames(data) {
+        //> At the moment (this may change later), `fetchFrames` is called once
+        //  to fetch Codeframe files for editors with files that aren't empty. When the
+        //  user first loads a page, we detect if we've fetched frames before for this instance
+        //  of the editor, and if we haven't, we fetch it from the API and mark that we've
+        //  fetched. This is so we avoid having to re-fetch with every route change, which happens
+        //  with every save.
         if (!this._framesFetched) {
             if (data.htmlFrameHash) {
                 api.get(`/frame/${data.htmlFrameHash}`).then(resp => {
@@ -227,9 +266,16 @@ class Editor extends StyledComponent {
         }
     }
 
+    //> `initMonaco` is one of the few places in the codebase that directly interacts
+    //  with the Monaco editor's API. We create a new instance of an editor and start
+    //  editing the currently selected mode's file.
     initMonaco() {
+        //> We explicitly create a div to containe the editor, since that's how Monaco's
+        //  editor API works.
         this.monacoContainer = document.createElement('div');
         this.monacoContainer.classList.add('editorContainer');
+        //> Monaco's production bundle is designed to be consumed using an AMD
+        //  module loader like RequireJS. You don't need to understand this part.
         require.config({
             paths: {
                 vs: 'https://unpkg.com/monaco-editor/min/vs',
@@ -241,15 +287,21 @@ class Editor extends StyledComponent {
                 value: this.frames[this.mode],
             });
             this.render();
+            //> After the editor renders once, we want to make sure the editor
+            //  is sized correctly to the containing box. `layout()` forces Monaco
+            //  to re-layout itself in the space it was given.
             this.monacoEditor.layout();
         });
     }
 
     resizeEditor() {
+        //> `editorInstance.layout()` forces the editor to re-size itself.
         this.monacoEditor.layout();
     }
 
     switchMode(mode) {
+        //> When we switch modes, we have to switch out the file + language being edited
+        //  in Monaco and re-render.
         if (this.monacoEditor) {
             this.frames[this.mode] = this.monacoEditor.getValue();
             monaco.editor.setModelLanguage(this.monacoEditor.getModel(), mode);
@@ -260,12 +312,16 @@ class Editor extends StyledComponent {
         gevent('editor', 'switchmode', mode);
     }
 
+    //> `saveFrames` handles saving / persisting Codeframe files to the backend service,
+    //  and returns a promise that resolves only once all frame files have been saved.
     async saveFrames() {
         this.frames[this.mode] = this.monacoEditor.getValue();
         const hashes = {
             html: '',
             js: '',
         }
+        //> This is a nice way to make the function hang (not resolve its returned Promise)
+        //  until all of its requests have resolved.
         await Promise.all([
             api.post(`/frame/`, this.frames.html).then(resp => {
                 return resp.text();
@@ -274,6 +330,8 @@ class Editor extends StyledComponent {
                 return resp.text();
             }).then(hash => hashes.js = hash),
         ]);
+        //> Once we've saved the current frames, open the new frames up in the preview pane
+        //  by going to this route with the new frames.
         router.go(`/h/${hashes.html}/j/${hashes.js}/edit`);
         gevent('editor', 'save');
     }
@@ -287,7 +345,7 @@ class Editor extends StyledComponent {
         border-left: 2px solid var(--cf-black);
         display: flex;
         flex-direction: column;
-        @media (max-width: ${MOBILE_WIDTH}px) {
+        @media (max-width: 750px) {
             width: 100% !important;
             height: 50% !important;
             border-left: 0 !important;
@@ -362,6 +420,8 @@ class Editor extends StyledComponent {
                 <button class="button" onclick="${this.saveFrames}">Save ${'&'} Reload</button>
             </div>
             ${this.monacoEditor ? this.monacoContainer : (
+                //> If the editor is not yet available (is still loading), show a placeholder
+                //  bit of text.
                 jdom`<div class="ready"><em>Getting your code ready...</em></div>`
             )}
         </div>`;
@@ -369,27 +429,38 @@ class Editor extends StyledComponent {
 
 }
 
+//> The `Workspace` component is the "Codeframe editor". That is to say,
+//  this is the component that wraps everything into a neat, interactive page
+//  and is the backbone of the Codeframe editing experience.
 class Workspace extends StyledComponent {
 
     init(frameRecord) {
+        //> The left/right panes are split 50/50 between its two panes.
         this.paneSplit = 50;
         this.preview = new PreviewPane(frameRecord);
         this.editor = new Editor(frameRecord);
 
         this.bind(frameRecord, data => this.render(data));
 
+        //> `this.grabDragging` represents whether there is currently a
+        //  drag-to-resize-panes interaction happening.
         this.grabDragging = false;
         this.handleGrabMousedown = this.handleGrabMousedown.bind(this);
         this.handleGrabMousemove = this.handleGrabMousemove.bind(this);
         this.handleGrabMouseup = this.handleGrabMouseup.bind(this);
     }
 
+    //> Shortcut method to set the sizes of children components, given
+    //  one split percentage.
     setPaneWidth(width) {
         this.paneSplit = width;
         this.preview.setWidth(width);
         this.editor.setWidth(100 - width);
         this.render();
     }
+
+    //> What follows are mouse/pointer event handlers to make resizing a
+    //  smooth experience.
 
     handleGrabMousedown() {
         this.grabDragging = true;
@@ -444,7 +515,7 @@ class Workspace extends StyledComponent {
             position: relative;
             height: 100%;
             flex-shrink: 1;
-            @media (max-width: ${MOBILE_WIDTH}px) {
+            @media (max-width: 750px) {
                 flex-direction: column !important;
             }
         }
@@ -539,15 +610,20 @@ class Workspace extends StyledComponent {
 
 }
 
+//> The `App` component simply wraps around the `Workspace` to provide
+// routing and a container for the workspace.
 class App extends StyledComponent {
 
     init(router) {
+        //> This `frameRecord` becomes the view model for most views
+        //  in the editor.
         this.frameRecord = new Record({
             htmlFrameHash: '',
             jsFrameHash: '',
         });
         this.workspace = new Workspace(this.frameRecord);
 
+        //> Routing logic.
         this.bind(router, ([name, params]) => {
             switch (name) {
                 case 'edit':
@@ -583,5 +659,6 @@ const router = new Router({
     default: '/new',
 });
 
+//> Create a new instance of the editor app and mount it to the DOM.
 const app = new App(router);
 document.body.appendChild(app.node);
