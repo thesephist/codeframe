@@ -141,11 +141,13 @@ class PreviewPane extends StyledComponent {
 
     selectInput(evt) {
         evt.target.select();
+        gevent('preview', 'selecturl');
     }
 
     handleRefresh() {
         this._lastUrl = '';
         this.render();
+        gevent('preview', 'refresh');
     }
 
     compose(data) {
@@ -255,6 +257,7 @@ class Editor extends StyledComponent {
         }
         this.mode = mode;
         this.render();
+        gevent('editor', 'switchmode', 'model', mode);
     }
 
     async saveFrames() {
@@ -272,6 +275,7 @@ class Editor extends StyledComponent {
             }).then(hash => hashes.js = hash),
         ]);
         router.go(`/h/${hashes.html}/j/${hashes.js}/edit`);
+        gevent('editor', 'save');
     }
 
     styles() {
@@ -402,6 +406,7 @@ class Workspace extends StyledComponent {
     handleGrabMouseup() {
         this.grabDragging = false;
         this.render();
+        gevent('workspace', 'resize', 'editor', this.paneSplit.toString());
     }
 
     styles() {
