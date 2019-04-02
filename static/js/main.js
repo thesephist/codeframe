@@ -507,7 +507,7 @@ class Workspace extends StyledComponent {
                     <a class="button" href="/">Codeframe</a>
                 </div>
                 <nav>
-                    <a class="button newButton" href="/new">
+                    <a class="button newButton" href="/new?from=editor">
                         + New <span class="mobile-hidden">Codeframe</span>
                     </a>
                     <a class="button tiny-hidden" href="https://twitter.com/thesephist" target="_blank">
