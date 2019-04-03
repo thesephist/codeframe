@@ -59,80 +59,77 @@
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">41</strong>        }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">42</strong></pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">43</strong>        res.set('Content-Type', contentType);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">44</strong>        res.set('X-Frame-Options', 'SAMEORIGIN');</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">45</strong>        res.send(data);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">46</strong>    });</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">47</strong>}</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">48</strong>for (const [uri, path] of Object.entries(STATIC_PATHS)) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">49</strong>    app.get(uri, (_req, res) =&#62; {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">50</strong>        try {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">51</strong>            respondWith(res, path);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">52</strong>        } catch (e) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">53</strong>            console.error(e);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">54</strong>            // For now, assume it's a not-found error</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">55</strong>            respondWith(res, '404.html');</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">56</strong>        }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">57</strong>    });</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">58</strong>}</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">59</strong>app.use('/static', express.static('static'));</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">60</strong></pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">44</strong>        res.send(data);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">45</strong>    });</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">46</strong>}</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">47</strong>for (const [uri, path] of Object.entries(STATIC_PATHS)) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">48</strong>    app.get(uri, (_req, res) =&#62; {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">49</strong>        try {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">50</strong>            respondWith(res, path);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">51</strong>        } catch (e) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">52</strong>            console.error(e);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">53</strong>            // For now, assume it's a not-found error</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">54</strong>            respondWith(res, '404.html');</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">55</strong>        }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">56</strong>    });</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">57</strong>}</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">58</strong>app.use('/static', express.static('static'));</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">59</strong></pre></div>
 <div class="line"><div class="doc"><p>Easily redirect <code>/f/*.html/edit</code> to an editor view to edit statically rendered Codeframes by just appending <code>/edit</code> to the URL.</p>
-</div><pre class="source javascript"><strong class="lineNumber">63</strong>app.get('/f/:htmlFrameHash/:jsFrameHash.html/edit', (req, res) =&#62; {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">64</strong>    res.redirect(302, `/h/${req.params.htmlFrameHash}/j/${req.params.jsFrameHash}/edit`);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">65</strong>});</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">66</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">67</strong>// API</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">68</strong>const API_PATHS = {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">69</strong>    'GET /api/frame/:frameHash': api.frame.get,</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">70</strong>    'POST /api/frame/': api.frame.post,</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">71</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">72</strong>    'GET /f/:htmlFrameHash/:jsFrameHash.html': api.frame.getPage,</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">73</strong>}</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">74</strong>const METHODS = ['GET', 'POST', 'PUT', 'DELETE'];</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">75</strong>for (const [spec, handler] of Object.entries(API_PATHS)) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">76</strong>    const [method, route] = spec.split(' ');</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">77</strong>    let appMethod;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">78</strong>    if (METHODS.includes(method)) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">79</strong>        appMethod = app[method.toLowerCase()].bind(app);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">80</strong>    } else {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">81</strong>        throw new Error(`Method ${method} for route ${route} is not valid`);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">82</strong>    }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">83</strong></pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">62</strong>app.get('/f/:htmlFrameHash/:jsFrameHash.html/edit', (req, res) =&#62; {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">63</strong>    res.redirect(302, `/h/${req.params.htmlFrameHash}/j/${req.params.jsFrameHash}/edit`);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">64</strong>});</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">65</strong></pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">66</strong>// API</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">67</strong>const API_PATHS = {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">68</strong>    'GET /api/frame/:frameHash': api.frame.get,</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">69</strong>    'POST /api/frame/': api.frame.post,</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">70</strong></pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">71</strong>    'GET /f/:htmlFrameHash/:jsFrameHash.html': api.frame.getPage,</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">72</strong>}</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">73</strong>const METHODS = ['GET', 'POST', 'PUT', 'DELETE'];</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">74</strong>for (const [spec, handler] of Object.entries(API_PATHS)) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">75</strong>    const [method, route] = spec.split(' ');</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">76</strong>    let appMethod;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">77</strong>    if (METHODS.includes(method)) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">78</strong>        appMethod = app[method.toLowerCase()].bind(app);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">79</strong>    } else {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">80</strong>        throw new Error(`Method ${method} for route ${route} is not valid`);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">81</strong>    }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">82</strong></pre></div>
 <div class="line"><div class="doc"><p>We determine the content-type based on requested resource file ending, and fall back to JSON.</p>
-</div><pre class="source javascript"><strong class="lineNumber">86</strong>    let contentType = 'application/json';</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">87</strong>    for (const [ending, type] of Object.entries(CONTENT_TYPES)) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">88</strong>        if (route.endsWith(ending)) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">89</strong>            contentType = type;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">90</strong>            break;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">91</strong>        }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">92</strong>    }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">93</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">94</strong>    appMethod(route, async (req, res) =&#62; {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">95</strong>        try {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">96</strong>            res.set('Content-Type', contentType);</pre></div>
-<div class="line"><div class="doc"><p>This <code>X-Frame-Options</code> setting (embed setting) is set this way to (for now) only allow embeds in other Codeframe sites, like on the home page.</p>
-</div><pre class="source javascript"><strong class="lineNumber">99</strong>            res.set('X-Frame-Options', 'SAMEORIGIN');</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">100</strong>            const result = await handler(req.params, req.query, req.body);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">101</strong>            if (typeof result === 'string') {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">102</strong>                res.send(result);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">103</strong>            } else {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">104</strong>                res.send(JSON.stringify(result));</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">105</strong>            }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">106</strong>        } catch (e) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">107</strong>            console.error(e);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">108</strong>            res.send('error');</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">109</strong>        }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">110</strong>    });</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">111</strong>}</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">112</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">113</strong>// 404 last</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">114</strong>app.use((_req, res) =&#62; respondWith(res, '404.html'));</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">115</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">116</strong>app.listen(</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">117</strong>    config.PORT,</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">118</strong>    () =&#62; console.log(`Codeframe running on localhost:${config.PORT}`)</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">119</strong>);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">120</strong></pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">85</strong>    let contentType = 'application/json';</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">86</strong>    for (const [ending, type] of Object.entries(CONTENT_TYPES)) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">87</strong>        if (route.endsWith(ending)) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">88</strong>            contentType = type;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">89</strong>            break;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">90</strong>        }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">91</strong>    }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">92</strong></pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">93</strong>    appMethod(route, async (req, res) =&#62; {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">94</strong>        try {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">95</strong>            res.set('Content-Type', contentType);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">96</strong>            const result = await handler(req.params, req.query, req.body);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">97</strong>            if (typeof result === 'string') {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">98</strong>                res.send(result);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">99</strong>            } else {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">100</strong>                res.send(JSON.stringify(result));</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">101</strong>            }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">102</strong>        } catch (e) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">103</strong>            console.error(e);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">104</strong>            res.send('error');</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">105</strong>        }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">106</strong>    });</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">107</strong>}</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">108</strong></pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">109</strong>// 404 last</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">110</strong>app.use((_req, res) =&#62; respondWith(res, '404.html'));</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">111</strong></pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">112</strong>app.listen(</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">113</strong>    config.PORT,</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">114</strong>    () =&#62; console.log(`Codeframe running on localhost:${config.PORT}`)</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">115</strong>);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">116</strong></pre></div>
     </main>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/github-gist.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>

@@ -41,7 +41,6 @@ const respondWith = (res, static_path) => {
         }
 
         res.set('Content-Type', contentType);
-        res.set('X-Frame-Options', 'SAMEORIGIN');
         res.send(data);
     });
 }
@@ -94,9 +93,6 @@ for (const [spec, handler] of Object.entries(API_PATHS)) {
     appMethod(route, async (req, res) => {
         try {
             res.set('Content-Type', contentType);
-            //> This `X-Frame-Options` setting (embed setting) is set this way to
-            //  (for now) only allow embeds in other Codeframe sites, like on the home page.
-            res.set('X-Frame-Options', 'SAMEORIGIN');
             const result = await handler(req.params, req.query, req.body);
             if (typeof result === 'string') {
                 res.send(result);
