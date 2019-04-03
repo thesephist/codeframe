@@ -472,6 +472,16 @@ class Workspace extends StyledComponent {
     //> Shortcut method to set the sizes of children components, given
     //  one split percentage.
     setPaneWidth(width) {
+        //> These cases implement "snapping" of panes to 0, 50, 100%
+        //  increments, with 1% buffer around each snap point.
+        if (width < 1) {
+            width = 0;
+        } else if (width > 99) {
+            width = 100;
+        } else if (width > 49 && width < 51) {
+            width = 50;
+        }
+
         this.paneSplit = width;
         this.preview.setWidth(width);
         this.editor.setWidth(100 - width);
