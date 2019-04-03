@@ -581,6 +581,11 @@ class Workspace extends StyledComponent {
             right: 0;
             bottom: 0;
             z-index: 1000;
+            transition: opacity .3s;
+            &.hidden {
+                opacity: 0;
+                pointer-events: none;
+            }
         }
         .fullButton {
             display: none;
@@ -627,7 +632,7 @@ class Workspace extends StyledComponent {
                     href="${window.location.href}">
                     Open in new tab
                 </a>
-                ${this.grabDragging ? jdom`<div class="grabHandleShadow"></div>` : ''}
+                <div class="grabHandleShadow ${this.grabDragging ? '' : 'hidden'}"></div>
                 <div
                     class="grabHandle mobile-hidden"
                     style="left:${this.paneSplit}%"
