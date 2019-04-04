@@ -214,9 +214,9 @@ class PreviewPane extends StyledComponent {
                     <div class="fixed button inputContainer">
                         <input value="${url}" onfocus="${this.selectInput}" />
                     </div>
-                    <button class="button refreshButton"
+                    <button class="button refreshButton" title="Refresh preview"
                         onclick="${this.handleRefresh}">↻</button>
-                    <a class="button previewButton"
+                    <a class="button previewButton" title="Open preview in new tab"
                         target="_blank" href="${url}">Preview</a>
                 </div>`
             ) : (
@@ -496,16 +496,19 @@ class Editor extends StyledComponent {
                 <div class="tabs">
                     <button
                         class="button ${this.mode === 'html' ? 'active' : ''} tab-html"
+                        title="Switch to HTML editor"
                         onclick="${this.switchHTMLMode}">
                         HTML
                     </button>
                     <button
                         class="button ${this.mode === 'javascript' ? 'active' : ''} tab-js"
+                        title="Switch to JavaScript editor"
                         onclick="${this.switchJSMode}">
                         JavaScript
                     </button>
                 </div>
-                <button class="button" onclick="${this.saveFrames}">Save ${'&'} Reload</button>
+                <button class="button" title="Save Codeframe and reload preview"
+                    onclick="${this.saveFrames}">Save ${'&'} Reload</button>
             </div>
             ${this.monacoEditor ? this.monacoContainer : (
                 //> If the editor is not yet available (is still loading), show a placeholder
@@ -705,13 +708,14 @@ class Workspace extends StyledComponent {
                 ${this.preview.node}
                 ${this.editor.node}
                 <a class="button fullButton"
-                    title="Open in a new window"
+                    title="Open editor in a new tab"
                     target="_blank"
                     href="${window.location.href}">
                     Open in new tab
                 </a>
                 <div class="grabHandleShadow ${this.grabDragging ? '' : 'hidden'}"></div>
                 <div
+                    title="Resize editor panes"
                     class="grabHandle mobile-hidden"
                     style="left:${this.paneSplit}%"
                     ontouchstart="${this.handleGrabMousedown}"
