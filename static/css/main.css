@@ -131,6 +131,7 @@ body {
 }
 
 .button:active {
+    color: #000;
     transform: translate(3px, 3px);
 }
 
