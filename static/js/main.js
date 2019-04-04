@@ -498,7 +498,14 @@ class Workspace extends StyledComponent {
 
     handleGrabMousemove(evt) {
         if (this.grabDragging) {
-            evt.preventDefault();
+            if (!evt.defaultPrevented) {
+                evt.preventDefault();
+            }
+            //> If the event is a touch event, get the `clientX` of the first
+            //  touch point, not the whole event.
+            if (evt.touches) {
+                evt = evt.touches[0];
+            }
             this.setPaneWidth(evt.clientX / window.innerWidth * 100);
         }
     }
@@ -605,6 +612,8 @@ class Workspace extends StyledComponent {
     compose() {
         return jdom`
         <div class="workspace ${window.frameElement === null ? '' : 'embedded'}"
+            ontouchmove="${this.grabDragging ? this.handleGrabMousemove : ''}"
+            ontouchend="${this.grabDragging ? this.handleGrabMouseup : ''}"
             onmousemove="${this.grabDragging ? this.handleGrabMousemove : ''}"
             onmouseup="${this.grabDragging ? this.handleGrabMouseup : ''}">
             <header>
@@ -636,6 +645,7 @@ class Workspace extends StyledComponent {
                 <div
                     class="grabHandle mobile-hidden"
                     style="left:${this.paneSplit}%"
+                    ontouchstart="${this.handleGrabMousedown}"
                     onmousedown="${this.handleGrabMousedown}">
                 </div>
             </main>
