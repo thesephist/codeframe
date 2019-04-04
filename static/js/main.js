@@ -762,6 +762,7 @@ class App extends StyledComponent {
         return css`
         width: 100%;
         height: 100vh;
+        overflow: hidden;
         `;
     }
 
@@ -781,3 +782,8 @@ const router = new Router({
 //> Create a new instance of the editor app and mount it to the DOM.
 const app = new App(router);
 document.body.appendChild(app.node);
+
+//> Since the editor is a full-window app, we don't want any overflows to
+//  make the app unnecessary scrollable beyond its viewport.
+document.body.style.overflow = 'hidden';
+
