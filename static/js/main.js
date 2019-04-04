@@ -97,13 +97,16 @@ class PreviewPane extends StyledComponent {
             border-right: 0 !important;
             border-bottom: 2px solid var(--cf-black);
         }
-        .urlBar {
+        .topBar {
             display: flex;
             flex-direction: row;
+            align-items: center;
+            justify-content: center;
             width: 100%;
             padding: 0 3px;
             border-bottom: 4px dotted var(--cf-black);
             flex-shrink: 0;
+            height: 52px;
             .embedded & {
                 background: var(--cf-background);
             }
@@ -154,6 +157,14 @@ class PreviewPane extends StyledComponent {
                 color: #000;
             }
         }
+        .unsavedWarning {
+            font-style: italic;
+            white-space: nowrap;
+            .button {
+                font-style: initial;
+                cursor: not-allowed;
+            }
+        }
         `;
     }
 
@@ -170,6 +181,16 @@ class PreviewPane extends StyledComponent {
         gevent('preview', 'refresh');
     }
 
+    //> If the iframe already has content, we want to replace its uri; if not,
+    //  we want to give it a uri. This takes care of this logic.
+    safelySetIframeURI(uri) {
+        if (this.iframe.contentWindow) {
+            this.iframe.contentWindow.location.replace(uri);
+        } else {
+            this.iframe.src = uri;
+        }
+    }
+
     compose(data) {
         //> We compare the new URL to the old URL here, to see whether we need to reset the `src`
         //  attribute on the iframe. If it's unchanged, we leave the iframe alone.
@@ -178,23 +199,35 @@ class PreviewPane extends StyledComponent {
             //> If we simply assign to `iframe.src` property here, it adds an entry to the parent
             //  page's back/forward history, which we don't want. We only want to add to `src` if
             //  the iframe does not already have a page loaded (i.e. when `contentWindow` is null).
-            if (this.iframe.contentWindow) {
-                this.iframe.contentWindow.location.replace(url);
-            } else {
-                this.iframe.src = url;
-            }
+            this.safelySetIframeURI(url);
             this._lastUrl = url;
         }
+        //> If we're not rendering from a saved Codeframe from the server but instead rendering
+        //  a "live" preview, generate a data URI instead and point the iframe to that.
+        if (data.liveRenderMarkup !== null) {
+            const dataURI = 'data:text/html,' + encodeURIComponent(data.liveRenderMarkup);
+            this.safelySetIframeURI(dataURI);
+        }
         return jdom`<div class="previewPanel" style="width:${this.paneWidth}%">
-            <div class="urlBar">
-                <div class="fixed button inputContainer">
-                    <input value="${url}" onfocus="${this.selectInput}" />
-                </div>
-                <button class="button refreshButton"
-                    onclick="${this.handleRefresh}">↻</button>
-                <a class="button previewButton"
-                    target="_blank" href="${url}">Preview</a>
-            </div>
+            ${data.liveRenderMarkup === null ? (
+                jdom`<div class="topBar">
+                    <div class="fixed button inputContainer">
+                        <input value="${url}" onfocus="${this.selectInput}" />
+                    </div>
+                    <button class="button refreshButton"
+                        onclick="${this.handleRefresh}">↻</button>
+                    <a class="button previewButton"
+                        target="_blank" href="${url}">Preview</a>
+                </div>`
+            ) : (
+                jdom`<div class="topBar">
+                    <div class="unsavedWarning">
+                        tap
+                        <div class="fixed inline button">Save ${'&'} Reload</div>
+                        to share <span class="mobile-hidden">→</span>
+                    </div>
+                </div>`
+            )}
             ${this.iframe}
         </div>`;
     }
@@ -244,6 +277,10 @@ class Editor extends StyledComponent {
         this.switchHTMLMode = this.switchMode.bind(this, 'html');
         this.switchJSMode = this.switchMode.bind(this, 'javascript');
         this.saveFrames = this.saveFrames.bind(this);
+
+        //> Live-rendering (previewing unsaved changes) should be debounced, since we don't
+        //  want to re-render the iframe with every keystroke, for example.
+        this.liveRenderFrames = debounce(this.liveRenderFrames.bind(this), 1000);
     }
 
     remove() {
@@ -261,7 +298,11 @@ class Editor extends StyledComponent {
         //  re-fetch HTML and JS files for the current version of the Codeframe (or if we have it already)
         //  and making those requests and saving the results to the view state. We are careful here
         //  to first check if the frames we are looking to fetch aren't the ones already saved in the editor.
-        if (data.htmlFrameHash + data.jsFrameHash !== this._lastHash && data.htmlFrameHash) {
+        if (
+            data.htmlFrameHash + data.jsFrameHash !== this._lastHash
+            && data.htmlFrameHash
+        ) {
+            this._lastHash = data.htmlFrameHash + data.jsFrameHash;
             api.get(`/frame/${data.htmlFrameHash}`).then(resp => {
                 return resp.text();
             }).then(result => {
@@ -301,8 +342,10 @@ class Editor extends StyledComponent {
         });
         require(['vs/editor/editor.main'], () => {
             //> Initialize models for both files
-            this.models.html = monaco.editor.createModel(this.frames.html, 'html');
-            this.models.javascript = monaco.editor.createModel(this.frames.javascript, 'javascript');
+            for (const lang of ['html', 'javascript']) {
+                this.models[lang] = monaco.editor.createModel(this.frames[lang], lang);
+                this.models[lang].onDidChangeContent(this.liveRenderFrames);
+            }
 
             this.monacoEditor = monaco.editor.create(this.monacoContainer);
             this.monacoEditor.setModel(this.models[this.mode]);
@@ -333,6 +376,32 @@ class Editor extends StyledComponent {
         gevent('editor', 'switchmode', mode);
     }
 
+    //> `liveRenderFrames()` is called when the editor content changes, to client-side
+    //  refresh the iframe preview contents.
+    liveRenderFrames() {
+        const newEditorValue = this.monacoEditor.getValue();
+        //> No need to re-render changes when the editor value is not new. (In fact,
+        //  because of leaky abstraction around events + immutable state between Monaco
+        //  and Torus, this leads to a race bug.)
+        if (newEditorValue !== this.frames[this.mode]) {
+            this.frames[this.mode] = newEditorValue;
+
+            const documentMarkup = `<!DOCTYPE html>
+<html>
+    <head><title>Live Frame | CodeFrame</title></head>
+    <body>
+        ${this.frames.html}
+        <script src="https://unpkg.com/torus-dom/dist/index.min.js"></script>
+        <script>${this.frames.javascript}</script>
+    </body>
+</html>`;
+
+            this.record.update({
+                liveRenderMarkup: documentMarkup,
+            });
+        }
+    }
+
     //> `saveFrames` handles saving / persisting Codeframe files to the backend service,
     //  and returns a promise that resolves only once all frame files have been saved.
     async saveFrames() {
@@ -353,7 +422,6 @@ class Editor extends StyledComponent {
         ]);
         //> Once we've saved the current frames, open the new frames up in the preview pane
         //  by going to this route with the new frames.
-        this._lastHash = hashes.html + hashes.js;
         router.go(`/h/${hashes.html}/j/${hashes.js}/edit`);
         gevent('editor', 'save');
     }
@@ -373,7 +441,7 @@ class Editor extends StyledComponent {
             border-left: 0 !important;
             border-top: 2px solid var(--cf-black);
         }
-        .top-bar {
+        .topBar {
             display: flex;
             flex-direction: row;
             justify-content: space-between;
@@ -381,6 +449,7 @@ class Editor extends StyledComponent {
             padding: 0 3px;
             border-bottom: 4px dotted var(--cf-black);
             flex-shrink: 0;
+            height: 52px;
             .embedded & {
                 background: var(--cf-background);
             }
@@ -423,7 +492,7 @@ class Editor extends StyledComponent {
 
     compose() {
         return jdom`<div class="editor" style="width:${this.paneWidth}%">
-            <div class="top-bar">
+            <div class="topBar">
                 <div class="tabs">
                     <button
                         class="button ${this.mode === 'html' ? 'active' : ''} tab-html"
@@ -664,6 +733,7 @@ class App extends StyledComponent {
         this.frameRecord = new Record({
             htmlFrameHash: '',
             jsFrameHash: '',
+            liveRenderMarkup: null,
         });
         this.workspace = new Workspace(this.frameRecord);
 
@@ -674,6 +744,7 @@ class App extends StyledComponent {
                     this.frameRecord.update({
                         htmlFrameHash: params.htmlFrameHash,
                         jsFrameHash: params.jsFrameHash,
+                        liveRenderMarkup: null,
                     });
                     break;
                 default:
