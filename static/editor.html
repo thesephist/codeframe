@@ -14,13 +14,16 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-137481167-1"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
+      window.ga = window.ga || null;
       if (!window.location.hostname.includes('localhost')) {
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
         gtag('config', 'UA-137481167-1');
         window.gevent = (category, action, label, value) => {
-          var tracker = ga.getAll()[0];
-          tracker.send('event', category, action, label, value);
+          var tracker = ga && ga.getAll()[0];
+          if (tracker) {
+            tracker.send('event', category, action, label, value);
+          }
         }
       } else {
         window.gevent = () => {}
