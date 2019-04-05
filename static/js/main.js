@@ -176,38 +176,41 @@ class PreviewPane extends StyledComponent {
     handleRefresh() {
         //> Force-refreshing the preview works by clearing the "last url"
         //  fetched, so it looks like the same URL is a new URL on next render.
-        this._lastUrl = '';
+        this._lastURL = '';
         this.render();
         gevent('preview', 'refresh');
     }
 
-    //> If the iframe already has content, we want to replace its uri; if not,
-    //  we want to give it a uri. This takes care of this logic.
-    safelySetIframeURI(uri) {
-        if (this.iframe.contentWindow) {
-            this.iframe.contentWindow.location.replace(uri);
-        } else {
-            this.iframe.src = uri;
+    safelySetIframeURL(url) {
+        //> If the iframe already has content, we want to replace its uri; if not,
+        //  we want to give it a uri. This takes care of this logic.
+        if (this._lastURL !== url) {
+            //> If we simply assign to `iframe.src` property here, it adds an entry to the parent
+            //  page's back/forward history, which we don't want. We only want to add to `src` if
+            //  the iframe does not already have a page loaded (i.e. when `contentWindow` is null).
+            if (this.iframe.contentWindow) {
+                this.iframe.contentWindow.location.replace(url);
+            } else {
+                this.iframe.src = url;
+            }
+            this._lastURL = url;
         }
     }
 
     compose(data) {
+        //> If we're not rendering from a saved Codeframe from the server but instead rendering
+        //  a "live" preview, generate a data URI instead and point the iframe to that. Otherwise,
+        //  just use the URL to the saved preview.
+        let url = '';
+        if (data.liveRenderMarkup === null) {
+            url = `${window.location.origin}/f/${data.htmlFrameHash}/${data.jsFrameHash}.html`;
+        } else {
+            url = 'data:text/html,' + encodeURIComponent(data.liveRenderMarkup);
+        }
+        this.safelySetIframeURL(url);
+
         //> We compare the new URL to the old URL here, to see whether we need to reset the `src`
         //  attribute on the iframe. If it's unchanged, we leave the iframe alone.
-        const url = `${window.location.origin}/f/${data.htmlFrameHash}/${data.jsFrameHash}.html`;
-        if (this._lastUrl !== url) {
-            //> If we simply assign to `iframe.src` property here, it adds an entry to the parent
-            //  page's back/forward history, which we don't want. We only want to add to `src` if
-            //  the iframe does not already have a page loaded (i.e. when `contentWindow` is null).
-            this.safelySetIframeURI(url);
-            this._lastUrl = url;
-        }
-        //> If we're not rendering from a saved Codeframe from the server but instead rendering
-        //  a "live" preview, generate a data URI instead and point the iframe to that.
-        if (data.liveRenderMarkup !== null) {
-            const dataURI = 'data:text/html,' + encodeURIComponent(data.liveRenderMarkup);
-            this.safelySetIframeURI(dataURI);
-        }
         return jdom`<div class="previewPanel" style="width:${this.paneWidth}%">
             ${data.liveRenderMarkup === null ? (
                 jdom`<div class="topBar">
@@ -241,6 +244,14 @@ class Editor extends StyledComponent {
     init(frameRecord) {
         //> Percentage of the editor size that the editor pane takes up.
         this.paneWidth = 50;
+
+        //> Initial values for extra settings
+        this.settings = {
+            //> Is the config bar visible?
+            visible: false,
+            //> Is the as-you-type live reload enabled?
+            asYouTypeEnabled: true,
+        }
 
         //> The "mode" is a slug, either `'html'` or `'javascript'`, that shows
         //  what file we're currently editing.
@@ -278,9 +289,13 @@ class Editor extends StyledComponent {
         this.switchJSMode = this.switchMode.bind(this, 'javascript');
         this.saveFrames = this.saveFrames.bind(this);
 
+        //> Bind other methods used as callbacks
+        this.toggleSettings = this.toggleSettings.bind(this);
+        this.toggleAsYouType = this.toggleAsYouType.bind(this);
+
         //> Live-rendering (previewing unsaved changes) should be debounced, since we don't
         //  want to re-render the iframe with every keystroke, for example.
-        this.liveRenderFrames = debounce(this.liveRenderFrames.bind(this), 1000);
+        this.liveRenderFrames = debounce(this.liveRenderFrames.bind(this), 750);
     }
 
     remove() {
@@ -379,10 +394,14 @@ class Editor extends StyledComponent {
     //> `liveRenderFrames()` is called when the editor content changes, to client-side
     //  refresh the iframe preview contents.
     liveRenderFrames() {
+        if (!this.settings.asYouTypeEnabled) {
+            return;
+        }
+
         const newEditorValue = this.monacoEditor.getValue();
         //> No need to re-render changes when the editor value is not new. (In fact,
         //  because of leaky abstraction around events + immutable state between Monaco
-        //  and Torus, this leads to a race bug.)
+        //  and Torus, doing so leads to a race bug.)
         if (newEditorValue !== this.frames[this.mode]) {
             this.frames[this.mode] = newEditorValue;
 
@@ -400,6 +419,24 @@ class Editor extends StyledComponent {
                 liveRenderMarkup: documentMarkup,
             });
         }
+    }
+
+    toggleSettings() {
+        this.settings.visible = !this.settings.visible;
+        this.render();
+        //> The settings bar changes the editor view size, so we need to
+        //  re-layout the editor after render.
+        this.resizeEditor();
+    }
+
+    toggleAsYouType() {
+        this.settings.asYouTypeEnabled = !this.settings.asYouTypeEnabled;
+        this.render();
+        //> In case there are any current dirty changes when this is toggled on...
+        if (this.settings.asYouTypeEnabled) {
+            this.liveRenderFrames();
+        }
+        gevent('editor', 'settings.asyoutype', this.settings.asYouTypeEnabled.toString());
     }
 
     //> `saveFrames` handles saving / persisting Codeframe files to the backend service,
@@ -450,11 +487,12 @@ class Editor extends StyledComponent {
             border-bottom: 4px dotted var(--cf-black);
             flex-shrink: 0;
             height: 52px;
+            overflow-x: auto;
             .embedded & {
                 background: var(--cf-background);
             }
         }
-        .tabs {
+        .buttonGroup {
             display: flex;
             flex-direction: row;
             align-items: center;
@@ -472,10 +510,12 @@ class Editor extends StyledComponent {
                 display: none;
             }
         }
-        .editorContainer, .ready {
-            height: 100%;
+        .editorContainer,
+        .ready {
             width: 100%;
             flex-shrink: 1;
+            flex-grow: 1;
+            overflow: hidden;
         }
         .ready {
             display: flex;
@@ -493,7 +533,7 @@ class Editor extends StyledComponent {
     compose() {
         return jdom`<div class="editor" style="width:${this.paneWidth}%">
             <div class="topBar">
-                <div class="tabs">
+                <div class="buttonGroup">
                     <button
                         class="button ${this.mode === 'html' ? 'active' : ''} tab-html"
                         title="Switch to HTML editor"
@@ -507,13 +547,27 @@ class Editor extends StyledComponent {
                         JavaScript
                     </button>
                 </div>
-                <button class="button" title="Save Codeframe and reload preview"
-                    onclick="${this.saveFrames}">Save ${'&'} Reload</button>
+                <div class="buttonGroup">
+                    <button class="button ${this.settings.visible ? 'active' : ''}" title="Show additional settings"
+                        onclick="${this.toggleSettings}">...</button>
+                    <button class="button" title="Save Codeframe and reload preview"
+                        onclick="${this.saveFrames}">Save ${'&'} Reload</button>
+                </div>
             </div>
+            ${this.settings.visible ? (
+                jdom`<div class="topBar">
+                    <button class="button ${this.settings.asYouTypeEnabled ? 'active' : ''}"
+                        title="Turn on or off live-reloading as you type"
+                        onclick="${this.toggleAsYouType}">
+                        Reload as you type
+                        ${this.settings.asYouTypeEnabled ? '(on)' : '(off)'}
+                    </button>
+                </div>`
+            ) : null}
             ${this.monacoEditor ? this.monacoContainer : (
                 //> If the editor is not yet available (is still loading), show a placeholder
                 //  bit of text.
-                jdom`<div class="ready"><em>Getting your code ready...</em></div>`
+                jdom`<div class="ready"><em>Getting your editor ready...</em></div>`
             )}
         </div>`;
     }
@@ -619,10 +673,10 @@ class Workspace extends StyledComponent {
             justify-content: space-between;
             align-items: flex-start;
             flex-grow: 1;
+            flex-shrink: 1;
             overflow: hidden;
             position: relative;
             height: 100%;
-            flex-shrink: 1;
             @media (max-width: 750px) {
                 flex-direction: column !important;
             }
@@ -708,7 +762,7 @@ class Workspace extends StyledComponent {
                 ${this.preview.node}
                 ${this.editor.node}
                 <a class="button fullButton"
-                    title="Open editor in a new tab"
+                    title="Open this editor in a new tab"
                     target="_blank"
                     href="${window.location.href}">
                     Open in new tab
@@ -762,6 +816,8 @@ class App extends StyledComponent {
         return css`
         width: 100%;
         height: 100vh;
+        display: flex;
+        flex-direction: column;
         overflow: hidden;
         `;
     }
@@ -786,4 +842,3 @@ document.body.appendChild(app.node);
 //> Since the editor is a full-window app, we don't want any overflows to
 //  make the app unnecessary scrollable beyond its viewport.
 document.body.style.overflow = 'hidden';
-
