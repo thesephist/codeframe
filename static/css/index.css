@@ -21,7 +21,8 @@ nav {
     white-space: nowrap;
 }
 
-.newButton {
+.newButton,
+.newButton:active {
     color: var(--cf-accent);
 }
 
