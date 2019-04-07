@@ -31,6 +31,7 @@ const api = {
         method: 'POST',
         body: body,
     }),
+    errlog: e => console.error(`Codeframe API error:\n\t${e}`),
 }
 
 const now = () => new Date().getTime();
@@ -325,8 +326,7 @@ class Editor extends StyledComponent {
                 if (this.models.html !== null) {
                     this.models.html.setValue(result);
                 }
-                this.render();
-            });
+            }).catch(e => api.errlog(e));
 
             api.get(`/frame/${data.jsFrameHash}`).then(resp => {
                 return resp.text();
@@ -335,8 +335,7 @@ class Editor extends StyledComponent {
                 if (this.models.javascript !== null) {
                     this.models.javascript.setValue(result);
                 }
-                this.render();
-            });
+            }).catch(e => api.errlog(e));
         }
     }
 
@@ -450,12 +449,14 @@ class Editor extends StyledComponent {
         //> This is a nice way to make the function hang (not resolve its returned Promise)
         //  until all of its requests have resolved.
         await Promise.all([
-            api.post(`/frame/`, this.frames.html).then(resp => {
-                return resp.text();
-            }).then(hash => hashes.html = hash),
-            api.post(`/frame/`, this.frames.javascript).then(resp => {
-                return resp.text();
-            }).then(hash => hashes.js = hash),
+            api.post('/frame/', this.frames.html)
+                .then(resp => resp.text())
+                .then(hash => hashes.html = hash)
+                .catch(e => api.errlog(e)),
+            api.post('/frame/', this.frames.javascript)
+                .then(resp => resp.text())
+                .then(hash => hashes.js = hash)
+                .catch(e => api.errlog(e)),
         ]);
         //> Once we've saved the current frames, open the new frames up in the preview pane
         //  by going to this route with the new frames.
