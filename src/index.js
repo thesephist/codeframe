@@ -6,7 +6,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 app.use(bodyParser.text({
-    limit: '100kb',
+    limit: '50kb',
 }));
 
 const api = require('./api.js');
