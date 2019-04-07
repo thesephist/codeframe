@@ -121,6 +121,18 @@ A key part of Codeframe is its library of friendly starter templates. It's a sma
 
 If you have Codeframes or samples you'd like to include on the front page of Codeframe as another starter template, add a file under `starter_fixtures/` and inside `const STARTER_FIXTURES` in `src/models.js`, and file a pull request! Starter templates set up this way are set up in the database at deployment time, ensuring that every running version of Codeframe has it set up.
 
+## Miscellaneous notes and interesting questions
+
+### Infinite loops and the halting problem
+
+One of the key features of the Codeframe editor is its "reload as you type" feature. That is, in the default mode (with the feature enabled), the editor will periodically reload the preview pane with the code from the editor, sometimes in the middle of typing. This generally makes for a superior editing experience -- without switching what we're doing, we get to see the result of our code immediately as we're editing, and that tight feedback loop is great for development.
+
+However, in certain cases, especially when writing JavaScript, this means that the preview reloads in the middle of typing, when we're writing potentially invalid or buggy JavaScript. One such buggy behavior that we might inadvertently reload into the preview pane is an infinite loop. In certain contexts, for example when we're writing `for(){}` and `while(){}` loops, we may create an infinite loop in the middle of typing our program that gets reloaded into our preview window, which by design grinds the entire editor tab to a halt, and results in potential data loss on the edits made in the editor.
+
+Codeframe isn't the first editor to run into this, and [CodePen.io](https://codepen.io/quezo/post/stopping-infinite-loops) has an interesting approach to instrumenting JavaScript in a live-reloading setting to prevent this behavior. The problem is challenging because preventing infinite loops in the general case is impossible -- it's a classic variant of the halting problem. In CodePen's case, they instrument the generated JavaScript code, such that when the same loop runs continuously for more than some period of time or iterations, it stops the loop. It's a pragmatic, albeit inelegant solution. Glitch, by contrast does nothing to prevent infinite loops in live reloading settings.
+
+I've found that, in practice it's fairly rare to accidentally write valid JavaScript code that also results in infinite loops. And for those rare cases, Codeframe has an option to disable as-you-type reloading in the editor. But by default, Codeframe follows Glitch's precedence in not modifying or instrumenting JavaScript to prevent infinite execution.
+
 ## Support
 
 If you enjoy using Codeframe and want to support what I make going forward, please consider making a donation to Codeframe through [PayPal](https://www.paypal.me/thesephist) or [Venmo](https://venmo.com/thesephist) 🙏.
