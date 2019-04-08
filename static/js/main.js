@@ -368,6 +368,17 @@ class Editor extends StyledComponent {
             //  is sized correctly to the containing box. `layout()` forces Monaco
             //  to re-layout itself in the space it was given.
             this.monacoEditor.layout();
+
+            //> Here we populate potential prefilled values from the URL query strings,
+            //  and force-live-render it into the preview to make those dirty changes
+            //  visible without saving these examples to the server.
+            if (prefilledValues.html || prefilledValues.js) {
+                this.frames.html = prefilledValues.html;
+                this.models.html.setValue(prefilledValues.html);
+                this.frames.javascript = prefilledValues.js;
+                this.models.javascript.setValue(prefilledValues.js);
+                this.liveRenderFrames({force: true});
+            }
         });
     }
 
@@ -392,7 +403,7 @@ class Editor extends StyledComponent {
 
     //> `liveRenderFrames()` is called when the editor content changes, to client-side
     //  refresh the iframe preview contents.
-    liveRenderFrames() {
+    liveRenderFrames({force = false}) {
         if (!this.settings.asYouTypeEnabled) {
             return;
         }
@@ -401,7 +412,7 @@ class Editor extends StyledComponent {
         //> No need to re-render changes when the editor value is not new. (In fact,
         //  because of leaky abstraction around events + immutable state between Monaco
         //  and Torus, doing so leads to a race bug.)
-        if (newEditorValue !== this.frames[this.mode]) {
+        if (force || newEditorValue !== this.frames[this.mode]) {
             this.frames[this.mode] = newEditorValue;
 
             const documentMarkup = `<!DOCTYPE html>
@@ -807,6 +818,21 @@ class App extends StyledComponent {
                     });
                     break;
                 default:
+                    {
+                        //> If there are prefilled HTML and JavaScript values provided
+                        //  provided in the query string, parse and save it for later
+                        //  when the editor loads.
+                        const searchPart = window.location.search.substr(1);
+                        if (searchPart) {
+                            for (const pair of searchPart.split('&')) {
+                                const idx = pair.indexOf('=');
+                                const langPart = pair.substr(0, idx);
+                                if (langPart in prefilledValues) {
+                                    prefilledValues[langPart] = decodeURIComponent(pair.substr(idx + 1));
+                                }
+                            }
+                        }
+                    }
                     router.go(`/h/${BLANK_HASH}/j/${BLANK_HASH}/edit`);
                     break;
             }
@@ -829,6 +855,13 @@ class App extends StyledComponent {
         </div>`;
     }
 
+}
+
+//> Used to save some global values for when the URL contains a
+//  pre-populated code sample.
+const prefilledValues = {
+    html: '',
+    js: '',
 }
 
 const router = new Router({
