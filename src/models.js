@@ -4,6 +4,7 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const zlib = require('zlib');
 
 const config = require('../config.js');
 
@@ -36,7 +37,8 @@ const hashFile = contents => {
 }
 
 //> `SourceFileStore` is the database that manages the app's communication
-//  with the filesystem-backed storage for Codeframe files.
+//  with the filesystem-backed storage for Codeframe files. For efficiency of data in storage,
+//  we compress files stored here with gzip for on-disk storage.
 class SourceFileStore {
 
     constructor(basePath) {
@@ -76,11 +78,19 @@ class SourceFileStore {
     //> Given a hash, returns a Promise resolving to the contents of the file, or rejects.
     getFromFS(frameHash) {
         return new Promise((res, rej) => {
-            fs.readFile(this.getPathFromHash(frameHash), 'utf8', (err, data) => {
+            fs.readFile(this.getPathFromHash(frameHash), (err, data) => {
                 if (err) {
                     rej(err);
                 } else {
-                    res(data);
+                    //> unzip gzip compression of the read data before returning
+                    //  to the caller
+                    zlib.gunzip(data, 'utf8', (err, results) => {
+                        if (err) {
+                            rej(err);
+                        } else {
+                            res(results.toString('utf8'));
+                        }
+                    });
                 }
             });
         });
@@ -93,11 +103,18 @@ class SourceFileStore {
         const exists = await this.has(sourceFilePath);
         if (!exists) {
             return new Promise((res, rej) => {
-                fs.writeFile(sourceFilePath, sourceFileContents, 'utf8', err => {
+                //> Before saving the file, gzip the text file
+                zlib.gzip(sourceFileContents, 'utf8', (err, results) => {
                     if (err) {
-                        rej(err)
+                        rej(err);
                     } else {
-                        res(frameHash);
+                        fs.writeFile(sourceFilePath, results, err => {
+                            if (err) {
+                                rej(err)
+                            } else {
+                                res(frameHash);
+                            }
+                        });
                     }
                 });
             });
