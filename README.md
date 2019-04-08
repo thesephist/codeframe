@@ -133,6 +133,10 @@ Codeframe isn't the first editor to run into this, and [CodePen.io](https://code
 
 I've found that, in practice, it's fairly rare to accidentally write syntax-valid JavaScript code that also results in infinite loops. And for those rare cases, Codeframe has an option to disable as-you-type reloading in the editor. But by default, Codeframe follows Glitch's precedence in not modifying or instrumenting JavaScript to prevent infinite execution. If we run into more use cases where this becomes an issue, we may revisit this problem.
 
+### "Saving" or "exporting" Codeframes
+
+A neat side-effect of the simplicity of the code you can write on Codeframe (no compile step, no bundling) is that the output you get in a preview HTML page is verbatim the code you typed into the editor, plus some wrapper HTML code. So rather than explicitly add an "export" button or menu item, the user can simply open the preview and save the HTML document itself to "export" any codeframes they've created.
+
 ## Support
 
 If you enjoy using Codeframe and want to support what I make going forward, please consider making a donation to Codeframe through [PayPal](https://www.paypal.me/thesephist) or [Venmo](https://venmo.com/thesephist) 🙏.
