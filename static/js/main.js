@@ -527,7 +527,6 @@ class Editor extends StyledComponent {
             width: 100%;
             flex-shrink: 1;
             flex-grow: 1;
-            overflow: hidden;
         }
         .ready {
             display: flex;

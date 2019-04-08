@@ -509,348 +509,347 @@
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">527</strong>            width: 100%;</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">528</strong>            flex-shrink: 1;</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">529</strong>            flex-grow: 1;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">530</strong>            overflow: hidden;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">531</strong>        }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">532</strong>        .ready {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">533</strong>            display: flex;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">534</strong>            flex-direction: row;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">535</strong>            justify-content: center;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">536</strong>            align-items: center;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">537</strong>            color: #555;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">538</strong>            em {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">539</strong>                display: block;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">540</strong>            }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">541</strong>        }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">542</strong>        `;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">543</strong>    }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">544</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">545</strong>    compose() {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">546</strong>        return jdom`&#60;div class="editor" style="width:${this.paneWidth}%"&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">547</strong>            &#60;div class="topBar"&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">548</strong>                &#60;div class="buttonGroup"&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">549</strong>                    &#60;button</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">550</strong>                        class="button ${this.mode === 'html' ? 'active' : ''} tab-html"</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">551</strong>                        title="Switch to HTML editor"</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">552</strong>                        onclick="${this.switchHTMLMode}"&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">553</strong>                        HTML</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">554</strong>                    &#60;/button&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">555</strong>                    &#60;button</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">556</strong>                        class="button ${this.mode === 'javascript' ? 'active' : ''} tab-js"</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">557</strong>                        title="Switch to JavaScript editor"</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">558</strong>                        onclick="${this.switchJSMode}"&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">559</strong>                        JavaScript</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">560</strong>                    &#60;/button&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">561</strong>                &#60;/div&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">562</strong>                &#60;div class="buttonGroup"&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">563</strong>                    &#60;button class="button ${this.settings.visible ? 'active' : ''}" title="Show additional settings"</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">564</strong>                        onclick="${this.toggleSettings}"&#62;...&#60;/button&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">565</strong>                    &#60;button class="button" title="Save Codeframe and reload preview"</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">566</strong>                        onclick="${this.saveFrames}"&#62;Save ${'&#38;'} Reload&#60;/button&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">567</strong>                &#60;/div&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">568</strong>            &#60;/div&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">569</strong>            ${this.settings.visible ? (</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">570</strong>                jdom`&#60;div class="topBar"&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">571</strong>                    &#60;button class="button ${this.settings.asYouTypeEnabled ? 'active' : ''}"</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">572</strong>                        title="Turn on or off live-reloading as you type"</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">573</strong>                        onclick="${this.toggleAsYouType}"&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">574</strong>                        Reload as you type</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">575</strong>                        ${this.settings.asYouTypeEnabled ? '(on)' : '(off)'}</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">576</strong>                    &#60;/button&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">577</strong>                &#60;/div&#62;`</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">578</strong>            ) : null}</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">579</strong>            ${this.monacoEditor ? this.monacoContainer : (</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">530</strong>        }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">531</strong>        .ready {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">532</strong>            display: flex;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">533</strong>            flex-direction: row;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">534</strong>            justify-content: center;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">535</strong>            align-items: center;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">536</strong>            color: #555;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">537</strong>            em {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">538</strong>                display: block;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">539</strong>            }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">540</strong>        }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">541</strong>        `;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">542</strong>    }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">543</strong></pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">544</strong>    compose() {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">545</strong>        return jdom`&#60;div class="editor" style="width:${this.paneWidth}%"&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">546</strong>            &#60;div class="topBar"&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">547</strong>                &#60;div class="buttonGroup"&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">548</strong>                    &#60;button</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">549</strong>                        class="button ${this.mode === 'html' ? 'active' : ''} tab-html"</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">550</strong>                        title="Switch to HTML editor"</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">551</strong>                        onclick="${this.switchHTMLMode}"&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">552</strong>                        HTML</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">553</strong>                    &#60;/button&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">554</strong>                    &#60;button</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">555</strong>                        class="button ${this.mode === 'javascript' ? 'active' : ''} tab-js"</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">556</strong>                        title="Switch to JavaScript editor"</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">557</strong>                        onclick="${this.switchJSMode}"&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">558</strong>                        JavaScript</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">559</strong>                    &#60;/button&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">560</strong>                &#60;/div&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">561</strong>                &#60;div class="buttonGroup"&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">562</strong>                    &#60;button class="button ${this.settings.visible ? 'active' : ''}" title="Show additional settings"</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">563</strong>                        onclick="${this.toggleSettings}"&#62;...&#60;/button&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">564</strong>                    &#60;button class="button" title="Save Codeframe and reload preview"</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">565</strong>                        onclick="${this.saveFrames}"&#62;Save ${'&#38;'} Reload&#60;/button&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">566</strong>                &#60;/div&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">567</strong>            &#60;/div&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">568</strong>            ${this.settings.visible ? (</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">569</strong>                jdom`&#60;div class="topBar"&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">570</strong>                    &#60;button class="button ${this.settings.asYouTypeEnabled ? 'active' : ''}"</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">571</strong>                        title="Turn on or off live-reloading as you type"</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">572</strong>                        onclick="${this.toggleAsYouType}"&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">573</strong>                        Reload as you type</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">574</strong>                        ${this.settings.asYouTypeEnabled ? '(on)' : '(off)'}</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">575</strong>                    &#60;/button&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">576</strong>                &#60;/div&#62;`</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">577</strong>            ) : null}</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">578</strong>            ${this.monacoEditor ? this.monacoContainer : (</pre></div>
 <div class="line"><div class="doc"><p>If the editor is not yet available (is still loading), show a placeholder bit of text.</p>
-</div><pre class="source javascript"><strong class="lineNumber">582</strong>                jdom`&#60;div class="ready"&#62;&#60;em&#62;Getting your editor ready...&#60;/em&#62;&#60;/div&#62;`</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">583</strong>            )}</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">584</strong>        &#60;/div&#62;`;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">585</strong>    }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">586</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">587</strong>}</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">588</strong></pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">581</strong>                jdom`&#60;div class="ready"&#62;&#60;em&#62;Getting your editor ready...&#60;/em&#62;&#60;/div&#62;`</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">582</strong>            )}</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">583</strong>        &#60;/div&#62;`;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">584</strong>    }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">585</strong></pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">586</strong>}</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">587</strong></pre></div>
 <div class="line"><div class="doc"><p>The <code>Workspace</code> component is the &quot;Codeframe editor&quot;. That is to say, this is the component that wraps everything into a neat, interactive page and is the backbone of the Codeframe editing experience.</p>
-</div><pre class="source javascript"><strong class="lineNumber">592</strong>class Workspace extends StyledComponent {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">593</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">594</strong>    init(frameRecord) {</pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">591</strong>class Workspace extends StyledComponent {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">592</strong></pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">593</strong>    init(frameRecord) {</pre></div>
 <div class="line"><div class="doc"><p>The left/right panes are split 50/50 between its two panes.</p>
-</div><pre class="source javascript"><strong class="lineNumber">596</strong>        this.paneSplit = 50;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">597</strong>        this.preview = new PreviewPane(frameRecord);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">598</strong>        this.editor = new Editor(frameRecord);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">599</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">600</strong>        this.bind(frameRecord, data =&#62; this.render(data));</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">601</strong></pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">595</strong>        this.paneSplit = 50;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">596</strong>        this.preview = new PreviewPane(frameRecord);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">597</strong>        this.editor = new Editor(frameRecord);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">598</strong></pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">599</strong>        this.bind(frameRecord, data =&#62; this.render(data));</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">600</strong></pre></div>
 <div class="line"><div class="doc"><p><code>this.grabDragging</code> represents whether there is currently a drag-to-resize-panes interaction happening.</p>
-</div><pre class="source javascript"><strong class="lineNumber">604</strong>        this.grabDragging = false;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">605</strong>        this.handleGrabMousedown = this.handleGrabMousedown.bind(this);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">606</strong>        this.handleGrabMousemove = this.handleGrabMousemove.bind(this);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">607</strong>        this.handleGrabMouseup = this.handleGrabMouseup.bind(this);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">608</strong>    }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">609</strong></pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">603</strong>        this.grabDragging = false;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">604</strong>        this.handleGrabMousedown = this.handleGrabMousedown.bind(this);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">605</strong>        this.handleGrabMousemove = this.handleGrabMousemove.bind(this);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">606</strong>        this.handleGrabMouseup = this.handleGrabMouseup.bind(this);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">607</strong>    }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">608</strong></pre></div>
 <div class="line"><div class="doc"><p>Shortcut method to set the sizes of children components, given one split percentage.</p>
-</div><pre class="source javascript"><strong class="lineNumber">612</strong>    setPaneWidth(width) {</pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">611</strong>    setPaneWidth(width) {</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber"></strong></pre></div>
 <div class="line"><div class="doc"><p>These cases implement &quot;snapping&quot; of panes to 0, 50, 100% increments, with 1% buffer around each snap point.</p>
-</div><pre class="source javascript"><strong class="lineNumber">615</strong>        if (width &#60; 1) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">616</strong>            width = 0;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">617</strong>        } else if (width &#62; 99) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">618</strong>            width = 100;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">619</strong>        } else if (width &#62; 49 &#38;&#38; width &#60; 51) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">620</strong>            width = 50;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">621</strong>        }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">622</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">623</strong>        this.paneSplit = width;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">624</strong>        this.preview.setWidth(width);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">625</strong>        this.editor.setWidth(100 - width);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">626</strong>        this.render();</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">627</strong>    }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">628</strong></pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">614</strong>        if (width &#60; 1) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">615</strong>            width = 0;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">616</strong>        } else if (width &#62; 99) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">617</strong>            width = 100;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">618</strong>        } else if (width &#62; 49 &#38;&#38; width &#60; 51) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">619</strong>            width = 50;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">620</strong>        }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">621</strong></pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">622</strong>        this.paneSplit = width;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">623</strong>        this.preview.setWidth(width);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">624</strong>        this.editor.setWidth(100 - width);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">625</strong>        this.render();</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">626</strong>    }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">627</strong></pre></div>
 <div class="line"><div class="doc"><p>What follows are mouse/pointer event handlers to make resizing a smooth experience.</p>
-</div><pre class="source javascript"><strong class="lineNumber">631</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">632</strong>    handleGrabMousedown() {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">633</strong>        this.grabDragging = true;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">634</strong>        this.render();</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">635</strong>    }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">636</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">637</strong>    handleGrabMousemove(evt) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">638</strong>        if (this.grabDragging) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">639</strong>            if (!evt.defaultPrevented) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">640</strong>                evt.preventDefault();</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">641</strong>            }</pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">630</strong></pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">631</strong>    handleGrabMousedown() {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">632</strong>        this.grabDragging = true;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">633</strong>        this.render();</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">634</strong>    }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">635</strong></pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">636</strong>    handleGrabMousemove(evt) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">637</strong>        if (this.grabDragging) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">638</strong>            if (!evt.defaultPrevented) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">639</strong>                evt.preventDefault();</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">640</strong>            }</pre></div>
 <div class="line"><div class="doc"><p>If the event is a touch event, get the <code>clientX</code> of the first touch point, not the whole event.</p>
-</div><pre class="source javascript"><strong class="lineNumber">644</strong>            if (evt.touches) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">645</strong>                evt = evt.touches[0];</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">646</strong>            }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">647</strong>            this.setPaneWidth(evt.clientX / window.innerWidth * 100);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">648</strong>        }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">649</strong>    }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">650</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">651</strong>    handleGrabMouseup() {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">652</strong>        this.grabDragging = false;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">653</strong>        this.render();</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">654</strong>        gevent('workspace', 'resize', 'editor', this.paneSplit);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">655</strong>    }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">656</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">657</strong>    styles() {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">658</strong>        return css`</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">659</strong>        width: 100%;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">660</strong>        height: 100%;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">661</strong>        display: flex;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">662</strong>        flex-direction: column;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">663</strong>        header {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">664</strong>            display: flex;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">665</strong>            flex-direction: row;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">666</strong>            justify-content: space-between;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">667</strong>            align-items: center;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">668</strong>            flex-shrink: 0;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">669</strong>            padding: 4px;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">670</strong>            background: var(--cf-background);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">671</strong>            border-bottom: 4px solid var(--cf-black);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">672</strong>        }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">673</strong>        &#38;.embedded header {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">674</strong>            display: none;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">675</strong>        }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">676</strong>        nav {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">677</strong>            display: flex;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">678</strong>            flex-direction: row;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">679</strong>            flex-shrink: 1;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">680</strong>            overflow-x: auto;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">681</strong>        }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">682</strong>        main {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">683</strong>            display: flex;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">684</strong>            flex-direction: row;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">685</strong>            justify-content: space-between;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">686</strong>            align-items: flex-start;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">687</strong>            flex-grow: 1;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">688</strong>            flex-shrink: 1;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">689</strong>            overflow: hidden;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">690</strong>            position: relative;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">691</strong>            height: 100%;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">692</strong>            @media (max-width: 750px) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">693</strong>                flex-direction: column !important;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">694</strong>            }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">695</strong>        }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">696</strong>        .button {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">697</strong>            white-space: nowrap;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">698</strong>        }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">699</strong>        .newButton {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">700</strong>            color: var(--cf-accent);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">701</strong>        }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">702</strong>        .grabHandle {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">703</strong>            position: absolute;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">704</strong>            top: 50%;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">705</strong>            left: 0;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">706</strong>            transform: translate(-50%, -50%);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">707</strong>            border-radius: 4px;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">708</strong>            width: 8px;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">709</strong>            height: 56px;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">710</strong>            background: #fff;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">711</strong>            border: 3px solid var(--cf-black);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">712</strong>            cursor: ew-resize;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">713</strong>            z-index: 2000;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">714</strong>            &#38;:hover {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">715</strong>                background: var(--cf-background);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">716</strong>            }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">717</strong>            &#38;:active {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">718</strong>                background: var(--cf-accent);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">719</strong>            }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">720</strong>        }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">721</strong>        .grabHandleShadow {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">722</strong>            background: rgba(0, 0, 0, .1);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">723</strong>            position: absolute;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">724</strong>            top: 0;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">725</strong>            left: 0;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">726</strong>            right: 0;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">727</strong>            bottom: 0;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">728</strong>            z-index: 1000;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">729</strong>            transition: opacity .3s;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">730</strong>            &#38;.hidden {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">731</strong>                opacity: 0;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">732</strong>                pointer-events: none;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">733</strong>            }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">734</strong>        }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">735</strong>        .fullButton {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">736</strong>            display: none;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">737</strong>        }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">738</strong>        &#38;.embedded .fullButton {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">739</strong>            display: block;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">740</strong>            position: absolute;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">741</strong>            top: unset;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">742</strong>            left: unset;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">743</strong>            bottom: 2px;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">744</strong>            right: 6px;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">745</strong>            font-size: .75em;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">746</strong>        }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">747</strong>        `;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">748</strong>    }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">749</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">750</strong>    compose() {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">751</strong>        return jdom`</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">752</strong>        &#60;div class="workspace ${window.frameElement === null ? '' : 'embedded'}"</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">753</strong>            ontouchmove="${this.grabDragging ? this.handleGrabMousemove : ''}"</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">754</strong>            ontouchend="${this.grabDragging ? this.handleGrabMouseup : ''}"</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">755</strong>            onmousemove="${this.grabDragging ? this.handleGrabMousemove : ''}"</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">756</strong>            onmouseup="${this.grabDragging ? this.handleGrabMouseup : ''}"&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">757</strong>            &#60;header&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">758</strong>                &#60;div class="logo"&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">759</strong>                    &#60;a class="button" href="/"&#62;Codeframe&#60;/a&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">760</strong>                &#60;/div&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">761</strong>                &#60;nav&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">762</strong>                    &#60;a class="button newButton" href="/new?from=editor"&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">763</strong>                        + New &#60;span class="mobile-hidden"&#62;Codeframe&#60;/span&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">764</strong>                    &#60;/a&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">765</strong>                    &#60;a class="button tiny-hidden" href="https://twitter.com/thesephist" target="_blank"&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">766</strong>                        &#60;span class="mobile-hidden"&#62;Made by&#60;/span&#62; @thesephist</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">767</strong>                    &#60;/a&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">768</strong>                    &#60;a class="button" href="https://github.com/thesephist/codeframe" target="_blank"&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">769</strong>                        &#60;span class="mobile-hidden"&#62;View Source on&#60;/span&#62; GitHub</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">770</strong>                    &#60;/a&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">771</strong>                &#60;/nav&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">772</strong>            &#60;/header&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">773</strong>            &#60;main&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">774</strong>                ${this.preview.node}</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">775</strong>                ${this.editor.node}</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">776</strong>                &#60;a class="button fullButton"</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">777</strong>                    title="Open this editor in a new tab"</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">778</strong>                    target="_blank"</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">779</strong>                    href="${window.location.href}"&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">780</strong>                    Open in new tab</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">781</strong>                &#60;/a&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">782</strong>                &#60;div class="grabHandleShadow ${this.grabDragging ? '' : 'hidden'}"&#62;&#60;/div&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">783</strong>                &#60;div</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">784</strong>                    title="Resize editor panes"</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">785</strong>                    class="grabHandle mobile-hidden"</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">786</strong>                    style="left:${this.paneSplit}%"</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">787</strong>                    ontouchstart="${this.handleGrabMousedown}"</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">788</strong>                    onmousedown="${this.handleGrabMousedown}"&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">789</strong>                &#60;/div&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">790</strong>            &#60;/main&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">791</strong>        &#60;/div&#62;`;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">792</strong>    }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">793</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">794</strong>}</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">795</strong></pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">643</strong>            if (evt.touches) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">644</strong>                evt = evt.touches[0];</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">645</strong>            }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">646</strong>            this.setPaneWidth(evt.clientX / window.innerWidth * 100);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">647</strong>        }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">648</strong>    }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">649</strong></pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">650</strong>    handleGrabMouseup() {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">651</strong>        this.grabDragging = false;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">652</strong>        this.render();</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">653</strong>        gevent('workspace', 'resize', 'editor', this.paneSplit);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">654</strong>    }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">655</strong></pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">656</strong>    styles() {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">657</strong>        return css`</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">658</strong>        width: 100%;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">659</strong>        height: 100%;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">660</strong>        display: flex;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">661</strong>        flex-direction: column;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">662</strong>        header {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">663</strong>            display: flex;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">664</strong>            flex-direction: row;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">665</strong>            justify-content: space-between;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">666</strong>            align-items: center;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">667</strong>            flex-shrink: 0;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">668</strong>            padding: 4px;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">669</strong>            background: var(--cf-background);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">670</strong>            border-bottom: 4px solid var(--cf-black);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">671</strong>        }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">672</strong>        &#38;.embedded header {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">673</strong>            display: none;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">674</strong>        }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">675</strong>        nav {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">676</strong>            display: flex;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">677</strong>            flex-direction: row;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">678</strong>            flex-shrink: 1;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">679</strong>            overflow-x: auto;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">680</strong>        }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">681</strong>        main {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">682</strong>            display: flex;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">683</strong>            flex-direction: row;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">684</strong>            justify-content: space-between;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">685</strong>            align-items: flex-start;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">686</strong>            flex-grow: 1;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">687</strong>            flex-shrink: 1;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">688</strong>            overflow: hidden;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">689</strong>            position: relative;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">690</strong>            height: 100%;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">691</strong>            @media (max-width: 750px) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">692</strong>                flex-direction: column !important;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">693</strong>            }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">694</strong>        }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">695</strong>        .button {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">696</strong>            white-space: nowrap;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">697</strong>        }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">698</strong>        .newButton {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">699</strong>            color: var(--cf-accent);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">700</strong>        }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">701</strong>        .grabHandle {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">702</strong>            position: absolute;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">703</strong>            top: 50%;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">704</strong>            left: 0;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">705</strong>            transform: translate(-50%, -50%);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">706</strong>            border-radius: 4px;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">707</strong>            width: 8px;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">708</strong>            height: 56px;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">709</strong>            background: #fff;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">710</strong>            border: 3px solid var(--cf-black);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">711</strong>            cursor: ew-resize;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">712</strong>            z-index: 2000;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">713</strong>            &#38;:hover {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">714</strong>                background: var(--cf-background);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">715</strong>            }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">716</strong>            &#38;:active {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">717</strong>                background: var(--cf-accent);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">718</strong>            }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">719</strong>        }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">720</strong>        .grabHandleShadow {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">721</strong>            background: rgba(0, 0, 0, .1);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">722</strong>            position: absolute;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">723</strong>            top: 0;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">724</strong>            left: 0;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">725</strong>            right: 0;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">726</strong>            bottom: 0;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">727</strong>            z-index: 1000;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">728</strong>            transition: opacity .3s;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">729</strong>            &#38;.hidden {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">730</strong>                opacity: 0;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">731</strong>                pointer-events: none;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">732</strong>            }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">733</strong>        }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">734</strong>        .fullButton {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">735</strong>            display: none;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">736</strong>        }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">737</strong>        &#38;.embedded .fullButton {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">738</strong>            display: block;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">739</strong>            position: absolute;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">740</strong>            top: unset;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">741</strong>            left: unset;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">742</strong>            bottom: 2px;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">743</strong>            right: 6px;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">744</strong>            font-size: .75em;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">745</strong>        }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">746</strong>        `;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">747</strong>    }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">748</strong></pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">749</strong>    compose() {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">750</strong>        return jdom`</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">751</strong>        &#60;div class="workspace ${window.frameElement === null ? '' : 'embedded'}"</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">752</strong>            ontouchmove="${this.grabDragging ? this.handleGrabMousemove : ''}"</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">753</strong>            ontouchend="${this.grabDragging ? this.handleGrabMouseup : ''}"</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">754</strong>            onmousemove="${this.grabDragging ? this.handleGrabMousemove : ''}"</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">755</strong>            onmouseup="${this.grabDragging ? this.handleGrabMouseup : ''}"&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">756</strong>            &#60;header&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">757</strong>                &#60;div class="logo"&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">758</strong>                    &#60;a class="button" href="/"&#62;Codeframe&#60;/a&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">759</strong>                &#60;/div&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">760</strong>                &#60;nav&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">761</strong>                    &#60;a class="button newButton" href="/new?from=editor"&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">762</strong>                        + New &#60;span class="mobile-hidden"&#62;Codeframe&#60;/span&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">763</strong>                    &#60;/a&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">764</strong>                    &#60;a class="button tiny-hidden" href="https://twitter.com/thesephist" target="_blank"&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">765</strong>                        &#60;span class="mobile-hidden"&#62;Made by&#60;/span&#62; @thesephist</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">766</strong>                    &#60;/a&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">767</strong>                    &#60;a class="button" href="https://github.com/thesephist/codeframe" target="_blank"&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">768</strong>                        &#60;span class="mobile-hidden"&#62;View Source on&#60;/span&#62; GitHub</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">769</strong>                    &#60;/a&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">770</strong>                &#60;/nav&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">771</strong>            &#60;/header&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">772</strong>            &#60;main&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">773</strong>                ${this.preview.node}</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">774</strong>                ${this.editor.node}</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">775</strong>                &#60;a class="button fullButton"</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">776</strong>                    title="Open this editor in a new tab"</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">777</strong>                    target="_blank"</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">778</strong>                    href="${window.location.href}"&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">779</strong>                    Open in new tab</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">780</strong>                &#60;/a&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">781</strong>                &#60;div class="grabHandleShadow ${this.grabDragging ? '' : 'hidden'}"&#62;&#60;/div&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">782</strong>                &#60;div</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">783</strong>                    title="Resize editor panes"</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">784</strong>                    class="grabHandle mobile-hidden"</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">785</strong>                    style="left:${this.paneSplit}%"</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">786</strong>                    ontouchstart="${this.handleGrabMousedown}"</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">787</strong>                    onmousedown="${this.handleGrabMousedown}"&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">788</strong>                &#60;/div&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">789</strong>            &#60;/main&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">790</strong>        &#60;/div&#62;`;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">791</strong>    }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">792</strong></pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">793</strong>}</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">794</strong></pre></div>
 <div class="line"><div class="doc"><p>The <code>App</code> component simply wraps around the <code>Workspace</code> to provide routing and a container for the workspace.</p>
-</div><pre class="source javascript"><strong class="lineNumber">798</strong>class App extends StyledComponent {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">799</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">800</strong>    init(router) {</pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">797</strong>class App extends StyledComponent {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">798</strong></pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">799</strong>    init(router) {</pre></div>
 <div class="line"><div class="doc"><p>This <code>frameRecord</code> becomes the view model for most views in the editor.</p>
-</div><pre class="source javascript"><strong class="lineNumber">803</strong>        this.frameRecord = new Record({</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">804</strong>            htmlFrameHash: '',</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">805</strong>            jsFrameHash: '',</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">806</strong>            liveRenderMarkup: null,</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">807</strong>        });</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">808</strong>        this.workspace = new Workspace(this.frameRecord);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">809</strong></pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">802</strong>        this.frameRecord = new Record({</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">803</strong>            htmlFrameHash: '',</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">804</strong>            jsFrameHash: '',</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">805</strong>            liveRenderMarkup: null,</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">806</strong>        });</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">807</strong>        this.workspace = new Workspace(this.frameRecord);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">808</strong></pre></div>
 <div class="line"><div class="doc"><p>Routing logic.</p>
-</div><pre class="source javascript"><strong class="lineNumber">811</strong>        this.bind(router, ([name, params]) =&#62; {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">812</strong>            switch (name) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">813</strong>                case 'edit':</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">814</strong>                    this.frameRecord.update({</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">815</strong>                        htmlFrameHash: params.htmlFrameHash,</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">816</strong>                        jsFrameHash: params.jsFrameHash,</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">817</strong>                        liveRenderMarkup: null,</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">818</strong>                    });</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">819</strong>                    break;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">820</strong>                case 'welcome':</pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">810</strong>        this.bind(router, ([name, params]) =&#62; {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">811</strong>            switch (name) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">812</strong>                case 'edit':</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">813</strong>                    this.frameRecord.update({</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">814</strong>                        htmlFrameHash: params.htmlFrameHash,</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">815</strong>                        jsFrameHash: params.jsFrameHash,</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">816</strong>                        liveRenderMarkup: null,</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">817</strong>                    });</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">818</strong>                    break;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">819</strong>                case 'welcome':</pre></div>
 <div class="line"><div class="doc"><p>This is a predetermined URL that points to the welcome Codeframe.</p>
-</div><pre class="source javascript"><strong class="lineNumber">822</strong>                    router.go('/h/34257cad6ac3/j/e3b0c44298fc/edit');</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">823</strong>                    break;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">824</strong>                default:</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">825</strong>                    {</pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">821</strong>                    router.go('/h/34257cad6ac3/j/e3b0c44298fc/edit');</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">822</strong>                    break;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">823</strong>                default:</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">824</strong>                    {</pre></div>
 <div class="line"><div class="doc"><p>If there are prefilled HTML and JavaScript values provided provided in the query string, parse and save it for later when the editor loads.</p>
-</div><pre class="source javascript"><strong class="lineNumber">829</strong>                        const searchPart = window.location.search.substr(1);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">830</strong>                        if (searchPart) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">831</strong>                            for (const pair of searchPart.split('&#38;')) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">832</strong>                                const idx = pair.indexOf('=');</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">833</strong>                                const langPart = pair.substr(0, idx);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">834</strong>                                if (langPart in prefilledValues) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">835</strong>                                    prefilledValues[langPart] = decodeURIComponent(pair.substr(idx + 1));</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">836</strong>                                }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">837</strong>                            }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">838</strong>                        }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">839</strong>                    }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">840</strong>                    router.go(`/h/${BLANK_HASH}/j/${BLANK_HASH}/edit`);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">841</strong>                    break;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">842</strong>            }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">843</strong>        })</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">844</strong>    }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">845</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">846</strong>    styles() {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">847</strong>        return css`</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">848</strong>        width: 100%;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">849</strong>        height: 100vh;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">850</strong>        display: flex;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">851</strong>        flex-direction: column;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">852</strong>        overflow: hidden;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">853</strong>        `;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">854</strong>    }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">855</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">856</strong>    compose() {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">857</strong>        return jdom`&#60;div id="root"&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">858</strong>            ${this.workspace.node}</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">859</strong>        &#60;/div&#62;`;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">860</strong>    }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">861</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">862</strong>}</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">863</strong></pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">828</strong>                        const searchPart = window.location.search.substr(1);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">829</strong>                        if (searchPart) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">830</strong>                            for (const pair of searchPart.split('&#38;')) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">831</strong>                                const idx = pair.indexOf('=');</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">832</strong>                                const langPart = pair.substr(0, idx);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">833</strong>                                if (langPart in prefilledValues) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">834</strong>                                    prefilledValues[langPart] = decodeURIComponent(pair.substr(idx + 1));</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">835</strong>                                }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">836</strong>                            }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">837</strong>                        }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">838</strong>                    }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">839</strong>                    router.go(`/h/${BLANK_HASH}/j/${BLANK_HASH}/edit`);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">840</strong>                    break;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">841</strong>            }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">842</strong>        })</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">843</strong>    }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">844</strong></pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">845</strong>    styles() {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">846</strong>        return css`</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">847</strong>        width: 100%;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">848</strong>        height: 100vh;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">849</strong>        display: flex;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">850</strong>        flex-direction: column;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">851</strong>        overflow: hidden;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">852</strong>        `;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">853</strong>    }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">854</strong></pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">855</strong>    compose() {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">856</strong>        return jdom`&#60;div id="root"&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">857</strong>            ${this.workspace.node}</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">858</strong>        &#60;/div&#62;`;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">859</strong>    }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">860</strong></pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">861</strong>}</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">862</strong></pre></div>
 <div class="line"><div class="doc"><p>Used to save some global values for when the URL contains a pre-populated code sample.</p>
-</div><pre class="source javascript"><strong class="lineNumber">866</strong>const prefilledValues = {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">867</strong>    html: '',</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">868</strong>    js: '',</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">869</strong>}</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">870</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">871</strong>const router = new Router({</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">872</strong>    edit: '/h/:htmlFrameHash/j/:jsFrameHash/edit',</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">873</strong>    welcome: '/welcome',</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">874</strong>    default: '/new',</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">875</strong>});</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">876</strong></pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">865</strong>const prefilledValues = {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">866</strong>    html: '',</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">867</strong>    js: '',</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">868</strong>}</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">869</strong></pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">870</strong>const router = new Router({</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">871</strong>    edit: '/h/:htmlFrameHash/j/:jsFrameHash/edit',</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">872</strong>    welcome: '/welcome',</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">873</strong>    default: '/new',</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">874</strong>});</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">875</strong></pre></div>
 <div class="line"><div class="doc"><p>Create a new instance of the editor app and mount it to the DOM.</p>
-</div><pre class="source javascript"><strong class="lineNumber">878</strong>const app = new App(router);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">879</strong>document.body.appendChild(app.node);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">880</strong></pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">877</strong>const app = new App(router);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">878</strong>document.body.appendChild(app.node);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">879</strong></pre></div>
 <div class="line"><div class="doc"><p>Since the editor is a full-window app, we don&#39;t want any overflows to make the app unnecessary scrollable beyond its viewport.</p>
-</div><pre class="source javascript"><strong class="lineNumber">883</strong>document.body.style.overflow = 'hidden';</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">884</strong></pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">882</strong>document.body.style.overflow = 'hidden';</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">883</strong></pre></div>
     </main>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/github-gist.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
