@@ -20,7 +20,11 @@ const CONTENT_TYPES = {
 // STATIC ASSETS
 const STATIC_PATHS = {
     '/': 'index.html',
+
+    // Editor alias routes
     '/new': 'editor.html',
+    '/welcome': 'editor.html',
+
     '/favicon.ico': 'assets/favicon.ico',
     '/h/:htmlFrameHash/j/:jsFrameHash/edit': 'editor.html',
 }

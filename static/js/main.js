@@ -817,6 +817,10 @@ class App extends StyledComponent {
                         liveRenderMarkup: null,
                     });
                     break;
+                case 'welcome':
+                    //> This is a predetermined URL that points to the welcome Codeframe.
+                    router.go('/h/34257cad6ac3/j/e3b0c44298fc/edit');
+                    break;
                 default:
                     {
                         //> If there are prefilled HTML and JavaScript values provided
@@ -866,6 +870,7 @@ const prefilledValues = {
 
 const router = new Router({
     edit: '/h/:htmlFrameHash/j/:jsFrameHash/edit',
+    welcome: '/welcome',
     default: '/new',
 });
 

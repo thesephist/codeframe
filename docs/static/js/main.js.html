@@ -790,62 +790,67 @@
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">817</strong>                        liveRenderMarkup: null,</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">818</strong>                    });</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">819</strong>                    break;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">820</strong>                default:</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">821</strong>                    {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">820</strong>                case 'welcome':</pre></div>
+<div class="line"><div class="doc"><p>This is a predetermined URL that points to the welcome Codeframe.</p>
+</div><pre class="source javascript"><strong class="lineNumber">822</strong>                    router.go('/h/34257cad6ac3/j/e3b0c44298fc/edit');</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">823</strong>                    break;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">824</strong>                default:</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">825</strong>                    {</pre></div>
 <div class="line"><div class="doc"><p>If there are prefilled HTML and JavaScript values provided provided in the query string, parse and save it for later when the editor loads.</p>
-</div><pre class="source javascript"><strong class="lineNumber">825</strong>                        const searchPart = window.location.search.substr(1);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">826</strong>                        if (searchPart) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">827</strong>                            for (const pair of searchPart.split('&#38;')) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">828</strong>                                const idx = pair.indexOf('=');</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">829</strong>                                const langPart = pair.substr(0, idx);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">830</strong>                                if (langPart in prefilledValues) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">831</strong>                                    prefilledValues[langPart] = decodeURIComponent(pair.substr(idx + 1));</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">832</strong>                                }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">833</strong>                            }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">834</strong>                        }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">835</strong>                    }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">836</strong>                    router.go(`/h/${BLANK_HASH}/j/${BLANK_HASH}/edit`);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">837</strong>                    break;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">838</strong>            }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">839</strong>        })</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">840</strong>    }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">841</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">842</strong>    styles() {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">843</strong>        return css`</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">844</strong>        width: 100%;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">845</strong>        height: 100vh;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">846</strong>        display: flex;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">847</strong>        flex-direction: column;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">848</strong>        overflow: hidden;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">849</strong>        `;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">850</strong>    }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">851</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">852</strong>    compose() {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">853</strong>        return jdom`&#60;div id="root"&#62;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">854</strong>            ${this.workspace.node}</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">855</strong>        &#60;/div&#62;`;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">856</strong>    }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">857</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">858</strong>}</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">859</strong></pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">829</strong>                        const searchPart = window.location.search.substr(1);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">830</strong>                        if (searchPart) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">831</strong>                            for (const pair of searchPart.split('&#38;')) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">832</strong>                                const idx = pair.indexOf('=');</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">833</strong>                                const langPart = pair.substr(0, idx);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">834</strong>                                if (langPart in prefilledValues) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">835</strong>                                    prefilledValues[langPart] = decodeURIComponent(pair.substr(idx + 1));</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">836</strong>                                }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">837</strong>                            }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">838</strong>                        }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">839</strong>                    }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">840</strong>                    router.go(`/h/${BLANK_HASH}/j/${BLANK_HASH}/edit`);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">841</strong>                    break;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">842</strong>            }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">843</strong>        })</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">844</strong>    }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">845</strong></pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">846</strong>    styles() {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">847</strong>        return css`</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">848</strong>        width: 100%;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">849</strong>        height: 100vh;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">850</strong>        display: flex;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">851</strong>        flex-direction: column;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">852</strong>        overflow: hidden;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">853</strong>        `;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">854</strong>    }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">855</strong></pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">856</strong>    compose() {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">857</strong>        return jdom`&#60;div id="root"&#62;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">858</strong>            ${this.workspace.node}</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">859</strong>        &#60;/div&#62;`;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">860</strong>    }</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">861</strong></pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">862</strong>}</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">863</strong></pre></div>
 <div class="line"><div class="doc"><p>Used to save some global values for when the URL contains a pre-populated code sample.</p>
-</div><pre class="source javascript"><strong class="lineNumber">862</strong>const prefilledValues = {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">863</strong>    html: '',</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">864</strong>    js: '',</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">865</strong>}</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">866</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">867</strong>const router = new Router({</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">868</strong>    edit: '/h/:htmlFrameHash/j/:jsFrameHash/edit',</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">869</strong>    default: '/new',</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">870</strong>});</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">871</strong></pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">866</strong>const prefilledValues = {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">867</strong>    html: '',</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">868</strong>    js: '',</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">869</strong>}</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">870</strong></pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">871</strong>const router = new Router({</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">872</strong>    edit: '/h/:htmlFrameHash/j/:jsFrameHash/edit',</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">873</strong>    welcome: '/welcome',</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">874</strong>    default: '/new',</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">875</strong>});</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">876</strong></pre></div>
 <div class="line"><div class="doc"><p>Create a new instance of the editor app and mount it to the DOM.</p>
-</div><pre class="source javascript"><strong class="lineNumber">873</strong>const app = new App(router);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">874</strong>document.body.appendChild(app.node);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">875</strong></pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">878</strong>const app = new App(router);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">879</strong>document.body.appendChild(app.node);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">880</strong></pre></div>
 <div class="line"><div class="doc"><p>Since the editor is a full-window app, we don&#39;t want any overflows to make the app unnecessary scrollable beyond its viewport.</p>
-</div><pre class="source javascript"><strong class="lineNumber">878</strong>document.body.style.overflow = 'hidden';</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">879</strong></pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">883</strong>document.body.style.overflow = 'hidden';</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">884</strong></pre></div>
     </main>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/github-gist.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>

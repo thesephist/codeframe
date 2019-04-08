@@ -26,6 +26,7 @@ const STARTER_FIXTURES = [
     'nametag-torus.js',
     'see-javascript.html',
     'todo-torus.js',
+    'welcome.html',
 ];
 
 //> Utility method to get a trimmed sha256 hash of a string.
