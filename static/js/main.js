@@ -818,7 +818,7 @@ class App extends StyledComponent {
                     break;
                 case 'welcome':
                     //> This is a predetermined URL that points to the welcome Codeframe.
-                    router.go('/h/34257cad6ac3/j/e3b0c44298fc/edit');
+                    router.go('/h/34257cad6ac3/j/e3b0c44298fc/edit', {replace: true});
                     break;
                 default:
                     {
@@ -836,7 +836,10 @@ class App extends StyledComponent {
                             }
                         }
                     }
-                    router.go(`/h/${BLANK_HASH}/j/${BLANK_HASH}/edit`);
+                    //> When we redirect some URL right on page load, we want that new URL
+                    //  to _replace_ the old, given URL value, not append a new history entry.
+                    //  So replace the history entry, not append.
+                    router.go(`/h/${BLANK_HASH}/j/${BLANK_HASH}/edit`, {replace: true});
                     break;
             }
         })
