@@ -423,7 +423,10 @@ class Editor extends StyledComponent {
 
             const documentMarkup = `<!DOCTYPE html>
 <html>
-    <head><title>Live Frame | CodeFrame</title></head>
+    <head>
+        <meta charset="utf-8"/>
+        <title>Live Frame | Codeframe</title>
+    </head>
     <body>
         ${this.frames.html}
         <script src="https://unpkg.com/torus-dom/dist/index.min.js"></script>

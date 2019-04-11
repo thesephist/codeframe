@@ -25,7 +25,10 @@ api.frame.getPage = async params => {
     const jsFrame = await store.getFromFS(params.jsFrameHash);
     return `<!DOCTYPE html>
 <html>
-    <head><title>Live Frame | CodeFrame</title></head>
+    <head>
+        <meta charset="utf-8"/>
+        <title>Live Frame | Codeframe</title>
+    </head>
     <body>
         ${htmlFrame}
         <script src="https://unpkg.com/torus-dom/dist/index.min.js"></script>
