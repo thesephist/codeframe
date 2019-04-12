@@ -604,6 +604,12 @@ class Workspace extends StyledComponent {
         this.handleGrabMousedown = this.handleGrabMousedown.bind(this);
         this.handleGrabMousemove = this.handleGrabMousemove.bind(this);
         this.handleGrabMouseup = this.handleGrabMouseup.bind(this);
+
+        window.addEventListener('beforeunload', evt => {
+            if (this.record.get('liveRenderMarkup') !== null) {
+                evt.returnValue = 'You have unsaved changes to your Codeframe. Are you sure you want to leave?';
+            }
+        });
     }
 
     //> Shortcut method to set the sizes of children components, given
