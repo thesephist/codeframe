@@ -379,6 +379,12 @@ class Editor extends StyledComponent {
                 this.models.javascript.setValue(prefilledValues.js);
                 this.liveRenderFrames({force: true});
             }
+
+            //> When the editor loads, bring the focus to it unless there is another
+            //  element with focus.
+            if (document.activeElement === null || document.activeElement === document.body) {
+                this.monacoEditor.focus();
+            }
         });
     }
 
