@@ -295,8 +295,10 @@ class Editor extends StyledComponent {
         this.toggleAsYouType = this.toggleAsYouType.bind(this);
 
         //> Live-rendering (previewing unsaved changes) should be debounced, since we don't
-        //  want to re-render the iframe with every keystroke, for example.
-        this.liveRenderFrames = debounce(this.liveRenderFrames.bind(this), 750);
+        //  want to re-render the iframe with every keystroke, for example. But we leave an
+        //  escape hatch with *Immediate for forced re-renders, etc.
+        this.liveRenderFramesImmediate = this.liveRenderFrames.bind(this);
+        this.liveRenderFrames = debounce(this.liveRenderFramesImmediate, 750);
     }
 
     remove() {
@@ -322,18 +324,25 @@ class Editor extends StyledComponent {
             api.get(`/frame/${data.htmlFrameHash}`).then(resp => {
                 return resp.text();
             }).then(result => {
-                this.frames.html = result;
-                if (this.models.html !== null) {
-                    this.models.html.setValue(result);
+                //> This checks against a race bug, where more recent "live" edits have
+                //  been made since we began to fetch frames.
+                if (this.record.get('liveRenderMarkup') === null) {
+                    this.frames.html = result;
+                    if (this.models.html !== null) {
+                        this.models.html.setValue(result);
+                    }
                 }
             }).catch(e => api.errlog(e));
 
             api.get(`/frame/${data.jsFrameHash}`).then(resp => {
                 return resp.text();
             }).then(result => {
-                this.frames.javascript = result;
-                if (this.models.javascript !== null) {
-                    this.models.javascript.setValue(result);
+                //> This checks against a race bug. See above.
+                if (this.record.get('liveRenderMarkup') === null) {
+                    this.frames.javascript = result;
+                    if (this.models.javascript !== null) {
+                        this.models.javascript.setValue(result);
+                    }
                 }
             }).catch(e => api.errlog(e));
         }
@@ -410,7 +419,7 @@ class Editor extends StyledComponent {
                 this.models.html.setValue(prefilledValues.html);
                 this.frames.javascript = prefilledValues.js;
                 this.models.javascript.setValue(prefilledValues.js);
-                this.liveRenderFrames({force: true});
+                this.liveRenderFramesImmediate({force: true});
             }
 
             //> When the editor loads, bring the focus to it unless there is another
@@ -442,7 +451,7 @@ class Editor extends StyledComponent {
 
     //> `liveRenderFrames()` is called when the editor content changes, to client-side
     //  refresh the iframe preview contents.
-    liveRenderFrames({force = false}) {
+    liveRenderFrames({force = false} = {}) {
         if (!this.settings.asYouTypeEnabled) {
             return;
         }
@@ -487,7 +496,7 @@ class Editor extends StyledComponent {
         this.render();
         //> In case there are any current dirty changes when this is toggled on...
         if (this.settings.asYouTypeEnabled) {
-            this.liveRenderFrames();
+            this.liveRenderFramesImmediate();
         }
         gevent('editor', 'settings.asyoutype', this.settings.asYouTypeEnabled.toString());
     }
