@@ -517,7 +517,7 @@ class CodeMirrorEditor {
 
 }
 
-const EditorCore = false ? MonacoEditor : CodeMirrorEditor;
+const EditorCore = navigator.userAgent.match(/(Android|iPhone|iPad|iPod)/) ? CodeMirrorEditor : MonacoEditor;
 
 //> The `Editor` component encapsulates the Monaco editor, all file state,
 //  and other state about the files the user is editing.
