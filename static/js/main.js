@@ -703,7 +703,14 @@ class Editor extends StyledComponent {
         ]);
         //> Once we've saved the current frames, open the new frames up in the preview pane
         //  by going to this route with the new frames.
-        router.go(`/h/${hashes.html}/j/${hashes.js}/edit`);
+        const route = `/h/${hashes.html}/j/${hashes.js}/edit`;
+        if (window.location.pathname.startsWith(route)) {
+            this.record.update({
+                liveRenderMarkup: null,
+            });
+        } else {
+            router.go(route);
+        }
         gevent('editor', 'save');
     }
 
