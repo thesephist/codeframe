@@ -238,6 +238,16 @@ class PreviewPane extends StyledComponent {
 
 }
 
+const loadScript = url => {
+    const tag = document.createElement('script');
+    tag.src = url;
+    tag.async = true;
+    return new Promise((res, rej) => {
+        tag.addEventListener('load', res);
+        document.body.appendChild(tag);
+    });
+}
+
 class MonacoEditor {
 
     constructor(callback) {
@@ -258,13 +268,8 @@ class MonacoEditor {
 
         this._beingSetProgrammatically = false;
 
-        //> Loading logic
         const MONACO_SRC_ROOT = 'https://unpkg.com/monaco-editor/min/vs';
-
-        const monacoLoaderScript = document.createElement('script');
-        monacoLoaderScript.src = MONACO_SRC_ROOT + '/loader.js';
-        monacoLoaderScript.addEventListener('load', () => this._loadEditor(callback));
-        document.body.appendChild(monacoLoaderScript);
+        loadScript(MONACO_SRC_ROOT + '/loader.js').then(() => this._loadEditor(callback));
     }
 
     _loadEditor(callback) {
@@ -328,14 +333,14 @@ class MonacoEditor {
         if (this.ready()) {
             return this.models[mode].getValue();
         } else {
-            return '';
+            return this.frames[mode];
         }
     }
 
     setValue(value, mode = this.mode) {
         this._beingSetProgrammatically = true;
         if (this.ready()) {
-            if (this.models[mode].getValue() !== value) {
+            if (this.models[mode].getValue(mode) !== value) {
                 this.models[mode].setValue(value);
             }
         } else {
@@ -383,16 +388,66 @@ class MonacoEditor {
 
 class CodeMirrorEditor {
 
-    constructor() {
+    constructor(callback) {
         this.mode = 'html';
+
+        this.frames = {
+            html: '',
+            javascript: ``,
+        }
+        this.documents = {
+            html: null,
+            javascript: null,
+        }
+
+        this.container = document.createElement('div');
+        this.container.classList.add('editorContainer');
+        this.codeMirrorEditor = null;
+
+        this._loadEditor(callback);
+    }
+
+    async _loadEditor(callback) {
+        const EDITOR_SCRIPT_ROOT = 'https://unpkg.com/codemirror';
+        const EDITOR_SCRIPT_SRC = EDITOR_SCRIPT_ROOT + '/lib/codemirror.js';
+        const LANG_SCRIPT_SRC = [
+            'javascript',
+            'xml',
+            'css',
+            'htmlmixed',
+        ].map(mode => `${EDITOR_SCRIPT_ROOT}/mode/${mode}/${mode}.js`);
+
+        //> These must load in this order -- language modes must load
+        //  after the core editor is loaded.
+        await loadScript(EDITOR_SCRIPT_SRC);
+        await Promise.all(LANG_SCRIPT_SRC.map(loadScript));
+
+        this.documents.html = CodeMirror.Doc(this.frames.html, 'htmlmixed');
+        this.documents.javascript = CodeMirror.Doc(this.frames.html, 'javascript');
+
+        this.codeMirrorEditor = CodeMirror(this.container, {
+            value: this.documents[this.mode],
+        });
+
+        callback();
     }
 
     getValue(mode = this.mode) {
-
+        if (this.ready()) {
+            return this.documents[mode].getValue();
+        } else {
+            return this.frames[mode];
+        }
     }
 
     setValue(value, mode = this.mode) {
-
+        if (this.ready()) {
+            if (this.documents[mode].getValue(mode) !== value) {
+                this.documents[mode].setValue(mode);
+            }
+        } else {
+            this.frames[mode] = value;
+        }
     }
 
     getMode() {
@@ -401,10 +456,17 @@ class CodeMirrorEditor {
 
     setMode(mode) {
         this.mode = mode;
+        this.codeMirrorEditor.swapDoc(this.documents[mode]);
     }
 
     addChangeHandler(handler) {
+        if (this.ready()) {
+            // TODO
+        }
+    }
 
+    getContainer() {
+        return this.container;
     }
 
     resize() {
@@ -412,12 +474,12 @@ class CodeMirrorEditor {
     }
 
     ready() {
-
+        return this.codeMirrorEditor !== null;
     }
 
 }
 
-const EditorCore = true ? MonacoEditor : CodeMirrorEditor;
+const EditorCore = false ? MonacoEditor : CodeMirrorEditor;
 
 //> The `Editor` component encapsulates the Monaco editor, all file state,
 //  and other state about the files the user is editing.
@@ -527,7 +589,6 @@ class Editor extends StyledComponent {
     }
 
     resizeEditor() {
-        //> `editorInstance.layout()` forces the editor to re-size itself.
         this.core.resize();
     }
 
@@ -658,6 +719,7 @@ class Editor extends StyledComponent {
         .editorContainer,
         .ready {
             width: 100%;
+            height: 100%;
             flex-shrink: 1;
             flex-grow: 1;
         }
