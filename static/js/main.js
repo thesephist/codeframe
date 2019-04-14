@@ -361,7 +361,40 @@ class Editor extends StyledComponent {
                 this.models[lang].onDidChangeContent(this.liveRenderFrames);
             }
 
-            this.monacoEditor = monaco.editor.create(this.monacoContainer);
+            //> Define a custom theme
+            monaco.editor.defineTheme('cf-default', {
+                base: 'vs',
+                inherit: true,
+                rules: [
+                    {token: '', foreground: '000000', background: 'ffffff'},
+                    {token: 'comment', foreground: '888888', fontStyle: 'italic'},
+
+                    //> Javascript-related highlights
+                    {token: 'keyword', foreground: '3436bb', fontStyle: 'bold'},
+                    {token: 'type', foreground: '038c6e'},
+                    {token: 'string', foreground: 'b31515'},
+                    {token: 'number', foreground: 'ec6a40'},
+
+                    //> HTML/CSS-related highlights
+                    {token: 'tag', foreground: '038c6e'},
+                    {token: 'attribute.name', foreground: 'e40132'},
+                    {token: 'attribute.value.html', foreground: '3436bb'},
+                ],
+                colors: {
+                    'editor.background': '#ffffff',
+                    'editor.lineHighlightBorder': '#f8f8f8',
+                    'editor.lineHighlightBackground': '#f8f8f8',
+                    'editorLineNumber.foreground': '#888888',
+                    'editorLineNumber.activeForeground': '#333333',
+                    'editorIndentGuide.background': '#ffffff',
+                    'editorIndentGuide.activeBackground': '#ffffff',
+                },
+            });
+            monaco.editor.setTheme('cf-default');
+
+            this.monacoEditor = monaco.editor.create(this.monacoContainer, {
+                fontFamily: "'Menlo', 'Monaco', monospace",
+            });
             this.monacoEditor.setModel(this.models[this.mode]);
             this.render();
             //> After the editor renders once, we want to make sure the editor
@@ -742,6 +775,7 @@ class Workspace extends StyledComponent {
             bottom: 0;
             z-index: 1000;
             transition: opacity .3s;
+            cursor: ew-resize;
             &.hidden {
                 opacity: 0;
                 pointer-events: none;
