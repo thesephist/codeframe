@@ -246,12 +246,16 @@ const loadScript = url => {
 }
 
 //> ## Editor implementations
-//  Codeframe uses multiple different editor backends (`EditorCore` implementations)
-//  to implement the actual code editor part of Codeframe. This is because (1) it reduces
-//  reliance on one particular third-party editor, (2) it creates an interface under which
-//  new editor backends can be added / experimented with, and (3) different editor backends
-//  are best suited for different clients. We currently use two backends, Visual Studio
-//  Code's Monaco editor, and CodeMirror, which powers Glitch, Chrome DevTools, and more.
+
+//> Codeframe uses multiple different editor backends (`EditorCore` implementations)
+//  to implement the actual code editor part of Codeframe. This is because...
+//
+//  1. It reduces reliance on one particular third-party editor.
+//  2. It creates an interface under which new editor backends can be added / experimented with.
+//  3. Different editor backends are best suited for different clients.
+//
+//  We currently use two backends, Visual Studio Code's Monaco editor, and
+//  CodeMirror, which powers Glitch, Chrome DevTools, and more.
 
 //> Monaco-based implementation of `EditorCore`
 class MonacoEditor {
