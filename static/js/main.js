@@ -417,13 +417,18 @@ class CodeMirrorEditor {
             'htmlmixed',
         ].map(mode => `${EDITOR_SCRIPT_ROOT}/mode/${mode}/${mode}.js`);
 
+        const styleLink = document.createElement('link');
+        styleLink.rel = 'stylesheet';
+        styleLink.href = EDITOR_SCRIPT_ROOT + '/lib/codemirror.css';
+        document.head.appendChild(styleLink);
+
         //> These must load in this order -- language modes must load
         //  after the core editor is loaded.
         await loadScript(EDITOR_SCRIPT_SRC);
         await Promise.all(LANG_SCRIPT_SRC.map(loadScript));
 
         this.documents.html = CodeMirror.Doc(this.frames.html, 'htmlmixed');
-        this.documents.javascript = CodeMirror.Doc(this.frames.html, 'javascript');
+        this.documents.javascript = CodeMirror.Doc(this.frames.javascript, 'javascript');
 
         this.codeMirrorEditor = CodeMirror(this.container, {
             value: this.documents[this.mode],
@@ -470,7 +475,7 @@ class CodeMirrorEditor {
     }
 
     resize() {
-
+        this.codeMirrorEditor.setSize();
     }
 
     ready() {
@@ -715,6 +720,9 @@ class Editor extends StyledComponent {
             &::after {
                 display: none;
             }
+        }
+        .CodeMirror {
+            height: 100%;
         }
         .editorContainer,
         .ready {
