@@ -242,7 +242,7 @@ const loadScript = url => {
     const tag = document.createElement('script');
     tag.src = url;
     tag.async = true;
-    return new Promise((res, rej) => {
+    return new Promise((res, _rej) => {
         tag.addEventListener('load', res);
         document.body.appendChild(tag);
     });
@@ -340,7 +340,7 @@ class MonacoEditor {
     setValue(value, mode = this.mode) {
         this._beingSetProgrammatically = true;
         if (this.ready()) {
-            if (this.models[mode].getValue(mode) !== value) {
+            if (this.models[mode].getValue() !== value) {
                 this.models[mode].setValue(value);
             }
         } else {
@@ -408,7 +408,9 @@ class CodeMirrorEditor {
     }
 
     async _loadEditor(callback) {
-        const EDITOR_SCRIPT_ROOT = 'https://unpkg.com/codemirror';
+        //> We fix the version number here because CM 6 is going to have breaking
+        //  API changes.
+        const EDITOR_SCRIPT_ROOT = 'https://unpkg.com/codemirror@5';
         const EDITOR_SCRIPT_SRC = EDITOR_SCRIPT_ROOT + '/lib/codemirror.js';
         const LANG_SCRIPT_SRC = [
             'javascript',
@@ -416,6 +418,10 @@ class CodeMirrorEditor {
             'css',
             'htmlmixed',
         ].map(mode => `${EDITOR_SCRIPT_ROOT}/mode/${mode}/${mode}.js`);
+        const AUX_SRC = [
+            'edit/closetag.js',
+            'edit/closebrackets.js',
+        ].map(path => `${EDITOR_SCRIPT_ROOT}/addon/${path}`);
 
         const styleLink = document.createElement('link');
         styleLink.rel = 'stylesheet';
@@ -425,14 +431,35 @@ class CodeMirrorEditor {
         //> These must load in this order -- language modes must load
         //  after the core editor is loaded.
         await loadScript(EDITOR_SCRIPT_SRC);
-        await Promise.all(LANG_SCRIPT_SRC.map(loadScript));
+        await Promise.all([
+            ...LANG_SCRIPT_SRC,
+            ...AUX_SRC,
+        ].map(loadScript));
 
         this.documents.html = CodeMirror.Doc(this.frames.html, 'htmlmixed');
         this.documents.javascript = CodeMirror.Doc(this.frames.javascript, 'javascript');
 
         this.codeMirrorEditor = CodeMirror(this.container, {
-            value: this.documents[this.mode],
+            indentUnit: 4,
+            tabSize: 4,
+            lineWrapping: false,
+            lineNumbers: true,
+            indentWithTabs: true,
+
+            // provided by edit/closetag.js
+            autoCloseTags: true,
+
+            // provided by edit/closebrackets.js
+            autoCloseBrackets: true,
         });
+        //> We swap the document in after instantiation rather than in creation,
+        //  because the latter option strips the document of its language mode.
+        //  This seems like a poorly documented behavior of CM.
+        this.codeMirrorEditor.swapDoc(this.documents[this.mode]);
+
+        if (document.activeElement === null || document.activeElement === document.body) {
+            this.codeMirrorEditor.focus();
+        }
 
         callback();
     }
@@ -447,8 +474,8 @@ class CodeMirrorEditor {
 
     setValue(value, mode = this.mode) {
         if (this.ready()) {
-            if (this.documents[mode].getValue(mode) !== value) {
-                this.documents[mode].setValue(mode);
+            if (this.documents[mode].getValue() !== value) {
+                this.documents[mode].setValue(value);
             }
         } else {
             this.frames[mode] = value;
@@ -461,12 +488,18 @@ class CodeMirrorEditor {
 
     setMode(mode) {
         this.mode = mode;
-        this.codeMirrorEditor.swapDoc(this.documents[mode]);
+        if (this.ready()) {
+            this.codeMirrorEditor.swapDoc(this.documents[mode]);
+        }
     }
 
     addChangeHandler(handler) {
         if (this.ready()) {
-            // TODO
+            this.codeMirrorEditor.on('changes', (_, changeEvent) => {
+                if (changeEvent[0].origin !== 'setValue') {
+                    handler();
+                }
+            });
         }
     }
 
@@ -583,7 +616,7 @@ class Editor extends StyledComponent {
             if (prefilledValues.html || prefilledValues.js) {
                 this.core.setValue(prefilledValues.html, 'html');
                 this.core.setValue(prefilledValues.js, 'javascript');
-                this.liveRenderFramesImmediate({force: true});
+                this.liveRenderFramesImmediate();
             }
 
             this.core.addChangeHandler(this.liveRenderFrames);
@@ -607,7 +640,7 @@ class Editor extends StyledComponent {
 
     //> `liveRenderFrames()` is called when the editor content changes, to client-side
     //  refresh the iframe preview contents.
-    liveRenderFrames({force = false} = {}) {
+    liveRenderFrames() {
         if (!this.settings.asYouTypeEnabled) {
             return;
         }
@@ -721,13 +754,12 @@ class Editor extends StyledComponent {
                 display: none;
             }
         }
-        .CodeMirror {
-            height: 100%;
-        }
         .editorContainer,
         .ready {
             width: 100%;
-            height: 100%;
+            /* dummy size, flex will resize
+             * but CodeMirror needs a set size */
+            height: 300px;
             flex-shrink: 1;
             flex-grow: 1;
         }
@@ -739,6 +771,49 @@ class Editor extends StyledComponent {
             color: #555;
             em {
                 display: block;
+            }
+        }
+        .CodeMirror {
+            height: 100%;
+            font-family: 'Menlo', 'Monaco', 'Courier', monospace;
+            font-size: 12px;
+            line-height: 1.5em;
+            &-gutters {
+                background: #fff;
+                border-right: 0;
+            }
+            &-lines {
+                padding-bottom: 60vh;
+            }
+            &-cursor {
+                border-width: 2px;
+            }
+            &-linenumber {
+                padding-right: 12px;
+            }
+
+            span.cm-comment {
+                color: #888;
+            }
+            span.cm-keyword {
+                color: #3436bb;
+                font-weight: bold;
+            }
+            span.cm-def {
+                color: #038c6e;
+            }
+            span.cm-string,
+            span.cm-string-2 {
+                color: #b31515;
+            }
+            span.cm-number {
+                color: #ec6140;
+            }
+            span.cm-tag {
+                color: #038c6e;
+            }
+            span.cm-attribute {
+                color: #e40132;
             }
         }
         `;
@@ -954,6 +1029,7 @@ class Workspace extends StyledComponent {
             bottom: 2px;
             right: 6px;
             font-size: .75em;
+            z-index: 100;
         }
         `;
     }
