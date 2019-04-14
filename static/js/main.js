@@ -256,6 +256,8 @@ class MonacoEditor {
         this.container.classList.add('editorContainer');
         this.monacoEditor = null;
 
+        this._beingSetProgrammatically = false;
+
         //> Loading logic
         const MONACO_SRC_ROOT = 'https://unpkg.com/monaco-editor/min/vs';
 
@@ -331,6 +333,7 @@ class MonacoEditor {
     }
 
     setValue(value, mode = this.mode) {
+        this._beingSetProgrammatically = true;
         if (this.ready()) {
             if (this.models[mode].getValue() !== value) {
                 this.models[mode].setValue(value);
@@ -338,6 +341,7 @@ class MonacoEditor {
         } else {
             this.frames[mode] = value;
         }
+        this._beingSetProgrammatically = false;
     }
 
     getMode() {
@@ -351,8 +355,13 @@ class MonacoEditor {
 
     addChangeHandler(handler) {
         if (this.ready()) {
-            this.models.html.onDidChangeContent(handler);
-            this.models.javascript.onDidChangeContent(handler);
+            const userChangeHandler = () => {
+                if (!this._beingSetProgrammatically) {
+                    handler();
+                }
+            }
+            this.models.html.onDidChangeContent(userChangeHandler);
+            this.models.javascript.onDidChangeContent(userChangeHandler);
         }
     }
 
