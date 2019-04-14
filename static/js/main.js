@@ -238,6 +238,178 @@ class PreviewPane extends StyledComponent {
 
 }
 
+class MonacoEditor {
+
+    constructor(callback) {
+        this.mode = 'html';
+
+        this.frames = {
+            html: '',
+            javascript: ``,
+        }
+        this.models = {
+            html: null,
+            javascript: null,
+        }
+
+        this.container = document.createElement('div');
+        this.container.classList.add('editorContainer');
+        this.monacoEditor = null;
+
+        //> Loading logic
+        const MONACO_SRC_ROOT = 'https://unpkg.com/monaco-editor/min/vs';
+
+        const monacoLoaderScript = document.createElement('script');
+        monacoLoaderScript.src = MONACO_SRC_ROOT + '/loader.js';
+        monacoLoaderScript.addEventListener('load', () => this._loadEditor(callback));
+        document.body.appendChild(monacoLoaderScript);
+    }
+
+    _loadEditor(callback) {
+        require.config({
+            paths: {
+                vs: 'https://unpkg.com/monaco-editor/min/vs',
+            },
+        });
+        require(['vs/editor/editor.main'], () => {
+            //> Initialize models for both files
+            this.models.html = monaco.editor.createModel(this.frames.html, 'html');
+            this.models.javascript = monaco.editor.createModel(this.frames.javascript, 'javascript');
+
+            //> Define a custom theme
+            monaco.editor.defineTheme('cf-default', {
+                base: 'vs',
+                inherit: true,
+                rules: [
+                    {token: '', foreground: '000000', background: 'ffffff'},
+                    {token: 'comment', foreground: '888888', fontStyle: 'italic'},
+
+                    //> Javascript-related highlights
+                    {token: 'keyword', foreground: '3436bb', fontStyle: 'bold'},
+                    {token: 'type', foreground: '038c6e'},
+                    {token: 'string', foreground: 'b31515'},
+                    {token: 'number', foreground: 'ec6a40'},
+
+                    //> HTML/CSS-related highlights
+                    {token: 'tag', foreground: '038c6e'},
+                    {token: 'attribute.name', foreground: 'e40132'},
+                    {token: 'attribute.value.html', foreground: '3436bb'},
+                ],
+                colors: {
+                    'editor.background': '#ffffff',
+                    'editor.lineHighlightBorder': '#f8f8f8',
+                    'editor.lineHighlightBackground': '#f8f8f8',
+                    'editorLineNumber.foreground': '#888888',
+                    'editorLineNumber.activeForeground': '#333333',
+                    'editorIndentGuide.background': '#ffffff',
+                    'editorIndentGuide.activeBackground': '#ffffff',
+                },
+            });
+            monaco.editor.setTheme('cf-default');
+
+            this.monacoEditor = monaco.editor.create(this.container, {
+                fontFamily: "'Menlo', 'Monaco', monospace",
+            });
+            this.monacoEditor.setModel(this.models[this.mode]);
+
+            //> When the editor loads, bring the focus to it unless there is another
+            //  element with focus.
+            if (document.activeElement === null || document.activeElement === document.body) {
+                this.monacoEditor.focus();
+            }
+
+            callback();
+        });
+    }
+
+    getValue(mode = this.mode) {
+        if (this.ready()) {
+            return this.models[mode].getValue();
+        } else {
+            return '';
+        }
+    }
+
+    setValue(value, mode = this.mode) {
+        if (this.ready()) {
+            if (this.models[mode].getValue() !== value) {
+                this.models[mode].setValue(value);
+            }
+        } else {
+            this.frames[mode] = value;
+        }
+    }
+
+    getMode() {
+        return this.mode;
+    }
+
+    setMode(mode) {
+        this.mode = mode;
+        this.monacoEditor.setModel(this.models[mode]);
+    }
+
+    addChangeHandler(handler) {
+        if (this.ready()) {
+            this.models.html.onDidChangeContent(handler);
+            this.models.javascript.onDidChangeContent(handler);
+        }
+    }
+
+    getContainer() {
+        return this.container;
+    }
+
+    resize() {
+        if (this.monacoEditor) {
+            this.monacoEditor.layout();
+        }
+    }
+
+    ready() {
+        return this.monacoEditor !== null;
+    }
+
+}
+
+class CodeMirrorEditor {
+
+    constructor() {
+        this.mode = 'html';
+    }
+
+    getValue(mode = this.mode) {
+
+    }
+
+    setValue(value, mode = this.mode) {
+
+    }
+
+    getMode() {
+        return this.mode;
+    }
+
+    setMode(mode) {
+        this.mode = mode;
+    }
+
+    addChangeHandler(handler) {
+
+    }
+
+    resize() {
+
+    }
+
+    ready() {
+
+    }
+
+}
+
+const EditorCore = true ? MonacoEditor : CodeMirrorEditor;
+
 //> The `Editor` component encapsulates the Monaco editor, all file state,
 //  and other state about the files the user is editing.
 class Editor extends StyledComponent {
@@ -254,25 +426,10 @@ class Editor extends StyledComponent {
             asYouTypeEnabled: true,
         }
 
-        //> The "mode" is a slug, either `'html'` or `'javascript'`, that shows
-        //  what file we're currently editing.
-        this.mode = 'html';
         //> Frame hashes of the last-saved editor values, to see if we need to re-fetch
         //  frame file values when the route changes.
         this._lastHash = '';
-        //> The frames state stores the string contents of both files during editing.
-        this.frames = {
-            html: '',
-            javascript: ``,
-        }
-        //> Monaco has the concept of "models" to keep track of state across editing sessions
-        //  between files. This is where we keep the model (state) of the two files, when they're
-        //  not actively being edited. This preserves e.g. the undo/redo stack between mode switches.
-        this.models = {
-            html: null,
-            javascript: null,
-        }
-        this.initMonaco();
+        this.initEditorCore();
 
         this.bind(frameRecord, data => {
             this.fetchFrames(data);
@@ -327,10 +484,7 @@ class Editor extends StyledComponent {
                 //> This checks against a race bug, where more recent "live" edits have
                 //  been made since we began to fetch frames.
                 if (this.record.get('liveRenderMarkup') === null) {
-                    this.frames.html = result;
-                    if (this.models.html !== null) {
-                        this.models.html.setValue(result);
-                    }
+                    this.core.setValue(result, 'html');
                 }
             }).catch(e => api.errlog(e));
 
@@ -339,112 +493,39 @@ class Editor extends StyledComponent {
             }).then(result => {
                 //> This checks against a race bug. See above.
                 if (this.record.get('liveRenderMarkup') === null) {
-                    this.frames.javascript = result;
-                    if (this.models.javascript !== null) {
-                        this.models.javascript.setValue(result);
-                    }
+                    this.core.setValue(result, 'javascript');
                 }
             }).catch(e => api.errlog(e));
         }
     }
 
-    //> `initMonaco` is one of the few places in the codebase that directly interacts
-    //  with the Monaco editor's API. We create a new instance of an editor and start
-    //  editing the currently selected mode's file.
-    initMonaco() {
-        //> We explicitly create a div to contain the editor, since that's how Monaco's
-        //  editor API works.
-        this.monacoContainer = document.createElement('div');
-        this.monacoContainer.classList.add('editorContainer');
-        //> Monaco's production bundle is designed to be consumed using an AMD
-        //  module loader like RequireJS. You don't need to understand this part.
-        require.config({
-            paths: {
-                vs: 'https://unpkg.com/monaco-editor/min/vs',
-            },
-        });
-        require(['vs/editor/editor.main'], () => {
-            //> Initialize models for both files
-            for (const lang of ['html', 'javascript']) {
-                this.models[lang] = monaco.editor.createModel(this.frames[lang], lang);
-                this.models[lang].onDidChangeContent(this.liveRenderFrames);
-            }
-
-            //> Define a custom theme
-            monaco.editor.defineTheme('cf-default', {
-                base: 'vs',
-                inherit: true,
-                rules: [
-                    {token: '', foreground: '000000', background: 'ffffff'},
-                    {token: 'comment', foreground: '888888', fontStyle: 'italic'},
-
-                    //> Javascript-related highlights
-                    {token: 'keyword', foreground: '3436bb', fontStyle: 'bold'},
-                    {token: 'type', foreground: '038c6e'},
-                    {token: 'string', foreground: 'b31515'},
-                    {token: 'number', foreground: 'ec6a40'},
-
-                    //> HTML/CSS-related highlights
-                    {token: 'tag', foreground: '038c6e'},
-                    {token: 'attribute.name', foreground: 'e40132'},
-                    {token: 'attribute.value.html', foreground: '3436bb'},
-                ],
-                colors: {
-                    'editor.background': '#ffffff',
-                    'editor.lineHighlightBorder': '#f8f8f8',
-                    'editor.lineHighlightBackground': '#f8f8f8',
-                    'editorLineNumber.foreground': '#888888',
-                    'editorLineNumber.activeForeground': '#333333',
-                    'editorIndentGuide.background': '#ffffff',
-                    'editorIndentGuide.activeBackground': '#ffffff',
-                },
-            });
-            monaco.editor.setTheme('cf-default');
-
-            this.monacoEditor = monaco.editor.create(this.monacoContainer, {
-                fontFamily: "'Menlo', 'Monaco', monospace",
-            });
-            this.monacoEditor.setModel(this.models[this.mode]);
-            this.render();
-            //> After the editor renders once, we want to make sure the editor
-            //  is sized correctly to the containing box. `layout()` forces Monaco
-            //  to re-layout itself in the space it was given.
-            this.monacoEditor.layout();
-
+    initEditorCore() {
+        this.core = new EditorCore(() => {
             //> Here we populate potential prefilled values from the URL query strings,
             //  and force-live-render it into the preview to make those dirty changes
             //  visible without saving these examples to the server.
             if (prefilledValues.html || prefilledValues.js) {
-                this.frames.html = prefilledValues.html;
-                this.models.html.setValue(prefilledValues.html);
-                this.frames.javascript = prefilledValues.js;
-                this.models.javascript.setValue(prefilledValues.js);
+                this.core.setValue(prefilledValues.html, 'html');
+                this.core.setValue(prefilledValues.js, 'javascript');
                 this.liveRenderFramesImmediate({force: true});
             }
 
-            //> When the editor loads, bring the focus to it unless there is another
-            //  element with focus.
-            if (document.activeElement === null || document.activeElement === document.body) {
-                this.monacoEditor.focus();
-            }
+            this.core.addChangeHandler(this.liveRenderFrames);
+
+            this.render();
+            this.resizeEditor();
         });
     }
 
     resizeEditor() {
         //> `editorInstance.layout()` forces the editor to re-size itself.
-        if (this.monacoEditor) {
-            this.monacoEditor.layout();
-        }
+        this.core.resize();
     }
 
     switchMode(mode) {
         //> When we switch modes, we have to first save the value of the file being
         //  edited, then switch out the underlying file model.
-        if (this.monacoEditor) {
-            this.frames[this.mode] = this.monacoEditor.getValue();
-            this.monacoEditor.setModel(this.models[mode]);
-        }
-        this.mode = mode;
+        this.core.setMode(mode);
         this.render();
         gevent('editor', 'switchmode', mode);
     }
@@ -456,14 +537,7 @@ class Editor extends StyledComponent {
             return;
         }
 
-        const newEditorValue = this.monacoEditor.getValue();
-        //> No need to re-render changes when the editor value is not new. (In fact,
-        //  because of leaky abstraction around events + immutable state between Monaco
-        //  and Torus, doing so leads to a race bug.)
-        if (force || newEditorValue !== this.frames[this.mode]) {
-            this.frames[this.mode] = newEditorValue;
-
-            const documentMarkup = `<!DOCTYPE html>
+        const documentMarkup = `<!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8"/>
@@ -471,16 +545,15 @@ class Editor extends StyledComponent {
         <title>Live Frame | Codeframe</title>
     </head>
     <body>
-        ${this.frames.html}
+        ${this.core.getValue('html')}
         <script src="https://unpkg.com/torus-dom/dist/index.min.js"></script>
-        <script>${this.frames.javascript}</script>
+        <script>${this.core.getValue('javascript')}</script>
     </body>
 </html>`;
 
-            this.record.update({
-                liveRenderMarkup: documentMarkup,
-            });
-        }
+        this.record.update({
+            liveRenderMarkup: documentMarkup,
+        });
     }
 
     toggleSettings() {
@@ -504,7 +577,6 @@ class Editor extends StyledComponent {
     //> `saveFrames` handles saving / persisting Codeframe files to the backend service,
     //  and returns a promise that resolves only once all frame files have been saved.
     async saveFrames() {
-        this.frames[this.mode] = this.monacoEditor.getValue();
         const hashes = {
             html: '',
             js: '',
@@ -512,11 +584,11 @@ class Editor extends StyledComponent {
         //> This is a nice way to make the function hang (not resolve its returned Promise)
         //  until all of its requests have resolved.
         await Promise.all([
-            api.post('/frame/', this.frames.html)
+            api.post('/frame/', this.core.getValue('html'))
                 .then(resp => resp.text())
                 .then(hash => hashes.html = hash)
                 .catch(e => api.errlog(e)),
-            api.post('/frame/', this.frames.javascript)
+            api.post('/frame/', this.core.getValue('javascript'))
                 .then(resp => resp.text())
                 .then(hash => hashes.js = hash)
                 .catch(e => api.errlog(e)),
@@ -594,17 +666,19 @@ class Editor extends StyledComponent {
     }
 
     compose() {
+        const mode = this.core.getMode();
+
         return jdom`<div class="editor" style="width:${this.paneWidth}%">
             <div class="topBar">
                 <div class="buttonGroup">
                     <button
-                        class="button ${this.mode === 'html' ? 'active' : ''} tab-html"
+                        class="button ${mode === 'html' ? 'active' : ''} tab-html"
                         title="Switch to HTML editor"
                         onclick="${this.switchHTMLMode}">
                         HTML
                     </button>
                     <button
-                        class="button ${this.mode === 'javascript' ? 'active' : ''} tab-js"
+                        class="button ${mode === 'javascript' ? 'active' : ''} tab-js"
                         title="Switch to JavaScript editor"
                         onclick="${this.switchJSMode}">
                         JavaScript
@@ -627,7 +701,7 @@ class Editor extends StyledComponent {
                     </button>
                 </div>`
             ) : null}
-            ${this.monacoEditor ? this.monacoContainer : (
+            ${this.core.ready() ? this.core.getContainer() : (
                 //> If the editor is not yet available (is still loading), show a placeholder
                 //  bit of text.
                 jdom`<div class="ready"><em>Getting your editor ready...</em></div>`
