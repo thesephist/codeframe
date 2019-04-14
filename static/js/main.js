@@ -6,17 +6,11 @@ const {
     Router,
 } = Torus;
 
-//> When a user visits a /new editor, we need to populate it
-//  with blank versions of HTML and JS frames. We fetch them by
-//  identifying them with this fixed, precomputed hash of blank frames.
-const BLANK_HASH = 'e3b0c44298fc';
-
 //> Utility function to fetch while bypassing the cache, and with some
 //  default options.
 const cfFetch = (uri, options) => {
     return fetch(uri, {
         credentials: 'same-origin',
-        cache: 'no-cache',
         ...options,
     });
 }
@@ -238,6 +232,9 @@ class PreviewPane extends StyledComponent {
 
 }
 
+//> Shorthand function that inserts a script tag with a given source and
+//  returns a promise that resolves when the script is loaded and evaluated.
+//  We use this as a minimal module loader to bootstrap loading of editor modules.
 const loadScript = url => {
     const tag = document.createElement('script');
     tag.src = url;
@@ -248,15 +245,29 @@ const loadScript = url => {
     });
 }
 
+//> ## Editor implementations
+//  Codeframe uses multiple different editor backends (`EditorCore` implementations)
+//  to implement the actual code editor part of Codeframe. This is because (1) it reduces
+//  reliance on one particular third-party editor, (2) it creates an interface under which
+//  new editor backends can be added / experimented with, and (3) different editor backends
+//  are best suited for different clients. We currently use two backends, Visual Studio
+//  Code's Monaco editor, and CodeMirror, which powers Glitch, Chrome DevTools, and more.
+
+//> Monaco-based implementation of `EditorCore`
 class MonacoEditor {
 
     constructor(callback) {
         this.mode = 'html';
 
+        //> Frames are temporary storage of loaded / saved Codeframe source files
+        //  before the editor itself has been loaded and initialized.
         this.frames = {
             html: '',
             javascript: ``,
         }
+        //> Monaco's core data structure backing each source file in the editor is
+        //  the "model". Each model represents and holds edit data, history, etc. for
+        //  one file. We keep track of two and swap between them in one editor instance.
         this.models = {
             html: null,
             javascript: null,
@@ -266,12 +277,15 @@ class MonacoEditor {
         this.container.classList.add('editorContainer');
         this.monacoEditor = null;
 
+        //> See `setValue()` to see why this exists.
         this._beingSetProgrammatically = false;
 
-        const MONACO_SRC_ROOT = 'https://unpkg.com/monaco-editor/min/vs';
-        loadScript(MONACO_SRC_ROOT + '/loader.js').then(() => this._loadEditor(callback));
+        //> Load the core editor module loader, and begin bootstrapping the Monaco
+        //  editor loading process.
+        loadScript('https://unpkg.com/monaco-editor/min/vs/loader.js').then(() => this._loadEditor(callback));
     }
 
+    //> Loads the rest of the Monaco editor source code and initializes the editor.
     _loadEditor(callback) {
         require.config({
             paths: {
@@ -314,6 +328,8 @@ class MonacoEditor {
             });
             monaco.editor.setTheme('cf-default');
 
+            //> Create one editor instance, in which we can swap between
+            //  the two source file models being edited.
             this.monacoEditor = monaco.editor.create(this.container, {
                 fontFamily: "'Menlo', 'Monaco', monospace",
             });
@@ -329,6 +345,8 @@ class MonacoEditor {
         });
     }
 
+    //> The following interface methods are shared between all `EditorCore` implementations
+
     getValue(mode = this.mode) {
         if (this.ready()) {
             return this.models[mode].getValue();
@@ -338,15 +356,20 @@ class MonacoEditor {
     }
 
     setValue(value, mode = this.mode) {
-        this._beingSetProgrammatically = true;
         if (this.ready()) {
             if (this.models[mode].getValue() !== value) {
+                //> Monaco doesn't have the ability to distinguish between changes to editor
+                //  content that happens because of user-initiated edits vs. programmatic
+                //  edits using `setValue()`. Since we only want to fire change event handlers
+                //  for the former kind of change, we keep track of the "is this a programmatic
+                //  change" state in this variable.
+                this._beingSetProgrammatically = true;
                 this.models[mode].setValue(value);
+                this._beingSetProgrammatically = false;
             }
         } else {
             this.frames[mode] = value;
         }
-        this._beingSetProgrammatically = false;
     }
 
     getMode() {
@@ -365,6 +388,8 @@ class MonacoEditor {
                     handler();
                 }
             }
+            //> In Monaco, there isn't change events in the editor, but
+            //  instead change events in the models, which we listen for.
             this.models.html.onDidChangeContent(userChangeHandler);
             this.models.javascript.onDidChangeContent(userChangeHandler);
         }
@@ -375,7 +400,7 @@ class MonacoEditor {
     }
 
     resize() {
-        if (this.monacoEditor) {
+        if (this.ready()) {
             this.monacoEditor.layout();
         }
     }
@@ -386,6 +411,9 @@ class MonacoEditor {
 
 }
 
+//> CodeMirror-based implementation of `EditorCore`, which is enabled on mobile browsers
+//  because Monaco is not mobile browser-compatible. This implementation is also slightly
+//  faster on slower networks.
 class CodeMirrorEditor {
 
     constructor(callback) {
@@ -395,6 +423,9 @@ class CodeMirrorEditor {
             html: '',
             javascript: ``,
         }
+        //> The Document is CodeMirror's data structure for storing file and editor
+        //  contents, edit history, etc. To swap between files / modes, we swap between
+        //  these two documents.
         this.documents = {
             html: null,
             javascript: null,
@@ -404,16 +435,20 @@ class CodeMirrorEditor {
         this.container.classList.add('editorContainer');
         this.codeMirrorEditor = null;
 
+        //> This bootstraps the loading process for the CodeMirror editor.
         this._loadEditor(callback);
     }
 
     async _loadEditor(callback) {
         //> We fix the version number here because CM 6 is going to have breaking
-        //  API changes.
+        //  API changes, and it's unclear at time of writing if that'll be released under
+        //  the same package.
         const EDITOR_SCRIPT_ROOT = 'https://unpkg.com/codemirror@5';
         const EDITOR_SCRIPT_SRC = EDITOR_SCRIPT_ROOT + '/lib/codemirror.js';
         const LANG_SCRIPT_SRC = [
             'javascript',
+            //> `xml` and `css` are dependencies of `htmlmixed`, the standalone
+            //  (not embedded) HTML language mode for CM.
             'xml',
             'css',
             'htmlmixed',
@@ -423,13 +458,15 @@ class CodeMirrorEditor {
             'edit/closebrackets.js',
         ].map(path => `${EDITOR_SCRIPT_ROOT}/addon/${path}`);
 
+        //> CodeMirror has an accompanying stylesheet. We load this manually here.
         const styleLink = document.createElement('link');
         styleLink.rel = 'stylesheet';
         styleLink.href = EDITOR_SCRIPT_ROOT + '/lib/codemirror.css';
         document.head.appendChild(styleLink);
 
         //> These must load in this order -- language modes must load
-        //  after the core editor is loaded.
+        //  after the core editor is loaded, but once the core editor
+        //  is loaded, everything else can load in parallel.
         await loadScript(EDITOR_SCRIPT_SRC);
         await Promise.all([
             ...LANG_SCRIPT_SRC,
@@ -496,6 +533,9 @@ class CodeMirrorEditor {
     addChangeHandler(handler) {
         if (this.ready()) {
             this.codeMirrorEditor.on('changes', (_, changeEvent) => {
+                //> We want to avoid triggering change events not generated directly
+                //  from user input. i.e. we don't want to hit change handlers when we
+                //  reload or reroute.
                 if (changeEvent[0].origin !== 'setValue') {
                     handler();
                 }
@@ -517,6 +557,7 @@ class CodeMirrorEditor {
 
 }
 
+//> Depending on the client, pick the editor implementation that provides the best experience.
 const EditorCore = navigator.userAgent.match(/(Android|iPhone|iPad|iPod)/) ? CodeMirrorEditor : MonacoEditor;
 
 //> The `Editor` component encapsulates the Monaco editor, all file state,
@@ -608,6 +649,7 @@ class Editor extends StyledComponent {
         }
     }
 
+    //> Initialize the given editor implementation.
     initEditorCore() {
         this.core = new EditorCore(() => {
             //> Here we populate potential prefilled values from the URL query strings,
@@ -1133,8 +1175,9 @@ class App extends StyledComponent {
                     }
                     //> When we redirect some URL right on page load, we want that new URL
                     //  to _replace_ the old, given URL value, not append a new history entry.
-                    //  So replace the history entry, not append.
-                    router.go(`/h/${BLANK_HASH}/j/${BLANK_HASH}/edit`, {replace: true});
+                    //  So replace the history entry, not append. In this case, we redirect to
+                    //  the URL of an empty Codeframe
+                    router.go(`/h/e3b0c44298fc/j/e3b0c44298fc/edit`, {replace: true});
                     break;
             }
         })
