@@ -337,7 +337,7 @@ class MonacoEditor {
             this.monacoEditor = monaco.editor.create(this.container, {
                 fontFamily: "'Menlo', 'Monaco', monospace",
             });
-            this.monacoEditor.setModel(this.models[this.mode]);
+            this.setMode(this.mode);
 
             //> When the editor loads, bring the focus to it unless there is another
             //  element with focus.
@@ -345,7 +345,7 @@ class MonacoEditor {
                 this.monacoEditor.focus();
             }
 
-            callback();
+            callback(this);
         });
     }
 
@@ -496,13 +496,13 @@ class CodeMirrorEditor {
         //> We swap the document in after instantiation rather than in creation,
         //  because the latter option strips the document of its language mode.
         //  This seems like a poorly documented behavior of CM.
-        this.codeMirrorEditor.swapDoc(this.documents[this.mode]);
+        this.setMode(this.mode);
 
         if (document.activeElement === null || document.activeElement === document.body) {
             this.codeMirrorEditor.focus();
         }
 
-        callback();
+        callback(this);
     }
 
     getValue(mode = this.mode) {
@@ -561,8 +561,119 @@ class CodeMirrorEditor {
 
 }
 
+class TextAreaEditor {
+
+    constructor(callback) {
+        this.mode = 'html';
+        this.frames = {
+            html: '',
+            javascript: '',
+        }
+
+        this.container = document.createElement('textarea');
+        this.container.classList.add('editorContainer');
+
+        //> Attach some basic event handlers to allow correct
+        //  indentation with tabs (4 spaces).
+        this.container.addEventListener('keydown', evt => {
+            if (evt.key === 'Tab') {
+                evt.preventDefault();
+
+                const tgt = evt.target;
+                if (evt.shiftKey) {
+                    const idx = tgt.selectionStart;
+                    if (idx !== null) {
+                        let front = tgt.value.substr(0, idx);
+                        const back = tgt.value.substr(idx);
+                        let diff = 0;
+                        while (front.endsWith(' ') && diff < 4) {
+                            front = front.substr(0, front.length - 1);
+                            tgt.value = front + back;
+                            diff ++;
+                        }
+                        //> Rendering the new input value will
+                        //  make us lose focus on the textarea, so we put the
+                        //  focus back by selecting the area the user was just editing.
+                        tgt.setSelectionRange(idx - diff, idx - diff);
+                    }
+                } else {
+                    const idx = tgt.selectionStart;
+                    if (idx !== null) {
+                        const front = tgt.value.substr(0, idx);
+                        const back = tgt.value.substr(idx);
+                        tgt.value = front + '    ' + back;
+                        //> Rendering the new input value will
+                        //  make us lose focus on the textarea, so we put the
+                        //  focus back by selecting the area the user was just editing.
+                        tgt.setSelectionRange(idx + 4, idx + 4);
+                    }
+                }
+            }
+        });
+
+        this.setMode(this.mode);
+
+        //> This is a trick to get around the asynchrony requirement
+        //  for the callback. (Promise callbacks are executed in the microtask
+        //  queue, not immediately.)
+        Promise.resolve().then(() => {
+            callback(this);
+        });
+    }
+
+    getValue(mode = this.mode) {
+        if (mode === this.mode) {
+            return this.container.value;
+        } else {
+            return this.frames[mode];
+        }
+    }
+
+    setValue(value, mode = this.mode) {
+        if (mode === this.mode) {
+            this.container.value = value;
+        } else {
+            this.frames[mode] = value;
+        }
+    }
+
+    getMode() {
+        return this.mode;
+    }
+
+    setMode(mode) {
+        //> Persist the current editor value to memory first
+        this.frames[this.mode] = this.container.value;
+
+        this.mode = mode;
+        this.container.value = this.frames[this.mode];
+    }
+
+    addChangeHandler(handler) {
+        this.container.addEventListener('input', () => {
+            // TODO: does this trigger when input is the same?
+            handler();
+        });
+    }
+
+    getContainer() {
+        return this.container;
+    }
+
+    resize() {
+        // no-op
+    }
+
+    ready() {
+        return true;
+    }
+
+}
+
 //> Depending on the client, pick the editor implementation that provides the best experience.
 const EditorCore = navigator.userAgent.match(/(Android|iPhone|iPad|iPod)/) ? CodeMirrorEditor : MonacoEditor;
+
+// const EditorCore = TextAreaEditor;
 
 //> The `Editor` component encapsulates the Monaco editor, all file state,
 //  and other state about the files the user is editing.
@@ -655,17 +766,17 @@ class Editor extends StyledComponent {
 
     //> Initialize the given editor implementation.
     initEditorCore() {
-        this.core = new EditorCore(() => {
+        this.core = new EditorCore(core => {
             //> Here we populate potential prefilled values from the URL query strings,
             //  and force-live-render it into the preview to make those dirty changes
             //  visible without saving these examples to the server.
             if (prefilledValues.html || prefilledValues.js) {
-                this.core.setValue(prefilledValues.html, 'html');
-                this.core.setValue(prefilledValues.js, 'javascript');
+                core.setValue(prefilledValues.html, 'html');
+                core.setValue(prefilledValues.js, 'javascript');
                 this.liveRenderFramesImmediate();
             }
 
-            this.core.addChangeHandler(this.liveRenderFrames);
+            core.addChangeHandler(this.liveRenderFrames);
 
             this.render();
             this.resizeEditor();
@@ -867,6 +978,18 @@ class Editor extends StyledComponent {
             }
             span.cm-attribute {
                 color: #e40132;
+            }
+        }
+        textarea.editorContainer {
+            font-family: 'Menlo', 'Monaco', 'Courier', monospace;
+            font-size: 12px;
+            line-height: 16px;
+            box-sizing: border-box;
+            padding: 4px 8px;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 60vh;
+            &:focus {
+                outline: none;
             }
         }
         `;
