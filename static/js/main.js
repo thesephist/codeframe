@@ -254,8 +254,9 @@ const loadScript = url => {
 //  2. It creates an interface under which new editor backends can be added / experimented with.
 //  3. Different editor backends are best suited for different clients.
 //
-//  We currently use two backends, Visual Studio Code's Monaco editor, and
-//  CodeMirror, which powers Glitch, Chrome DevTools, and more.
+//  We currently use two backends, Visual Studio Code's Monaco editor, which also runs CodeSandbox; and
+//  CodeMirror, which powers Glitch, Chrome DevTools, and more. You can also find a
+//  _reference implementation_ of a bare-bones editor built on `<textarea>` in `static/js/editors/textarea.js`.
 
 //> Monaco-based implementation of `EditorCore`
 class MonacoEditor {
