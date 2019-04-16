@@ -92,13 +92,19 @@ I chose Torus to build the frontend because (1) I wrote the library, so I know i
 
 The entire editor is implemented in a single JavaScript file, in `static/js/main.js`, which you can read [here](https://thesephist.github.io/codeframe/static/js/main.js.html).
 
-For the text editor inside Codeframe, I'm using [Monaco](https://microsoft.github.io/monaco-editor/), a text editor built for the browser from Microsoft's Visual Studio Code editor. It's fast, sleek, and works very well on desktop browsers. Monaco's mobile support is lacking, but this is hard to address without adding a bunch of shims to Monaco or shipping a custom text editor, which is at most a long-term roadmap item for Codeframe.
+For the text editor inside Codeframe, on Desktop browsers, I'm using [Monaco](https://microsoft.github.io/monaco-editor/), a text editor built for the browser from Microsoft's Visual Studio Code editor. It's fast, sleek, and works very well on desktop browsers. Monaco's mobile support is lacking, however, so on mobile browsers, we ship a different editor, [CodeMirror](https://codemirror.net). CodeMirror is used widely in Chrome DevTools and Glitch, among other tools, is lightweight and fast to load, and far more usable on mobile browsers than Monaco. The experiences of using both editors are at near parity for the basic experience, while each editor brings some smaller feature enhancements over the other. You can read about how we achieve this pluggable architecture in the "pluggable editor backend" section below.
 
 The preview pane in the editor is a simple `<iframe>` that opens a view of the generated HTML + JS page for the Codeframe, so you can see it as it updates live. Today, it operates completely independently from the editor, but in the future we may add some communication between the two to make fancier features possible, like live updates.
 
 ### A note on frontend dependencies
 
-Codeframe's editor only has two dependencies: Torus and the Monaco editor. For development speed, Codeframe currently ships both dependencies as simple `<script>` tags in the editor HTML that points to versions of the NPM packages on Unpkg. In the future, we may bundle our own versions of Torus and Monaco, but so far Unpkg has proven reliable enough.
+Codeframe's editor only has a single core dependency: Torus, which is a lightweight UI framework. For development speed, Codeframe currently ships the dependency as a simple `<script>` tag in the editor HTML that points ot the most recent version of the NPM package on Unpkg. In the future, we may bundle Torus with a compiled version of our editor script. But so far, Unpkg has proven reliable enough.
+
+### A pluggable editor backend
+
+Codeframe's code editor portion is not itself contained in this codebase. Although there is a _reference implementation_ of a very bare-bones editor here implemented as a `<textarea>`, in production, as explained above, Codeframe uses either Monaco or CodeMirror as the code editor of choice, depending on the client (mobile versus desktop browsers). We can shift easily and reliably between these three editors and potential other ones in the future because the Codeframe frontend interfaces with the editor through a small set of APIs that can be implemented around any reasonable code editor. We call this set of APIs the `EditorCore` interface.
+
+Codeframe ships with `EditorCore` wrappers for both Monaco and CodeMirror, and chooses to load one or the other at runtime depending on the client (if we aren't using an editor, no part of that editor's code is loaded in the browser). If we were to switch to a different editor backend or swap out an editor with another one in the future, this wrapper architecture with a small API surface makes this very easy -- a few hours at most to wrap the interface around a new editor. As long as the editor wrapper implements the interface correctly, the editor will work with rest of Codeframe.
 
 ## How to contribute (beginners welcome 👋)
 
