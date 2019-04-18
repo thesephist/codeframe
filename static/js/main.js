@@ -383,7 +383,9 @@ class MonacoEditor {
 
     setMode(mode) {
         this.mode = mode;
-        this.monacoEditor.setModel(this.models[mode]);
+        if (this.ready()) {
+            this.monacoEditor.setModel(this.models[mode]);
+        }
     }
 
     addChangeHandler(handler) {
@@ -592,6 +594,12 @@ class Editor extends StyledComponent {
             this.render(data);
         });
 
+        //> We deep link to the editor tab using the URL hash,
+        //  so restore the state here from when the page first loaded.
+        if (loadedURLState.tab !== '') {
+            this.switchMode(loadedURLState.tab);
+        }
+
         //> Any calls to `resizeEditor` should be debounced to 250ms. This is negligible
         // to UX in fast modern laptops, but has a noticeable impact on UX for lower-end devices.
         this.resizeEditor = debounce(this.resizeEditor.bind(this), 250);
@@ -661,12 +669,11 @@ class Editor extends StyledComponent {
             //> Here we populate potential prefilled values from the URL query strings,
             //  and force-live-render it into the preview to make those dirty changes
             //  visible without saving these examples to the server.
-            if (prefilledValues.html || prefilledValues.js) {
-                core.setValue(prefilledValues.html, 'html');
-                core.setValue(prefilledValues.js, 'javascript');
+            if (loadedURLState.html || loadedURLState.js) {
+                core.setValue(loadedURLState.html, 'html');
+                core.setValue(loadedURLState.js, 'javascript');
                 this.liveRenderFramesImmediate();
             }
-
             core.addChangeHandler(this.liveRenderFrames);
 
             this.render();
@@ -683,6 +690,9 @@ class Editor extends StyledComponent {
         //  edited, then switch out the underlying file model.
         this.core.setMode(mode);
         this.render();
+        //> We deep link to the editor tab using the URL hash,
+        //  so save the new mode state to the hash.
+        window.history.replaceState(null, document.title, '#' + mode);
         gevent('editor', 'switchmode', mode);
     }
 
@@ -1177,7 +1187,7 @@ class App extends StyledComponent {
                     break;
                 default:
                     {
-                        //> If there are prefilled HTML and JavaScript values provided
+                        //> If there are prefilled HTML and JavaScript values
                         //  provided in the query string, parse and save it for later
                         //  when the editor loads.
                         const searchPart = window.location.search.substr(1);
@@ -1185,8 +1195,8 @@ class App extends StyledComponent {
                             for (const pair of searchPart.split('&')) {
                                 const idx = pair.indexOf('=');
                                 const langPart = pair.substr(0, idx);
-                                if (langPart in prefilledValues) {
-                                    prefilledValues[langPart] = decodeURIComponent(pair.substr(idx + 1));
+                                if (langPart in loadedURLState) {
+                                    loadedURLState[langPart] = decodeURIComponent(pair.substr(idx + 1));
                                 }
                             }
                         }
@@ -1220,10 +1230,11 @@ class App extends StyledComponent {
 }
 
 //> Used to save some global values for when the URL contains a
-//  pre-populated code sample.
-const prefilledValues = {
+//  pre-populated code sample or tab state saved in the hash.
+const loadedURLState = {
     html: '',
     js: '',
+    tab: window.location.hash.substr(1),
 }
 
 const router = new Router({
