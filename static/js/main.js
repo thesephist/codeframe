@@ -823,8 +823,10 @@ class Editor extends StyledComponent {
         .ready {
             width: 100%;
             /* dummy size, flex will resize
-             * but CodeMirror needs a set size */
-            height: 300px;
+             * but CodeMirror needs a set size.
+             * set to 0 to avoid flex oversize
+             * issues on Android Chrome on focus */
+            height: 0;
             flex-shrink: 1;
             flex-grow: 1;
         }
