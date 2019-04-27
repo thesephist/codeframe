@@ -20,7 +20,7 @@
         gtag('js', new Date());
         gtag('config', 'UA-137481167-1');
         window.gevent = (category, action, label, value) => {
-          var tracker = ga && ga.getAll()[0];
+          const tracker = ga && ga.getAll && ga.getAll()[0];
           if (tracker) {
             tracker.send('event', category, action, label, value);
           }
