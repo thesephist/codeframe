@@ -82,6 +82,7 @@ body {
     font-weight: bold;
     cursor: pointer;
     box-sizing: border-box;
+    color: var(--cf-black);
 
     position: relative;
     top: -2px;
