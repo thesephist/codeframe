@@ -72,7 +72,7 @@
 <div class="line"><div class="doc"><p>Percentage of the editor size that the preview pane takes up.</p>
 </div><pre class="source javascript"><strong class="lineNumber">59</strong>        this.paneWidth = 50;</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">60</strong></pre></div>
-<div class="line"><div class="doc"><p>We create an iframe manually and insert it into the component DOM, so as to avoid the iframe being re-fetched and re-rendered every time the preview pane is rendered.</p>
+<div class="line"><div class="doc"><p>We create an iframe manually and insert it into the component DOM, so we can replace its URL when the preview URL changes, rather than simply having Torus set it and adding unnecessary history entries in the browser.</p>
 </div><pre class="source javascript"><strong class="lineNumber">64</strong>        this.iframe = document.createElement('iframe');</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">65</strong>        this.iframe.setAttribute('frameborder', 0);</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">66</strong></pre></div>

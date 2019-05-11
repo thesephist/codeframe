@@ -59,8 +59,8 @@ class PreviewPane extends StyledComponent {
         this.paneWidth = 50;
 
         //> We create an iframe manually and insert it into the component DOM,
-        //  so as to avoid the iframe being re-fetched and re-rendered every time
-        //  the preview pane is rendered.
+        //  so we can replace its URL when the preview URL changes, rather than
+        //  simply having Torus set it and adding unnecessary history entries in the browser.
         this.iframe = document.createElement('iframe');
         this.iframe.setAttribute('frameborder', 0);
 
