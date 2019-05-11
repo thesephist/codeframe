@@ -87,9 +87,10 @@ class PreviewPane extends StyledComponent {
         overflow: hidden;
         border-right: 2px solid var(--cf-black);
         @media (max-width: 750px) {
+            /* Overriding inline style */
             width: 100% !important;
-            height: 50% !important;
-            border-right: 0 !important;
+            height: 50%;
+            border-right: 0;
             border-bottom: 2px solid var(--cf-black);
         }
         .topBar {
@@ -782,9 +783,10 @@ class Editor extends StyledComponent {
         display: flex;
         flex-direction: column;
         @media (max-width: 750px) {
+            /* Overriding inline style */
             width: 100% !important;
-            height: 50% !important;
-            border-left: 0 !important;
+            height: 50%;
+            border-left: 0;
             border-top: 2px solid var(--cf-black);
         }
         .topBar {
@@ -1054,7 +1056,7 @@ class Workspace extends StyledComponent {
             position: relative;
             height: 100%;
             @media (max-width: 750px) {
-                flex-direction: column !important;
+                flex-direction: column;
             }
         }
         .button {
