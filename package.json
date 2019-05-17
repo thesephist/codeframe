@@ -10,7 +10,7 @@
     "start": "node src/index.js",
     "lint": "eslint ./src/*.js ./static/js/*.js",
     "docs": "litterate --config ./litterate.config.js",
-    "clean": "rm -r ./db/*"
+    "clean": "git clean -fxd"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
