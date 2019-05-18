@@ -165,7 +165,16 @@ class PreviewPane extends StyledComponent {
     }
 
     selectInput(evt) {
+        evt.preventDefault();
         evt.target.select();
+        //> This is a weird and funky workaround for the fact that, in Safari, the selection
+        //  made here from a focus event is cancelled immediately by a proceeding mouseup event,
+        //  when it happens. So we `.preventDefault()` only the next immediate mouseup event.
+        const cancelMouseup = e => {
+            e.preventDefault();
+            evt.target.removeEventListener('mouseup', cancelMouseup);
+        };
+        evt.target.addEventListener('mouseup', cancelMouseup);
         gevent('preview', 'selecturl');
     }
 
