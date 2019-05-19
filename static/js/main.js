@@ -359,6 +359,17 @@ class MonacoEditor {
         });
     }
 
+    _registerKeybindings(callbacks) {
+        //> For Monaco specifically, we capture the Ctrl/Cmd-S shortcut and call save
+        //  on the frames being edited. This is specific to Monaco because CodeMirror does
+        //  not currently have a way to extend the editor keybindings.
+        //  We _could_ also try to listen for different keyboard events in `Workspace` and
+        //  respond accordingly from there, but that would lead to inconsistencies
+        //  between browsers/OS vendors and it would depend on the editor bubbling
+        //  events up.
+        this.monacoEditor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S, callbacks.save);
+    }
+
     //> The following interface methods are shared between all `EditorCore` implementations
 
     getValue(mode = this.mode) {
@@ -684,6 +695,15 @@ class Editor extends StyledComponent {
                 this.liveRenderFramesImmediate();
             }
             core.addChangeHandler(this.liveRenderFrames);
+
+            // Monaco-specific, so this isn't super clean, but is the best
+            // solution I could come up with without breaking encapsulation
+            // of the EditorCore interface..
+            if ('_registerKeybindings' in core) {
+                core._registerKeybindings({
+                    save: this.saveFrames,
+                });
+            }
 
             this.render();
             this.resizeEditor();
