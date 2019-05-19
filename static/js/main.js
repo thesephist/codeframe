@@ -28,8 +28,6 @@ const api = {
     errlog: e => console.error(`Codeframe API error:\n\t${e}`),
 }
 
-const now = () => new Date().getTime();
-
 //> Debounce coalesces multiple calls to the same function in a short
 //  period of time into one call, by cancelling subsequent calls within
 //  a given timeframe.
@@ -38,11 +36,12 @@ const debounce = (fn, delayMillis) => {
     let to = null;
     return (...args) => {
         clearTimeout(to);
+        const now = Date.now();
         const dfn = () => {
-            lastRun = now();
+            lastRun = now;
             fn(...args);
         }
-        if (now() - lastRun > delayMillis) {
+        if (now - lastRun > delayMillis) {
             dfn()
         } else {
             to = setTimeout(dfn, delayMillis);
