@@ -349,12 +349,6 @@ class MonacoEditor {
             });
             this.setMode(this.mode);
 
-            //> When the editor loads, bring the focus to it unless there is another
-            //  element with focus.
-            if (document.activeElement === null || document.activeElement === document.body) {
-                this.monacoEditor.focus();
-            }
-
             callback(this);
         });
     }
@@ -520,10 +514,6 @@ class CodeMirrorEditor {
         //  because the latter option strips the document of its language mode.
         //  This seems like a poorly documented behavior of CM.
         this.setMode(this.mode);
-
-        if (document.activeElement === null || document.activeElement === document.body) {
-            this.codeMirrorEditor.focus();
-        }
 
         callback(this);
     }
