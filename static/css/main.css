@@ -153,6 +153,10 @@ body {
     outline: none;
 }
 
+.button.fixed {
+    cursor: initial;
+}
+
 .button.fixed:hover,
 .button.fixed:hover::before,
 .button.fixed:hover::after,
