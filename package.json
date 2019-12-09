@@ -17,7 +17,7 @@
     "express": "^4.17.1"
   },
   "devDependencies": {
-    "eslint": "^6.1.0",
-    "litterate": "^0.1.1"
+    "eslint": "^6.7.2",
+    "litterate": "^0.1.2"
   }
 }
