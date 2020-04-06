@@ -115,5 +115,5 @@ app.use((_req, res) => respondWith(res, '404.html'));
 
 app.listen(
     config.PORT,
-    () => console.log(`Codeframe running on localhost:${config.PORT}`)
+    () => console.log(`Codeframe running on localhost:${config.PORT}`),
 );

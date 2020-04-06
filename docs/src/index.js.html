@@ -17,121 +17,121 @@
             </div>
             <pre></pre>
         </div>
-        <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">1</strong>const fs = require('fs');</pre></div>
+        <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">1</strong>con&#115;t f&#115; = require('f&#115;');</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">2</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">3</strong>const config = require('../config.js');</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">3</strong>con&#115;t config = require('../config.j&#115;');</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">4</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">5</strong>const express = require('express');</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">6</strong>const bodyParser = require('body-parser');</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">7</strong>const app = express();</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">8</strong>app.use(bodyParser.text({</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">5</strong>con&#115;t expre&#115;&#115; = require('expre&#115;&#115;');</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">6</strong>con&#115;t bodyPar&#115;er = require('body-par&#115;er');</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">7</strong>con&#115;t app = expre&#115;&#115;();</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">8</strong>app.u&#115;e(bodyPar&#115;er.text({</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">9</strong>    limit: '50kb',</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">10</strong>}));</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">11</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">12</strong>const api = require('./api.js');</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">12</strong>con&#115;t api = require('./api.j&#115;');</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">13</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">14</strong>const CONTENT_TYPES = {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">15</strong>    '.js': 'text/javascript',</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">14</strong>con&#115;t CONTENT_TYPE&#83; = {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">15</strong>    '.j&#115;': 'text/java&#115;cript',</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">16</strong>    '.html': 'text/html',</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">17</strong>    '.ico': 'image/x-icon',</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">18</strong>}</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">19</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">20</strong>// STATIC ASSETS</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">21</strong>const STATIC_PATHS = {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">20</strong>// &#83;TATIC A&#83;&#83;ET&#83;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">21</strong>con&#115;t &#83;TATIC_PATH&#83; = {</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">22</strong>    '/': 'index.html',</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">23</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">24</strong>    // Editor alias routes</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">24</strong>    // Editor alia&#115; route&#115;</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">25</strong>    '/new': 'editor.html',</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">26</strong>    '/welcome': 'editor.html',</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">27</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">28</strong>    '/favicon.ico': 'assets/favicon.ico',</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">29</strong>    '/h/:htmlFrameHash/j/:jsFrameHash/edit': 'editor.html',</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">28</strong>    '/favicon.ico': 'a&#115;&#115;et&#115;/favicon.ico',</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">29</strong>    '/h/:htmlFrameHa&#115;h/j/:j&#115;FrameHa&#115;h/edit': 'editor.html',</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">30</strong>}</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">31</strong>const respondWith = (res, static_path) =&#62; {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">32</strong>    fs.readFile(`static/${static_path}`, (err, data) =&#62; {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">31</strong>con&#115;t re&#115;pondWith = (re&#115;, &#115;tatic_path) =&#62; {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">32</strong>    f&#115;.readFile(`&#115;tatic/${&#115;tatic_path}`, (err, data) =&#62; {</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">33</strong>        if (err) {</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">34</strong>            throw err;</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">35</strong>        }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">36</strong></pre></div>
 <div class="line"><div class="doc"><p>We determine the content-type based on requested resource file ending, and fall back to HTML.</p>
 </div><pre class="source javascript"><strong class="lineNumber">39</strong>        let contentType = 'text/html';</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">40</strong>        for (const [ending, type] of Object.entries(CONTENT_TYPES)) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">41</strong>            if (static_path.endsWith(ending)) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">40</strong>        for (con&#115;t [ending, type] of Object.entrie&#115;(CONTENT_TYPE&#83;)) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">41</strong>            if (&#115;tatic_path.end&#115;With(ending)) {</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">42</strong>                contentType = type;</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">43</strong>                break;</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">44</strong>            }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">45</strong>        }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">46</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">47</strong>        res.set('Content-Type', contentType);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">48</strong>        res.send(data);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">47</strong>        re&#115;.&#115;et('Content-Type', contentType);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">48</strong>        re&#115;.&#115;end(data);</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">49</strong>    });</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">50</strong>}</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">51</strong>for (const [uri, path] of Object.entries(STATIC_PATHS)) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">52</strong>    app.get(uri, (_req, res) =&#62; {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">51</strong>for (con&#115;t [uri, path] of Object.entrie&#115;(&#83;TATIC_PATH&#83;)) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">52</strong>    app.get(uri, (_req, re&#115;) =&#62; {</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">53</strong>        try {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">54</strong>            respondWith(res, path);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">54</strong>            re&#115;pondWith(re&#115;, path);</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">55</strong>        } catch (e) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">56</strong>            console.error(e);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">57</strong>            // For now, assume it's a not-found error</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">58</strong>            respondWith(res, '404.html');</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">56</strong>            con&#115;ole.error(e);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">57</strong>            // For now, a&#115;&#115;ume it'&#115; a not-found error</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">58</strong>            re&#115;pondWith(re&#115;, '404.html');</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">59</strong>        }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">60</strong>    });</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">61</strong>}</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">62</strong>app.use('/static', express.static('static'));</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">62</strong>app.u&#115;e('/&#115;tatic', expre&#115;&#115;.&#115;tatic('&#115;tatic'));</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">63</strong></pre></div>
 <div class="line"><div class="doc"><p>Easily redirect <code>/f/*.html/edit</code> to an editor view to edit statically rendered Codeframes by just appending <code>/edit</code> to the URL.</p>
-</div><pre class="source javascript"><strong class="lineNumber">66</strong>app.get('/f/:htmlFrameHash/:jsFrameHash.html/edit', (req, res) =&#62; {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">67</strong>    res.redirect(302, `/h/${req.params.htmlFrameHash}/j/${req.params.jsFrameHash}/edit`);</pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">66</strong>app.get('/f/:htmlFrameHa&#115;h/:j&#115;FrameHa&#115;h.html/edit', (req, re&#115;) =&#62; {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">67</strong>    re&#115;.redirect(302, `/h/${req.param&#115;.htmlFrameHa&#115;h}/j/${req.param&#115;.j&#115;FrameHa&#115;h}/edit`);</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">68</strong>});</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">69</strong></pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">70</strong>// API</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">71</strong>const API_PATHS = {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">72</strong>    'GET /api/frame/:frameHash': api.frame.get,</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">73</strong>    'POST /api/frame/': api.frame.post,</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">71</strong>con&#115;t API_PATH&#83; = {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">72</strong>    'GET /api/frame/:frameHa&#115;h': api.frame.get,</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">73</strong>    'PO&#83;T /api/frame/': api.frame.po&#115;t,</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">74</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">75</strong>    'GET /f/:htmlFrameHash/:jsFrameHash.html': api.frame.getPage,</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">75</strong>    'GET /f/:htmlFrameHa&#115;h/:j&#115;FrameHa&#115;h.html': api.frame.getPage,</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">76</strong>}</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">77</strong>const METHODS = ['GET', 'POST', 'PUT', 'DELETE'];</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">78</strong>for (const [spec, handler] of Object.entries(API_PATHS)) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">79</strong>    const [method, route] = spec.split(' ');</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">77</strong>con&#115;t METHOD&#83; = ['GET', 'PO&#83;T', 'PUT', 'DELETE'];</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">78</strong>for (con&#115;t [&#115;pec, handler] of Object.entrie&#115;(API_PATH&#83;)) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">79</strong>    con&#115;t [method, route] = &#115;pec.&#115;plit(' ');</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">80</strong>    let appMethod;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">81</strong>    if (METHODS.includes(method)) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">82</strong>        appMethod = app[method.toLowerCase()].bind(app);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">83</strong>    } else {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">84</strong>        throw new Error(`Method ${method} for route ${route} is not valid`);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">81</strong>    if (METHOD&#83;.include&#115;(method)) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">82</strong>        appMethod = app[method.toLowerCa&#115;e()].bind(app);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">83</strong>    } el&#115;e {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">84</strong>        throw new Error(`Method ${method} for route ${route} i&#115; not valid`);</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">85</strong>    }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">86</strong></pre></div>
 <div class="line"><div class="doc"><p>We determine the content-type based on requested resource file ending, and fall back to JSON.</p>
-</div><pre class="source javascript"><strong class="lineNumber">89</strong>    let contentType = 'application/json';</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">90</strong>    for (const [ending, type] of Object.entries(CONTENT_TYPES)) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">91</strong>        if (route.endsWith(ending)) {</pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">89</strong>    let contentType = 'application/j&#115;on';</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">90</strong>    for (con&#115;t [ending, type] of Object.entrie&#115;(CONTENT_TYPE&#83;)) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">91</strong>        if (route.end&#115;With(ending)) {</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">92</strong>            contentType = type;</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">93</strong>            break;</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">94</strong>        }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">95</strong>    }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">96</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">97</strong>    appMethod(route, async (req, res) =&#62; {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">97</strong>    appMethod(route, a&#115;ync (req, re&#115;) =&#62; {</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">98</strong>        try {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">99</strong>            res.set('Content-Type', contentType);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">100</strong>            const result = await handler(req.params, req.query, req.body);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">101</strong>            if (typeof result === 'string') {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">102</strong>                res.send(result);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">103</strong>            } else {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">104</strong>                res.send(JSON.stringify(result));</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">99</strong>            re&#115;.&#115;et('Content-Type', contentType);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">100</strong>            con&#115;t re&#115;ult = await handler(req.param&#115;, req.query, req.body);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">101</strong>            if (typeof re&#115;ult === '&#115;tring') {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">102</strong>                re&#115;.&#115;end(re&#115;ult);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">103</strong>            } el&#115;e {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">104</strong>                re&#115;.&#115;end(J&#83;ON.&#115;tringify(re&#115;ult));</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">105</strong>            }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">106</strong>        } catch (e) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">107</strong>            console.error(e);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">108</strong>            res.send('error');</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">107</strong>            con&#115;ole.error(e);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">108</strong>            re&#115;.&#115;end('error');</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">109</strong>        }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">110</strong>    });</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">111</strong>}</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">112</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">113</strong>// 404 last</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">114</strong>app.use((_req, res) =&#62; respondWith(res, '404.html'));</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">113</strong>// 404 la&#115;t</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">114</strong>app.u&#115;e((_req, re&#115;) =&#62; re&#115;pondWith(re&#115;, '404.html'));</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">115</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">116</strong>app.listen(</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">116</strong>app.li&#115;ten(</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">117</strong>    config.PORT,</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">118</strong>    () =&#62; console.log(`Codeframe running on localhost:${config.PORT}`)</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">118</strong>    () =&#62; con&#115;ole.log(`Codeframe running on localho&#115;t:${config.PORT}`),</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">119</strong>);</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">120</strong></pre></div>
     </main>

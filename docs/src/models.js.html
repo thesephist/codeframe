@@ -19,89 +19,89 @@
         </div>
         <div class="line"><div class="doc"><p>This file contains all logic for managing the filesystem backed database of Codeframe files.</p>
 </div><pre class="source javascript"><strong class="lineNumber">3</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">4</strong>const fs = require('fs');</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">5</strong>const path = require('path');</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">6</strong>const crypto = require('crypto');</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">7</strong>const zlib = require('zlib');</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">4</strong>con&#115;t f&#115; = require('f&#115;');</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">5</strong>con&#115;t path = require('path');</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">6</strong>con&#115;t crypto = require('crypto');</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">7</strong>con&#115;t zlib = require('zlib');</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">8</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">9</strong>const config = require('../config.js');</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">9</strong>con&#115;t config = require('../config.j&#115;');</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">10</strong></pre></div>
 <div class="line"><div class="doc"><p>These files are Codeframe files that must be ensured to exist in the database with every deploy, since they&#39;re used in demos on the home page. These are checked for existence later.</p>
-</div><pre class="source javascript"><strong class="lineNumber">14</strong>const STARTER_FIXTURES = [</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">15</strong>    'blank-torus.js',</pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">14</strong>con&#115;t &#83;TARTER_FIXTURE&#83; = [</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">15</strong>    'blank-toru&#115;.j&#115;',</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">16</strong>    'blank.frame',</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">17</strong>    'button-effects.html',</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">18</strong>    'canvas.js',</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">19</strong>    'filters-shadows.html',</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">17</strong>    'button-effect&#115;.html',</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">18</strong>    'canva&#115;.j&#115;',</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">19</strong>    'filter&#115;-&#115;hadow&#115;.html',</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">20</strong>    'flexbox.html',</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">21</strong>    'helloworld.html',</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">22</strong>    'helloworld.js',</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">23</strong>    'simple-blog.html',</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">22</strong>    'helloworld.j&#115;',</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">23</strong>    '&#115;imple-blog.html',</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">24</strong>    'interactive-input.html',</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">25</strong>    'interactive-input.js',</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">26</strong>    'nametag-torus.js',</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">27</strong>    'see-javascript.html',</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">28</strong>    'todo-torus.js',</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">25</strong>    'interactive-input.j&#115;',</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">26</strong>    'nametag-toru&#115;.j&#115;',</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">27</strong>    '&#115;ee-java&#115;cript.html',</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">28</strong>    'todo-toru&#115;.j&#115;',</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">29</strong>    'welcome.html',</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">30</strong>];</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">31</strong></pre></div>
 <div class="line"><div class="doc"><p>Utility method to get a trimmed sha256 hash of a string.</p>
-</div><pre class="source javascript"><strong class="lineNumber">33</strong>const hashFile = contents =&#62; {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">34</strong>    const hash = crypto.createHash('sha256');</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">35</strong>    hash.update(contents);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">36</strong>    // first 12 chars of the hex digest</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">37</strong>    return hash.digest('hex').substr(0, 12);</pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">33</strong>con&#115;t ha&#115;hFile = content&#115; =&#62; {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">34</strong>    con&#115;t ha&#115;h = crypto.createHa&#115;h('&#115;ha256');</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">35</strong>    ha&#115;h.update(content&#115;);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">36</strong>    // fir&#115;t 12 char&#115; of the hex dige&#115;t</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">37</strong>    return ha&#115;h.dige&#115;t('hex').&#115;ub&#115;tr(0, 12);</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">38</strong>}</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">39</strong></pre></div>
 <div class="line"><div class="doc"><p><code>SourceFileStore</code> is the database that manages the app&#39;s communication with the filesystem-backed storage for Codeframe files. For efficiency of data in storage, we compress files stored here with gzip for on-disk storage.</p>
-</div><pre class="source javascript"><strong class="lineNumber">43</strong>class SourceFileStore {</pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">43</strong>cla&#115;&#115; &#83;ourceFile&#83;tore {</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">44</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">45</strong>    constructor(basePath) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">46</strong>        this.basePath = basePath;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">47</strong>        if (!fs.existsSync(this.basePath)) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">48</strong>            fs.mkdirSync(this.basePath);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">45</strong>    con&#115;tructor(ba&#115;ePath) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">46</strong>        thi&#115;.ba&#115;ePath = ba&#115;ePath;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">47</strong>        if (!f&#115;.exi&#115;t&#115;&#83;ync(thi&#115;.ba&#115;ePath)) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">48</strong>            f&#115;.mkdir&#83;ync(thi&#115;.ba&#115;ePath);</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">49</strong>        }</pre></div>
 <div class="line"><div class="doc"><p>The first time the file store is created, we make sure each of the required demo snippets exists.</p>
-</div><pre class="source javascript"><strong class="lineNumber">52</strong>        for (const fxt of STARTER_FIXTURES) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">53</strong>            fs.readFile(`starter_fixtures/${fxt}`, 'utf8', (err, data) =&#62; {</pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">52</strong>        for (con&#115;t fxt of &#83;TARTER_FIXTURE&#83;) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">53</strong>            f&#115;.readFile(`&#115;tarter_fixture&#115;/${fxt}`, 'utf8', (err, data) =&#62; {</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">54</strong>                if (err) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">55</strong>                    console.error(err);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">56</strong>                } else {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">57</strong>                    this.create(data);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">55</strong>                    con&#115;ole.error(err);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">56</strong>                } el&#115;e {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">57</strong>                    thi&#115;.create(data);</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">58</strong>                }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">59</strong>            });</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">60</strong>        }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">61</strong>    }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">62</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">63</strong>    getPathFromHash(hash) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">64</strong>        return path.join(this.basePath, `cf_${hash}.frame`);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">63</strong>    getPathFromHa&#115;h(ha&#115;h) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">64</strong>        return path.join(thi&#115;.ba&#115;ePath, `cf_${ha&#115;h}.frame`);</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">65</strong>    }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">66</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">67</strong>    getHashedFilePath(contents) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">68</strong>        return this.getPathFromHash(hashFile(contents));</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">67</strong>    getHa&#115;hedFilePath(content&#115;) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">68</strong>        return thi&#115;.getPathFromHa&#115;h(ha&#115;hFile(content&#115;));</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">69</strong>    }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">70</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">71</strong>    has(sourceFilePath) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">72</strong>        return new Promise((res, _rej) =&#62; {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">73</strong>            fs.access(sourceFilePath, fs.constants.R_OK, err =&#62; {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">74</strong>                res(!err);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">71</strong>    ha&#115;(&#115;ourceFilePath) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">72</strong>        return new Promi&#115;e((re&#115;, _rej) =&#62; {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">73</strong>            f&#115;.acce&#115;&#115;(&#115;ourceFilePath, f&#115;.con&#115;tant&#115;.R_OK, err =&#62; {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">74</strong>                re&#115;(!err);</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">75</strong>            });</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">76</strong>        });</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">77</strong>    }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">78</strong></pre></div>
 <div class="line"><div class="doc"><p>Given a hash, returns a Promise resolving to the contents of the file, or rejects.</p>
-</div><pre class="source javascript"><strong class="lineNumber">80</strong>    getFromFS(frameHash) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">81</strong>        return new Promise((res, rej) =&#62; {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">82</strong>            fs.readFile(this.getPathFromHash(frameHash), (err, data) =&#62; {</pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">80</strong>    getFromF&#83;(frameHa&#115;h) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">81</strong>        return new Promi&#115;e((re&#115;, rej) =&#62; {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">82</strong>            f&#115;.readFile(thi&#115;.getPathFromHa&#115;h(frameHa&#115;h), (err, data) =&#62; {</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">83</strong>                if (err) {</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">84</strong>                    rej(err);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">85</strong>                } else {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">85</strong>                } el&#115;e {</pre></div>
 <div class="line"><div class="doc"><p>unzip gzip compression of the read data before returning to the caller</p>
-</div><pre class="source javascript"><strong class="lineNumber">88</strong>                    zlib.gunzip(data, 'utf8', (err, results) =&#62; {</pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">88</strong>                    zlib.gunzip(data, 'utf8', (err, re&#115;ult&#115;) =&#62; {</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">89</strong>                        if (err) {</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">90</strong>                            rej(err);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">91</strong>                        } else {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">92</strong>                            res(results.toString('utf8'));</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">91</strong>                        } el&#115;e {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">92</strong>                            re&#115;(re&#115;ult&#115;.to&#83;tring('utf8'));</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">93</strong>                        }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">94</strong>                    });</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">95</strong>                }</pre></div>
@@ -110,38 +110,38 @@
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">98</strong>    }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">99</strong></pre></div>
 <div class="line"><div class="doc"><p>First check if the file we&#39;re looking to create exists, and if not, create one.</p>
-</div><pre class="source javascript"><strong class="lineNumber">101</strong>    async create(sourceFileContents) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">102</strong>        const frameHash = hashFile(sourceFileContents);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">103</strong>        const sourceFilePath = this.getHashedFilePath(sourceFileContents);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">104</strong>        const exists = await this.has(sourceFilePath);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">105</strong>        if (!exists) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">106</strong>            return new Promise((res, rej) =&#62; {</pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">101</strong>    a&#115;ync create(&#115;ourceFileContent&#115;) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">102</strong>        con&#115;t frameHa&#115;h = ha&#115;hFile(&#115;ourceFileContent&#115;);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">103</strong>        con&#115;t &#115;ourceFilePath = thi&#115;.getHa&#115;hedFilePath(&#115;ourceFileContent&#115;);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">104</strong>        con&#115;t exi&#115;t&#115; = await thi&#115;.ha&#115;(&#115;ourceFilePath);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">105</strong>        if (!exi&#115;t&#115;) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">106</strong>            return new Promi&#115;e((re&#115;, rej) =&#62; {</pre></div>
 <div class="line"><div class="doc"><p>Before saving the file, gzip the text file</p>
-</div><pre class="source javascript"><strong class="lineNumber">108</strong>                zlib.gzip(sourceFileContents, 'utf8', (err, results) =&#62; {</pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">108</strong>                zlib.gzip(&#115;ourceFileContent&#115;, 'utf8', (err, re&#115;ult&#115;) =&#62; {</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">109</strong>                    if (err) {</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">110</strong>                        rej(err);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">111</strong>                    } else {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">112</strong>                        fs.writeFile(sourceFilePath, results, err =&#62; {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">111</strong>                    } el&#115;e {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">112</strong>                        f&#115;.writeFile(&#115;ourceFilePath, re&#115;ult&#115;, err =&#62; {</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">113</strong>                            if (err) {</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">114</strong>                                rej(err)</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">115</strong>                            } else {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">116</strong>                                res(frameHash);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">115</strong>                            } el&#115;e {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">116</strong>                                re&#115;(frameHa&#115;h);</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">117</strong>                            }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">118</strong>                        });</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">119</strong>                    }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">120</strong>                });</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">121</strong>            });</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">122</strong>        }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">123</strong>        return frameHash;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">123</strong>        return frameHa&#115;h;</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">124</strong>    }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">125</strong></pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">126</strong>}</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">127</strong></pre></div>
 <div class="line"><div class="doc"><p>Create a new database from the class, and export that for use.</p>
-</div><pre class="source javascript"><strong class="lineNumber">129</strong>const store = new SourceFileStore(config.DATABASE);</pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">129</strong>con&#115;t &#115;tore = new &#83;ourceFile&#83;tore(config.DATABA&#83;E);</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">130</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">131</strong>module.exports = {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">132</strong>    store,</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">131</strong>module.export&#115; = {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">132</strong>    &#115;tore,</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">133</strong>}</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">134</strong></pre></div>
     </main>

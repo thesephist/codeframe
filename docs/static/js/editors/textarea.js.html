@@ -18,103 +18,103 @@
             <pre></pre>
         </div>
         <div class="line"><div class="doc"><p>This is a reference implementation of the <code>EditorCore</code> interface that allows any third-party editor to be plugged into Codeframe as the code editor of choice. <code>TextAreaEditor</code> is backed by a simple <code>&lt;textarea&gt;</code> element.</p>
-</div><pre class="source javascript"><strong class="lineNumber">4</strong>class TextAreaEditor {</pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">4</strong>cla&#115;&#115; TextAreaEditor {</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">5</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">6</strong>    constructor(callback) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">7</strong>        this.mode = 'html';</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">6</strong>    con&#115;tructor(callback) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">7</strong>        thi&#115;.mode = 'html';</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">8</strong></pre></div>
 <div class="line"><div class="doc"><p>When the file contents are not being edited, they are cached in <code>this.frames</code>.</p>
-</div><pre class="source javascript"><strong class="lineNumber">11</strong>        this.frames = {</pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">11</strong>        thi&#115;.frame&#115; = {</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">12</strong>            html: '',</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">13</strong>            javascript: '',</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">13</strong>            java&#115;cript: '',</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">14</strong>        }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">15</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">16</strong>        this.container = document.createElement('textarea');</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">17</strong>        this.container.classList.add('editorContainer');</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">16</strong>        thi&#115;.container = document.createElement('textarea');</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">17</strong>        thi&#115;.container.cla&#115;&#115;Li&#115;t.add('editorContainer');</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">18</strong></pre></div>
 <div class="line"><div class="doc"><p>Attach some basic event handlers to allow correct indentation with tabs (4 spaces, for consistency).</p>
-</div><pre class="source javascript"><strong class="lineNumber">21</strong>        this.container.addEventListener('keydown', evt =&#62; {</pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">21</strong>        thi&#115;.container.addEventLi&#115;tener('keydown', evt =&#62; {</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">22</strong>            if (evt.key === 'Tab') {</pre></div>
 <div class="line"><div class="doc"><p>By default, the tab key will lead the user to go the next element in the tab-index order.</p>
 </div><pre class="source javascript"><strong class="lineNumber">25</strong>                evt.preventDefault();</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">26</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">27</strong>                const tgt = evt.target;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">28</strong>                if (evt.shiftKey) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">29</strong>                    const idx = tgt.selectionStart;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">27</strong>                con&#115;t tgt = evt.target;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">28</strong>                if (evt.&#115;hiftKey) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">29</strong>                    con&#115;t idx = tgt.&#115;election&#83;tart;</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">30</strong>                    if (idx !== null) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">31</strong>                        let front = tgt.value.substr(0, idx);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">32</strong>                        const back = tgt.value.substr(idx);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">31</strong>                        let front = tgt.value.&#115;ub&#115;tr(0, idx);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">32</strong>                        con&#115;t back = tgt.value.&#115;ub&#115;tr(idx);</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">33</strong>                        let diff = 0;</pre></div>
 <div class="line"><div class="doc"><p>If dedenting, remove any whitespace up to 4 spaces in front of the cursor.</p>
-</div><pre class="source javascript"><strong class="lineNumber">36</strong>                        while (front.endsWith(' ') &#38;&#38; diff &#60; 4) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">37</strong>                            front = front.substr(0, front.length - 1);</pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">36</strong>                        while (front.end&#115;With(' ') &#38;&#38; diff &#60; 4) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">37</strong>                            front = front.&#115;ub&#115;tr(0, front.length - 1);</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">38</strong>                            tgt.value = front + back;</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">39</strong>                            diff ++;</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">40</strong>                        }</pre></div>
 <div class="line"><div class="doc"><p>Rendering the new input value will make us lose focus on the textarea, so we put the focus back by selecting the area the user was just editing.</p>
-</div><pre class="source javascript"><strong class="lineNumber">44</strong>                        tgt.setSelectionRange(idx - diff, idx - diff);</pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">44</strong>                        tgt.&#115;et&#83;electionRange(idx - diff, idx - diff);</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">45</strong>                    }</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">46</strong>                } else {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">47</strong>                    const idx = tgt.selectionStart;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">46</strong>                } el&#115;e {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">47</strong>                    con&#115;t idx = tgt.&#115;election&#83;tart;</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">48</strong>                    if (idx !== null) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">49</strong>                        const front = tgt.value.substr(0, idx);</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">50</strong>                        const back = tgt.value.substr(idx);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">49</strong>                        con&#115;t front = tgt.value.&#115;ub&#115;tr(0, idx);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">50</strong>                        con&#115;t back = tgt.value.&#115;ub&#115;tr(idx);</pre></div>
 <div class="line"><div class="doc"><p>If indenting, just add 4 spaces at the position of the cursor.</p>
 </div><pre class="source javascript"><strong class="lineNumber">52</strong>                        tgt.value = front + '    ' + back;</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber"></strong></pre></div>
 <div class="line"><div class="doc"><p>Rendering the new input value will make us lose focus on the textarea, so we put the focus back by selecting the area the user was just editing.</p>
-</div><pre class="source javascript"><strong class="lineNumber">56</strong>                        tgt.setSelectionRange(idx + 4, idx + 4);</pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">56</strong>                        tgt.&#115;et&#83;electionRange(idx + 4, idx + 4);</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">57</strong>                    }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">58</strong>                }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">59</strong>            }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">60</strong>        });</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">61</strong></pre></div>
 <div class="line"><div class="doc"><p>Set the first file editing mode (&#39;html&#39;)</p>
-</div><pre class="source javascript"><strong class="lineNumber">63</strong>        this.setMode(this.mode);</pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">63</strong>        thi&#115;.&#115;etMode(thi&#115;.mode);</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">64</strong></pre></div>
 <div class="line"><div class="doc"><p>This is a trick to get around the asynchrony requirement for the callback. (Promise callbacks are executed in the microtask queue, not immediately.) This is required because Codeframe&#39;s editor component assumes that this callback is called after the editor is instantiated, so a synchronous callback in the constructor doesn&#39;t work.</p>
-</div><pre class="source javascript"><strong class="lineNumber">70</strong>        Promise.resolve().then(() =&#62; {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">71</strong>            callback(this);</pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">70</strong>        Promi&#115;e.re&#115;olve().then(() =&#62; {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">71</strong>            callback(thi&#115;);</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">72</strong>        });</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">73</strong>    }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">74</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">75</strong>    getValue(mode = this.mode) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">76</strong>        if (mode === this.mode) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">77</strong>            return this.container.value;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">78</strong>        } else {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">79</strong>            return this.frames[mode];</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">75</strong>    getValue(mode = thi&#115;.mode) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">76</strong>        if (mode === thi&#115;.mode) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">77</strong>            return thi&#115;.container.value;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">78</strong>        } el&#115;e {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">79</strong>            return thi&#115;.frame&#115;[mode];</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">80</strong>        }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">81</strong>    }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">82</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">83</strong>    setValue(value, mode = this.mode) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">84</strong>        if (mode === this.mode) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">85</strong>            this.container.value = value;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">86</strong>        } else {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">87</strong>            this.frames[mode] = value;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">83</strong>    &#115;etValue(value, mode = thi&#115;.mode) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">84</strong>        if (mode === thi&#115;.mode) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">85</strong>            thi&#115;.container.value = value;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">86</strong>        } el&#115;e {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">87</strong>            thi&#115;.frame&#115;[mode] = value;</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">88</strong>        }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">89</strong>    }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">90</strong></pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">91</strong>    getMode() {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">92</strong>        return this.mode;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">92</strong>        return thi&#115;.mode;</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">93</strong>    }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">94</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">95</strong>    setMode(mode) {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">95</strong>    &#115;etMode(mode) {</pre></div>
 <div class="line"><div class="doc"><p>Persist the current editor value to memory first</p>
-</div><pre class="source javascript"><strong class="lineNumber">97</strong>        this.frames[this.mode] = this.container.value;</pre></div>
+</div><pre class="source javascript"><strong class="lineNumber">97</strong>        thi&#115;.frame&#115;[thi&#115;.mode] = thi&#115;.container.value;</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">98</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">99</strong>        this.mode = mode;</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">100</strong>        this.container.value = this.frames[this.mode];</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">99</strong>        thi&#115;.mode = mode;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">100</strong>        thi&#115;.container.value = thi&#115;.frame&#115;[thi&#115;.mode];</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">101</strong>    }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">102</strong></pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">103</strong>    addChangeHandler(handler) {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">104</strong>        this.container.addEventListener('input', handler);</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">104</strong>        thi&#115;.container.addEventLi&#115;tener('input', handler);</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">105</strong>    }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">106</strong></pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">107</strong>    getContainer() {</pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">108</strong>        return this.container;</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">108</strong>        return thi&#115;.container;</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">109</strong>    }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">110</strong></pre></div>
-<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">111</strong>    resize() {</pre></div>
+<div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">111</strong>    re&#115;ize() {</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">112</strong>        // no-op</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">113</strong>    }</pre></div>
 <div class="line"><div class="doc"></div><pre class="source javascript"><strong class="lineNumber">114</strong></pre></div>
