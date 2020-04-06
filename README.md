@@ -1,6 +1,6 @@
 # Codeframe
 
-Codeframe is the fastest, easiest way to build and deploy quick static webpages, and it's designed to be the best place to learn how to create things for the web, on the web. You can find it running live at [beta.codeframe.co](https://beta.codeframe.co).
+Codeframe is the fastest, easiest way to build and deploy quick static webpages, and it's designed to be the best place to learn how to create things for the web, on the web. You can find it running live at [codeframe.co](https://codeframe.co).
 
 ![Codeframe.co](docs/screenshot.png)
 
