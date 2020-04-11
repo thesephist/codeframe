@@ -1148,7 +1148,7 @@ class Workspace extends StyledComponent {
                     <a class="button newButton" href="/new?from=editor">
                         + New <span class="mobile-hidden">Codeframe</span>
                     </a>
-                    <a class="button tiny-hidden" href="https://twitter.com/thesephist" target="_blank">
+                    <a class="button tiny-hidden" href="https://thesephist.com/" target="_blank">
                         <span class="mobile-hidden">Made by</span> @thesephist
                     </a>
                     <a class="button" href="https://github.com/thesephist/codeframe" target="_blank">
